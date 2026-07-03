@@ -1,8 +1,7 @@
 // functions/api/toss-confirm.js
 //
-// 토스페이먼츠 결제창에서 결제가 끝나면 successUrl(여기)로 돌아옵니다.
-// 이때 토스가 쿼리스트링에 paymentKey, orderId, amount를 자동으로 붙여줍니다.
-// 여기서 실제 승인(confirm) API를 호출해야 결제가 최종 완료됩니다.
+// 결제 완료 후 토스가 이 URL로 돌려보냅니다.
+// 1) 결제 승인 → 2) 클릭했던 에피소드 즉시 언락 → 3) 남은 크레딧 1개를 잔액에 적립
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -18,7 +17,7 @@ export async function onRequestGet(context) {
   }
 
   try {
-    // 1. 결제 시작 시 저장해둔 주문 정보 조회 (금액 위변조 방지)
+    // 1. 주문 정보 조회 (금액 위변조 방지)
     const orderRes = await fetch(
       `${env.SUPABASE_URL}/rest/v1/pending_orders?order_id=eq.${encodeURIComponent(orderId)}&select=*`,
       {
@@ -35,7 +34,7 @@ export async function onRequestGet(context) {
       return Response.redirect(`${origin}/?payment=fail`, 302);
     }
 
-    // 2. 토스페이먼츠 결제 승인 API 호출
+    // 2. 토스페이먼츠 결제 승인
     const authHeader = "Basic " + btoa(`${env.TOSS_SECRET_KEY}:`);
     const confirmRes = await fetch("https://api.tosspayments.com/v1/payments/confirm", {
       method: "POST",
@@ -54,12 +53,7 @@ export async function onRequestGet(context) {
       return Response.redirect(`${origin}/?payment=fail`, 302);
     }
 
-    // 3. 구매 내역 저장 (번들에 포함된 모든 에피소드를 각각 한 줄씩)
-    const rows = order.episodes.map((epId) => ({
-      user_id: order.user_id,
-      episode_id: epId,
-    }));
-
+    // 3. 클릭했던 에피소드 즉시 언락
     await fetch(`${env.SUPABASE_URL}/rest/v1/purchases`, {
       method: "POST",
       headers: {
@@ -68,10 +62,40 @@ export async function onRequestGet(context) {
         "Content-Type": "application/json",
         Prefer: "return=minimal,resolution=ignore-duplicates",
       },
-      body: JSON.stringify(rows),
+      body: JSON.stringify({
+        user_id: order.user_id,
+        episode_id: order.episode_id,
+      }),
     });
 
-    // 4. 임시 주문 정리
+    // 4. 남은 크레딧 1개를 잔액에 적립 (기존 잔액을 읽고 +1해서 upsert)
+    const creditRes = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/water_credits?user_id=eq.${order.user_id}&select=balance`,
+      {
+        headers: {
+          apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+        },
+      }
+    );
+    const creditData = await creditRes.json();
+    const currentBalance = creditData?.[0]?.balance ?? 0;
+
+    await fetch(`${env.SUPABASE_URL}/rest/v1/water_credits?on_conflict=user_id`, {
+      method: "POST",
+      headers: {
+        apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "resolution=merge-duplicates,return=minimal",
+      },
+      body: JSON.stringify({
+        user_id: order.user_id,
+        balance: currentBalance + 1,
+      }),
+    });
+
+    // 5. 임시 주문 정리
     await fetch(
       `${env.SUPABASE_URL}/rest/v1/pending_orders?order_id=eq.${encodeURIComponent(orderId)}`,
       {
@@ -83,7 +107,7 @@ export async function onRequestGet(context) {
       }
     );
 
-    return Response.redirect(`${origin}/?payment=success&bundle=${order.bundle_id}`, 302);
+    return Response.redirect(`${origin}/?payment=success`, 302);
   } catch (err) {
     return Response.redirect(`${origin}/?payment=fail`, 302);
   }
