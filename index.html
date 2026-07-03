@@ -402,6 +402,39 @@ footer{
   text-decoration:underline;
 }
 
+/* 잔여 샘물 사용 확인 모달 (구매 모달과 같은 오버레이 스타일 공유) */
+#credit-confirm-modal{
+  position:fixed;inset:0;z-index:1000;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(4,6,12,0.75);backdrop-filter:blur(4px);padding:20px;
+}
+#credit-confirm-modal.show{display:flex;}
+.credit-confirm-yes{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;padding:12px 0;margin-bottom:10px;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Noto Serif KR',serif;font-size:0.88rem;font-weight:600;
+  background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;
+}
+
+/* 우측 상단 안내 토스트 */
+.toast{
+  position:fixed;top:22px;right:22px;z-index:2000;
+  background:rgba(18,16,30,0.96);
+  border:1px solid rgba(160,220,240,0.3);
+  color:rgba(250,235,208,0.95);
+  padding:11px 18px;border-radius:10px;
+  font-family:'Noto Serif KR',serif;font-size:0.78rem;
+  max-width:240px;line-height:1.4;
+  opacity:0;transform:translateY(-8px);
+  transition:opacity 0.35s ease, transform 0.35s ease;
+  pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+@media (max-width:480px){
+  .toast{top:14px;right:14px;font-size:0.72rem;max-width:200px;}
+}
+
 /* ── HEADER ── */
 #top-header{
   position:fixed;top:0;left:0;right:0;z-index:100;
@@ -818,6 +851,19 @@ footer{
   </div>
 </div>
 
+<!-- 잔여 샘물 사용 확인 모달 -->
+<div id="credit-confirm-modal">
+  <div class="purchase-modal-card">
+    <div class="purchase-modal-title">💧 샘물로 열까요?</div>
+    <div class="purchase-modal-name" id="credit-confirm-text"></div>
+    <button class="credit-confirm-yes" onclick="confirmUseCredit()">네, 열게요</button>
+    <button class="purchase-modal-cancel" onclick="hideCreditConfirm()">아니요</button>
+  </div>
+</div>
+
+<!-- 우측 상단 안내 토스트 -->
+<div id="toast" class="toast"></div>
+
 <footer>
   <p style="font-size:1.8rem;margin-bottom:14px;">🦌</p>
   <p class="footer-verse">
@@ -876,6 +922,26 @@ function updateAuthUI(user){
   }
 }
 
+// 크레딧 1개 = 샘물 반병(에피소드 1개 분량). "병" 단위 문구로 변환
+function waterBottleLabel(balance){
+  if(balance <= 0) return '';
+  const bottles = Math.floor(balance / 2);
+  const half = balance % 2;
+  if(bottles === 0) return '반병';
+  if(half === 0) return `${bottles}병`;
+  return `${bottles}병 반`;
+}
+
+// 우측 상단 안내 토스트
+function showToast(msg, duration = 3400){
+  const el = document.getElementById('toast');
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), duration);
+}
+
 // 샘물(크레딧) 잔액 배지 업데이트
 async function updateWaterBadge(userId){
   if(!userId) return;
@@ -889,11 +955,12 @@ async function updateWaterBadge(userId){
   if(!badge) return;
   const balance = data?.balance || 0;
   if(balance > 0){
-    badge.textContent = `💧 ${balance}`;
+    badge.textContent = `💧 ${waterBottleLabel(balance)} 남음`;
     badge.style.display = 'inline-block';
   } else {
     badge.style.display = 'none';
   }
+  return balance;
 }
 
 // 구매한 에피소드 목록 가져와서 카드 잠금 해제
@@ -993,6 +1060,7 @@ const TOSS_CLIENT_KEY = 'test_ck_24xLea5zVA6bk5j2aKy6rQAMYNwW';
 const tossPayments = TossPayments(TOSS_CLIENT_KEY);
 
 let currentEpisodeId = null;
+let pendingCreditEpisodeId = null;
 
 async function showLockedAlert(e){
   e.preventDefault();
@@ -1005,7 +1073,7 @@ async function showLockedAlert(e){
     return;
   }
 
-  // 남아있는 샘물이 있으면 결제 없이 즉시 사용
+  // 남아있는 샘물이 있으면 확인 후 사용 (실수로 누르는 것 방지)
   const { data: creditRow } = await supabaseClient
     .from('water_credits')
     .select('balance')
@@ -1013,20 +1081,42 @@ async function showLockedAlert(e){
     .maybeSingle();
 
   if(creditRow && creditRow.balance > 0){
-    const { data, error } = await supabaseClient.rpc('use_water_credit', { p_episode_id: epId });
-    if(error || !data?.success){
-      console.error(error || data);
-      alert('에피소드를 여는 중 문제가 발생했어요.');
-      return;
-    }
-    unlockPurchasedEpisodes(session.user.id);
-    updateWaterBadge(session.user.id);
+    pendingCreditEpisodeId = epId;
+    document.getElementById('credit-confirm-text').textContent =
+      `남은 샘물 ${waterBottleLabel(creditRow.balance)}로 이 에피소드를 열 수 있어요.`;
+    document.getElementById('credit-confirm-modal').classList.add('show');
     return;
   }
 
   // 남은 샘물이 없으면 충전 모달 오픈
   currentEpisodeId = epId;
   document.getElementById('purchase-modal').classList.add('show');
+}
+
+function hideCreditConfirm(){
+  document.getElementById('credit-confirm-modal').classList.remove('show');
+  pendingCreditEpisodeId = null;
+}
+document.getElementById('credit-confirm-modal')?.addEventListener('click', function(e){
+  if(e.target === this) hideCreditConfirm();
+});
+
+async function confirmUseCredit(){
+  if(!pendingCreditEpisodeId) return;
+  const epId = pendingCreditEpisodeId;
+  hideCreditConfirm();
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session) return;
+
+  const { data, error } = await supabaseClient.rpc('use_water_credit', { p_episode_id: epId });
+  if(error || !data?.success){
+    console.error(error || data);
+    alert('에피소드를 여는 중 문제가 발생했어요.');
+    return;
+  }
+  unlockPurchasedEpisodes(session.user.id);
+  updateWaterBadge(session.user.id);
 }
 
 function hidePurchaseModal(){
@@ -1077,18 +1167,37 @@ async function payWith(provider){
 }
 
 // 결제 완료 후 돌아왔을 때 결과 안내
-(function handlePaymentResult(){
+(async function handlePaymentResult(){
   const params = new URLSearchParams(window.location.search);
   const result = params.get('payment');
-  if(!result) return;
+  if(!result){ return; }
+
+  // URL을 먼저 깨끗하게 정리
+  window.history.replaceState({}, '', window.location.pathname);
+
+  if(result === 'fail'){
+    showToast('결제가 완료되지 않았어요. 다시 시도해주세요.');
+    return;
+  }
 
   if(result === 'success'){
-    alert('💧 구매가 완료됐어요! 에피소드가 열리고, 샘물 1개는 다음에 원하는 에피소드에 자동으로 쓰여요.');
-  } else if(result === 'fail'){
-    alert('결제가 완료되지 않았어요. 다시 시도해주세요.');
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if(!session){
+      showToast('💧 구매가 완료됐어요!');
+      return;
+    }
+    const { data: creditRow } = await supabaseClient
+      .from('water_credits')
+      .select('balance')
+      .eq('user_id', session.user.id)
+      .maybeSingle();
+    const remaining = creditRow?.balance || 0;
+    if(remaining > 0){
+      showToast(`💧 구매 완료! 아직 에피소드 ${remaining}개를 더 볼 수 있어요.`, 4200);
+    } else {
+      showToast('💧 구매가 완료됐어요!');
+    }
   }
-  // URL을 깨끗하게 정리
-  window.history.replaceState({}, '', window.location.pathname);
 })();
 
 // 별 생성
