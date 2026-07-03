@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>목마른 사슴 — 성경 이야기 시뮬레이션</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#F5C842;
+  --gold-dark:#c89010;
+  --bg:#08060e;
+  --text:#faebd0;
+  --muted:rgba(250,235,208,0.65);
+  --card-bg:#0e0c1a;
+}
+html,body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Serif KR',serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+html{scroll-behavior:smooth;}
+
+/* ── HERO ── */
+#hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:60px 24px 80px;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 25% 25%,rgba(80,40,180,0.20) 0%,transparent 50%),
+    radial-gradient(ellipse at 75% 75%,rgba(180,120,10,0.14) 0%,transparent 50%),
+    var(--bg);
+}
+.stars{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.hero-logo-wrap{
+  position:relative;
+  margin-bottom:26px;
+}
+.hero-logo-ring{
+  position:absolute;
+  inset:-16px;
+  border-radius:50%;
+  border:2px solid rgba(245,200,66,0.55);
+  box-shadow:0 0 16px rgba(245,200,66,0.25);
+  animation:ringPulse 3.5s ease-in-out infinite;
+}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:0.85;}50%{transform:scale(1.10);opacity:0.35;}}
+.hero-logo{
+  width:clamp(108px,20vw,150px);
+  height:clamp(108px,20vw,150px);
+  border-radius:50%;
+  background-image:url('images/hero_forest_deer.jpg');
+  background-size:cover;
+  background-position:38% 62%;
+  position:relative;
+  box-shadow:
+    0 0 0 1px rgba(245,200,66,0.30),
+    0 0 0 8px rgba(8,6,14,0.9),
+    0 0 40px rgba(245,200,66,0.25),
+    0 12px 36px rgba(0,0,0,0.55);
+}
+.hero-logo::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  box-shadow:inset 0 0 24px rgba(0,0,0,0.35);
+}
+.stars{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.star{position:absolute;border-radius:50%;background:#fff;
+  animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);
+  opacity:var(--o,0.4);}
+@keyframes twinkle{0%,100%{opacity:var(--o);transform:scale(1);}50%{opacity:0.05;transform:scale(0.4);}}
+#hero>*:not(.stars){position:relative;z-index:1;}
+
+.hero-label{
+  font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.4vw,0.72rem);
+  letter-spacing:0.40em;color:var(--gold);opacity:0.75;
+  text-transform:uppercase;margin-bottom:14px;
+}
+h1.hero-title{
+  font-family:'Gowun Batang','Noto Serif KR',serif;
+  font-size:clamp(2.8rem,8vw,6rem);
+  font-weight:700;letter-spacing:0.08em;line-height:1.1;
+  background:linear-gradient(140deg,#fffbe8 0%,var(--gold) 40%,#ffe090 70%,#fff8e0 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-shadow:none;
+  margin-bottom:10px;
+  filter:drop-shadow(0 2px 20px rgba(245,200,66,0.35));
+}
+.hero-sub{
+  font-family:'Gowun Batang','Noto Serif KR',serif;font-size:clamp(0.80rem,1.8vw,1rem);
+  letter-spacing:0.28em;color:rgba(245,200,66,0.70);margin-bottom:28px;
+}
+.hero-verse{
+  font-family:'Noto Serif KR',serif;font-family:'Gowun Batang','Noto Serif KR',serif;font-size:clamp(0.82rem,1.6vw,0.96rem);
+  color:rgba(250,235,208,0.82);font-style:italic;line-height:2.1;max-width:420px;
+  border-left:2px solid rgba(245,200,66,0.35);padding-left:18px;text-align:left;margin:0 auto;
+}
+.hero-desc{
+  margin-top:22px;font-size:clamp(0.80rem,1.6vw,0.92rem);
+  color:var(--muted);line-height:1.95;max-width:400px;
+}
+.scroll-hint{
+  margin-top:48px;font-family:'Cinzel',serif;font-size:0.64rem;
+  letter-spacing:0.24em;color:rgba(245,200,66,0.40);
+  animation:scrollPulse 2.8s ease-in-out infinite;
+}
+@keyframes scrollPulse{0%,100%{opacity:0.35;transform:translateY(0);}50%{opacity:0.85;transform:translateY(7px);}}
+
+/* ── SECTION ── */
+.section{background:var(--bg);padding:80px 24px;}
+.section-inner{max-width:1120px;margin:0 auto;}
+.section-header{text-align:center;margin-bottom:52px;}
+.eyebrow{
+  font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.2vw,0.68rem);
+  letter-spacing:0.38em;color:var(--gold);opacity:0.88;
+  text-transform:uppercase;display:block;margin-bottom:12px;
+}
+.section-h2{
+  font-family:'Cinzel',serif;font-size:clamp(1.6rem,4vw,2.8rem);
+  font-weight:700;color:#fff;letter-spacing:0.05em;
+  text-shadow:0 0 40px rgba(245,200,66,0.18);margin-bottom:14px;
+}
+.divider{
+  width:56px;height:2px;margin:0 auto 18px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.section-desc{
+  font-size:clamp(0.80rem,1.6vw,0.92rem);
+  color:rgba(250,235,208,0.80);line-height:1.9;
+  max-width:460px;margin:0 auto;
+}
+
+/* ── GRID ── */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));
+  gap:22px;
+}
+
+/* ── CARD ── */
+.card{
+  position:relative;
+  display:flex;flex-direction:column;
+  background:var(--card-bg);
+  border:1px solid rgba(245,200,66,0.12);
+  border-radius:12px;overflow:hidden;
+  text-decoration:none;color:inherit;
+  transition:transform 0.22s ease,box-shadow 0.22s ease,border-color 0.22s ease;
+}
+.card:not(.card-locked):hover{
+  transform:translateY(-7px);
+  box-shadow:0 20px 50px rgba(0,0,0,0.65),0 0 0 1px rgba(245,200,66,0.32);
+  border-color:rgba(245,200,66,0.38);
+}
+.card:not(.card-locked):active{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* ── THUMBNAIL ── */
+.card-thumb{
+  width:100%;aspect-ratio:16/9;
+  background-size:cover;background-position:center top;
+  position:relative;overflow:hidden;
+  transition:transform 0.5s ease;
+}
+.card:not(.card-locked):hover .card-thumb{transform:scale(1.05);}
+.card-thumb::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 45%,rgba(8,6,14,0.90) 100%);
+}
+.card-thumb-locked{
+  width:100%;aspect-ratio:16/9;
+  background:linear-gradient(135deg,#14121e 0%,#0a0816 100%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.lock-emoji{font-size:2.4rem;opacity:0.22;}
+.lock-icon{
+  position:absolute;bottom:10px;right:12px;
+  font-size:1.1rem;opacity:0.35;
+}
+.card-locked{opacity:0.55;cursor:default;}
+
+/* ── CARD BODY ── */
+.card-body{
+  padding:clamp(12px,2vw,18px) clamp(14px,2.5vw,20px) clamp(14px,2.5vw,20px);
+  flex:1;display:flex;flex-direction:column;gap:5px;
+}
+.ep-num{
+  font-family:'Cinzel',serif;font-size:0.60rem;
+  letter-spacing:0.22em;color:var(--gold);opacity:0.80;
+}
+.ep-locked{color:rgba(255,255,255,0.28);}
+.card-title{
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.92rem,2vw,1.08rem);
+  font-weight:700;color:#fff;letter-spacing:0.03em;line-height:1.3;
+}
+.card-title-locked{color:rgba(255,255,255,0.32);}
+.card-verse{
+  font-family:'Cinzel',serif;font-size:0.62rem;
+  letter-spacing:0.10em;color:rgba(245,200,66,0.58);
+}
+.card-verse-locked{color:rgba(245,200,66,0.20);}
+.card-desc{
+  font-size:clamp(0.74rem,1.4vw,0.82rem);
+  color:var(--muted);line-height:1.75;flex:1;margin-top:2px;
+}
+.card-desc-locked{color:rgba(255,255,255,0.20);}
+.play-btn{
+  display:inline-block;margin-top:12px;
+  font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.14em;
+  color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  padding:7px 16px;border-radius:3px;align-self:flex-start;
+  transition:box-shadow 0.2s,transform 0.15s;
+}
+.card:not(.card-locked):hover .play-btn{
+  box-shadow:0 4px 16px rgba(245,200,66,0.5);transform:translateX(3px);
+}
+
+/* ── NT 섹션 ── */
+.section-nt{
+  background:linear-gradient(180deg,var(--bg) 0%,#0a051e 50%,var(--bg) 100%);
+}
+.nt-badge{
+  display:inline-block;font-family:'Cinzel',serif;
+  font-size:0.60rem;letter-spacing:0.24em;
+  color:rgba(245,200,66,0.55);
+  border:1px solid rgba(245,200,66,0.18);
+  padding:5px 14px;border-radius:20px;margin-bottom:14px;
+}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--bg);border-top:1px solid rgba(245,200,66,0.08);
+  text-align:center;padding:52px 24px;
+}
+.footer-verse{font-size:clamp(0.76rem,1.5vw,0.86rem);color:var(--muted);font-style:italic;line-height:2.1;}
+.footer-copy{margin-top:14px;font-size:0.64rem;color:rgba(255,255,255,0.20);letter-spacing:0.12em;}
+
+/* ── 반응형 ── */
+@media(max-width:600px){
+  .section{padding:60px 16px;}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .card-body{padding:10px 12px 14px;gap:4px;}
+  .card-title{font-size:0.88rem;}
+  .card-desc{font-size:0.72rem;}
+  .play-btn{font-size:0.62rem;padding:6px 12px;margin-top:8px;}
+  .lock-emoji{font-size:1.8rem;}
+}
+@media(max-width:380px){
+  .grid{grid-template-columns:1fr;}
+  h1.hero-title{font-size:2.2rem;}
+}
+@media(max-height:500px) and (orientation:landscape){
+  #hero{min-height:auto;padding:36px 24px 50px;}
+  .grid{grid-template-columns:repeat(3,1fr);}
+}
+
+.free-badge{
+  position:absolute;top:10px;left:10px;z-index:3;
+  font-family:'Cinzel',serif;font-size:0.60rem;letter-spacing:0.06em;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  color:#120a02;font-weight:700;
+  padding:4px 11px;border-radius:14px;
+  box-shadow:0 3px 10px rgba(245,200,66,0.4);
+}
+
+.water-guide{
+  margin-top:10px;
+  font-family:'Gowun Batang',serif;
+  font-size:0.76rem;
+  color:rgba(160,220,240,0.75);
+  text-align:center;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.guide-icon{
+  width:20px;height:20px;object-fit:contain;
+  flex-shrink:0;
+  transform:scale(1.7);
+}
+
+/* 카드 우측 상단 작은 물병 아이콘 버튼 */
+.water-icon-btn{
+  position:absolute;top:8px;right:8px;z-index:4;
+  width:30px;height:30px;
+  background:rgba(8,14,22,0.55);
+  backdrop-filter:blur(4px);
+  border:1px solid rgba(160,220,240,0.30);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  padding:2px;cursor:pointer;
+  transition:transform 0.15s,background 0.15s;
+  overflow:hidden;
+}
+.water-icon-btn:hover{
+  transform:scale(1.15);
+  background:rgba(8,14,22,0.8);
+}
+.water-icon-btn img{
+  width:100%;height:100%;object-fit:contain;
+  transform:scale(1.5);
+}
+/* 흐릿한 시작하기 버튼 (잠긴 카드용) */
+.play-btn-dim{
+  opacity:0.45;
+  filter:grayscale(0.3);
+}
+.card:hover .play-btn-dim{
+  opacity:0.65;
+  box-shadow:none !important;
+  transform:none !important;
+}
+
+/* 샘물 설명 모달 */
+#water-modal{
+  position:fixed;inset:0;z-index:1000;
+  display:none;
+  align-items:center;justify-content:center;
+  background:rgba(4,6,12,0.75);
+  backdrop-filter:blur(4px);
+  padding:20px;
+}
+#water-modal.show{display:flex;}
+.water-modal-card{
+  background:linear-gradient(160deg,#12101e 0%,#0a0816 100%);
+  border:1px solid rgba(160,220,240,0.25);
+  border-radius:16px;
+  padding:32px 28px;
+  max-width:340px;width:100%;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+.water-modal-img{
+  width:64px;height:64px;object-fit:contain;
+  margin:0 auto 16px;
+  filter:drop-shadow(0 4px 12px rgba(120,200,240,0.4));
+}
+.water-modal-title{
+  font-family:'Cinzel',serif;font-size:1.1rem;
+  color:#fff;letter-spacing:0.04em;margin-bottom:14px;
+}
+.water-modal-desc{
+  font-family:'Noto Serif KR',serif;font-size:0.85rem;
+  color:rgba(250,235,208,0.80);line-height:1.9;margin-bottom:20px;
+}
+.water-modal-desc b{color:rgba(160,220,240,0.95);font-weight:600;}
+.water-modal-close{
+  font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;
+  color:#052028;background:linear-gradient(135deg,#9fe0ee,#5cb0cc);
+  border:none;padding:9px 26px;border-radius:4px;cursor:pointer;
+}
+
+/* 구매(간편결제) 모달 */
+#purchase-modal{
+  position:fixed;inset:0;z-index:1000;
+  display:none;
+  align-items:center;justify-content:center;
+  background:rgba(4,6,12,0.75);
+  backdrop-filter:blur(4px);
+  padding:20px;
+}
+#purchase-modal.show{display:flex;}
+.purchase-modal-card{
+  background:linear-gradient(160deg,#12101e 0%,#0a0816 100%);
+  border:1px solid rgba(160,220,240,0.25);
+  border-radius:16px;
+  padding:30px 26px;
+  max-width:340px;width:100%;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+.purchase-modal-title{
+  font-family:'Cinzel',serif;font-size:1.0rem;
+  color:#fff;letter-spacing:0.03em;margin-bottom:6px;
+}
+.purchase-modal-name{
+  font-family:'Noto Serif KR',serif;font-size:0.85rem;
+  color:rgba(250,235,208,0.85);margin-bottom:4px;
+}
+.purchase-modal-price{
+  font-family:'Cinzel',serif;font-size:0.8rem;
+  color:rgba(160,220,240,0.9);margin-bottom:22px;
+}
+.pay-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;padding:12px 0;margin-bottom:10px;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Noto Serif KR',serif;font-size:0.88rem;font-weight:600;
+}
+.pay-btn-kakao{background:#FEE500;color:#191919;}
+.pay-btn-naver{background:#03C75A;color:#fff;}
+.purchase-modal-cancel{
+  margin-top:6px;background:none;border:none;
+  color:rgba(255,255,255,0.45);font-size:0.78rem;cursor:pointer;
+  text-decoration:underline;
+}
+
+/* ── HEADER ── */
+#top-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:14px 20px;
+  background:rgba(8,6,14,0.55);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(245,200,66,0.10);
+}
+.auth-area{display:flex;align-items:center;gap:10px;}
+.kakao-login-btn{
+  display:flex;align-items:center;gap:7px;
+  background:#FEE500;color:#191919;
+  border:none;border-radius:8px;
+  padding:8px 16px;
+  font-family:'Noto Serif KR',sans-serif;
+  font-size:0.78rem;font-weight:700;
+  cursor:pointer;
+  box-shadow:0 2px 10px rgba(0,0,0,0.25);
+  transition:transform 0.15s,box-shadow 0.15s;
+}
+.kakao-login-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(254,229,0,0.4);
+}
+.kakao-icon{width:16px;height:16px;flex-shrink:0;}
+.user-info{
+  display:none;align-items:center;gap:10px;
+  font-family:'Noto Serif KR',serif;font-size:0.78rem;
+  color:rgba(250,235,208,0.85);
+}
+.user-info.show{display:flex;}
+.kakao-login-btn.hide{display:none;}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(245,200,66,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.85rem;
+  border:1px solid rgba(245,200,66,0.25);
+}
+.logout-btn{
+  font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.08em;
+  color:rgba(250,235,208,0.55);
+  background:none;border:1px solid rgba(250,235,208,0.20);
+  padding:5px 11px;border-radius:14px;cursor:pointer;
+  transition:color 0.15s,border-color 0.15s;
+}
+.logout-btn:hover{color:rgba(250,235,208,0.85);border-color:rgba(250,235,208,0.40);}
+
+/* 히어로 섹션이 헤더에 안 가리게 여백 확보 */
+#hero{padding-top:calc(60px + 52px);}
+
+@media(max-width:480px){
+  #top-header{padding:10px 14px;}
+  .kakao-login-btn{padding:7px 12px;font-size:0.70rem;}
+  .user-info{font-size:0.68rem;gap:6px;}
+  .user-avatar{width:24px;height:24px;font-size:0.72rem;}
+  .logout-btn{font-size:0.58rem;padding:4px 8px;}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.tosspayments.com/v1/payment"></script>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="top-header">
+  <div class="auth-area">
+    <button class="kakao-login-btn" id="kakao-login-btn" onclick="signInWithKakao()">
+      <svg class="kakao-icon" viewBox="0 0 24 24" fill="#191919"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.2 4.5 6.7-.2.7-.7 2.6-.8 3-.1.5.2.5.4.3.2-.1 2.6-1.8 3.6-2.5.7.1 1.5.2 2.3.2 5.5 0 10-3.6 10-8s-4.5-8-10-8z"/></svg>
+      카카오로 시작하기
+    </button>
+    <div class="user-info" id="user-info">
+      <span class="user-avatar">🦌</span>
+      <span id="user-name">사용자</span>
+      <button class="logout-btn" onclick="signOut()">로그아웃</button>
+    </div>
+  </div>
+</header>
+
+
+
+<!-- HERO -->
+<section id="hero">
+  <div class="stars" id="stars"></div>
+  <div class="hero-logo-wrap"><div class="hero-logo-ring"></div><div class="hero-logo"></div></div>
+  <div class="hero-label">Bible Story Simulation</div>
+  <h1 class="hero-title">목마른 사슴</h1>
+  <div class="hero-sub">성경 이야기 시뮬레이션</div>
+  <blockquote class="hero-verse">
+    "하나님이여 사슴이 시냇물을 찾기에 갈급함 같이<br>
+    내 영혼이 주를 찾기에 갈급하니이다"
+    <cite style="font-size:0.70rem;opacity:0.60;font-style:normal;display:block;margin-top:8px;">— 시편 42:1</cite>
+  </blockquote>
+  <p class="hero-desc">
+    성경 속 인물들의 갈림길에 서보세요.<br>
+    그들의 두려움, 분노, 믿음을 함께 경험하며<br>
+    하나님의 이야기 안으로 걸어 들어갑니다.
+  </p>
+  <div class="scroll-hint">↓ &nbsp; 에피소드 보기</div>
+</section>
+
+<!-- 구약 -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="eyebrow">Old Testament</span>
+      <h2 class="section-h2">구약성경</h2>
+      <div class="divider"></div>
+      <p class="section-desc">믿음의 선조들이 하나님 앞에서 내린 선택들</p>
+      <p class="water-guide"><img src="images/water_bottle.png" alt="샘물" class="guide-icon">샘물이 궁금하다면 카드 우측 상단 아이콘을 눌러보세요</p>
+      
+    </div>
+    <div class="grid">
+      <a href="episodes/red_sea_miracle_v3.html" class="card">
+          <div class="free-badge">🌊 첫 체험 무료</div>
+          <div class="card-thumb" style="background-image:url('images/ep01_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.01</span>
+            <h3 class="card-title">홍해의 기적</h3>
+            <p class="card-verse">출애굽기 14장</p>
+            <p class="card-desc">두려움과 믿음 사이, 모세가 지팡이를 들었다</p>
+            <span class="play-btn">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep02" data-episode-file="episodes/abraham_ep2.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep02_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.02</span>
+            <h3 class="card-title">아브라함의 믿음</h3>
+            <p class="card-verse">창세기 22장</p>
+            <p class="card-desc">가장 소중한 것을 내려놓을 수 있는가</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep03" data-episode-file="episodes/jacob_ep3.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep03_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.03</span>
+            <h3 class="card-title">야곱의 씨름</h3>
+            <p class="card-verse">창세기 32-33장</p>
+            <p class="card-desc">밤새 하나님과 씨름한 한 사람</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep04" data-episode-file="episodes/joseph_ep4.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep04_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.04</span>
+            <h3 class="card-title">요셉의 용서</h3>
+            <p class="card-verse">창세기 45장</p>
+            <p class="card-desc">복수 대신 용서를 선택한 순간</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep05" data-episode-file="episodes/gideon_ep5.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep05_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.05</span>
+            <h3 class="card-title">기드온의 300용사</h3>
+            <p class="card-verse">사사기 7장</p>
+            <p class="card-desc">300명으로 대군을 무너뜨린 하나님의 방법</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep06" data-episode-file="episodes/moses_ep6.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep06_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.06</span>
+            <h3 class="card-title">모세와 금송아지</h3>
+            <p class="card-verse">출애굽기 32장</p>
+            <p class="card-desc">분노와 중보 사이에서 선 모세</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep07" data-episode-file="episodes/david_ep7.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep07_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.07</span>
+            <h3 class="card-title">다윗과 사울</h3>
+            <p class="card-verse">사무엘상 24장</p>
+            <p class="card-desc">복수할 기회를 옷자락 하나로 내려놓다</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep08" data-episode-file="episodes/elijah_ep8.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep08_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.08</span>
+            <h3 class="card-title">엘리야와 로뎀나무</h3>
+            <p class="card-verse">열왕기상 19장</p>
+            <p class="card-desc">지쳐 쓰러진 그 자리에 천사가 왔다</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep09" data-episode-file="episodes/jonah_ep9.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep09_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.09</span>
+            <h3 class="card-title">요나와 니느웨</h3>
+            <p class="card-verse">요나서</p>
+            <p class="card-desc">도망친 선지자와 하나님의 끈질긴 긍휼</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+<a href="#" onclick="showLockedAlert(event)" class="card card-locked-episode" data-episode-id="ep10" data-episode-file="episodes/job_ep10.html">
+          <button class="water-icon-btn" onclick="showWaterInfo(event)" title="샘물이란?">
+            <img src="images/water_bottle.png" alt="샘물">
+          </button>
+          <div class="card-thumb" style="background-image:url('images/ep10_img1.jpg');"></div>
+          <div class="card-body">
+            <span class="ep-num">EP.10</span>
+            <h3 class="card-title">욥의 고난</h3>
+            <p class="card-verse">욥기 1-2장</p>
+            <p class="card-desc">정직하게 하나님 앞에 선 사람</p>
+            <span class="play-btn play-btn-dim">▶ 시작하기</span>
+          </div>
+        </a>
+    </div>
+  </div>
+</section>
+
+<!-- 신약 -->
+<section class="section section-nt">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="nt-badge">Coming Soon</div>
+      <span class="eyebrow">New Testament</span>
+      <h2 class="section-h2">신약성경</h2>
+      <div class="divider"></div>
+      <p class="section-desc">예수님과 제자들의 이야기, 곧 찾아옵니다</p>
+    </div>
+    <div class="grid">
+      <div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">🕊️</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.01</span>
+            <h3 class="card-title card-title-locked">예수님의 세례</h3>
+            <p class="card-verse card-verse-locked">마태복음 3장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">⚡</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.02</span>
+            <h3 class="card-title card-title-locked">광야의 시험</h3>
+            <p class="card-verse card-verse-locked">마태복음 4장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">🌊</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.03</span>
+            <h3 class="card-title card-title-locked">물 위를 걷는 베드로</h3>
+            <p class="card-verse card-verse-locked">마태복음 14장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">🏠</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.04</span>
+            <h3 class="card-title card-title-locked">탕자의 귀환</h3>
+            <p class="card-verse card-verse-locked">누가복음 15장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">🌳</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.05</span>
+            <h3 class="card-title card-title-locked">삭개오</h3>
+            <p class="card-verse card-verse-locked">누가복음 19장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">🙏</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.06</span>
+            <h3 class="card-title card-title-locked">겟세마네의 기도</h3>
+            <p class="card-verse card-verse-locked">마태복음 26장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">✨</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.07</span>
+            <h3 class="card-title card-title-locked">부활의 아침</h3>
+            <p class="card-verse card-verse-locked">요한복음 20장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">🔥</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.08</span>
+            <h3 class="card-title card-title-locked">오순절 성령 강림</h3>
+            <p class="card-verse card-verse-locked">사도행전 2장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">💡</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.09</span>
+            <h3 class="card-title card-title-locked">사울의 회심</h3>
+            <p class="card-verse card-verse-locked">사도행전 9장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+<div class="card card-locked">
+          <div class="card-thumb card-thumb-locked">
+            <span class="lock-emoji">📖</span>
+            <span class="lock-icon">🔒</span>
+          </div>
+          <div class="card-body">
+            <span class="ep-num ep-locked">NT.10</span>
+            <h3 class="card-title card-title-locked">요한의 계시</h3>
+            <p class="card-verse card-verse-locked">요한계시록 1장</p>
+            <p class="card-desc card-desc-locked">Coming Soon</p>
+          </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- 샘물 설명 모달 -->
+<div id="water-modal">
+  <div class="water-modal-card">
+    <img src="images/water_bottle.png" alt="샘물" class="water-modal-img">
+    <div class="water-modal-title">샘물이란?</div>
+    <div class="water-modal-desc">
+      <b>샘물 한 병</b>이면 원하는 이야기<br>
+      <b>두 편</b>을 자유롭게 열어볼 수 있어요.<br><br>
+      마시고 싶은 순서대로,<br>
+      원하는 이야기부터 골라보세요.
+    </div>
+    <button class="water-modal-close" onclick="hideWaterInfo()">알겠어요</button>
+  </div>
+</div>
+
+<!-- 간편결제 모달 -->
+<div id="purchase-modal">
+  <div class="purchase-modal-card">
+    <div class="purchase-modal-title">💧 샘물로 열기</div>
+    <div class="purchase-modal-name" id="purchase-modal-name"></div>
+    <div class="purchase-modal-price" id="purchase-modal-price"></div>
+    <button class="pay-btn pay-btn-kakao" onclick="payWith('카카오페이')">카카오페이로 결제</button>
+    <button class="pay-btn pay-btn-naver" onclick="payWith('네이버페이')">네이버페이로 결제</button>
+    <button class="purchase-modal-cancel" onclick="hidePurchaseModal()">닫기</button>
+  </div>
+</div>
+
+<footer>
+  <p style="font-size:1.8rem;margin-bottom:14px;">🦌</p>
+  <p class="footer-verse">
+    "내 영혼아 네가 어찌하여 낙심하며 어찌하여 내 속에서 불안해 하는가<br>
+    너는 하나님께 소망을 두라" — 시편 42:5
+  </p>
+  <p class="footer-copy">© 목마른 사슴 · Bible Story Simulation</p>
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// Supabase 초기화
+// ══════════════════════════════════════
+const SUPABASE_URL = 'https://hblmipexylhbgmskxnnj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhibG1pcGV4eWxoYmdtc2t4bm5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NzYyNzIsImV4cCI6MjA5ODQ1MjI3Mn0.D3Ie869LyBSUSZaGBKowDTDfCj-pgyI9fpDjYOLxqMU';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 카카오 로그인 시작
+async function signInWithKakao(){
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: 'kakao',
+    options: {
+      redirectTo: window.location.origin + window.location.pathname
+    }
+  });
+  if(error){
+    console.error('로그인 오류:', error);
+    alert('로그인 중 문제가 발생했어요. 잠시 후 다시 시도해주세요.');
+  }
+}
+
+// 로그아웃
+async function signOut(){
+  await supabaseClient.auth.signOut();
+  updateAuthUI(null);
+}
+
+// 로그인 상태에 따라 UI 업데이트
+function updateAuthUI(user){
+  const loginBtn = document.getElementById('kakao-login-btn');
+  const userInfo = document.getElementById('user-info');
+  const userName = document.getElementById('user-name');
+
+  if(user){
+    loginBtn.classList.add('hide');
+    userInfo.classList.add('show');
+    const name = user.user_metadata?.name
+      || user.user_metadata?.full_name
+      || user.user_metadata?.nickname
+      || user.email
+      || '사용자';
+    userName.textContent = name;
+  } else {
+    loginBtn.classList.remove('hide');
+    userInfo.classList.remove('show');
+  }
+}
+
+// 구매한 에피소드 목록 가져와서 카드 잠금 해제
+async function unlockPurchasedEpisodes(userId){
+  if(!userId) return;
+
+  const { data, error } = await supabaseClient
+    .from('purchases')
+    .select('episode_id')
+    .eq('user_id', userId);
+
+  if(error){
+    console.error('구매 내역 조회 오류:', error);
+    return;
+  }
+
+  const purchasedIds = (data || []).map(row => row.episode_id);
+
+  document.querySelectorAll('.card-locked-episode').forEach(card => {
+    const epId = card.dataset.episodeId;
+    if(purchasedIds.includes(epId)){
+      const file = card.dataset.episodeFile;
+      card.href = file;
+      card.removeAttribute('onclick');
+      card.classList.remove('card-locked-episode');
+      card.classList.add('card-unlocked');
+      const dimBtn = card.querySelector('.play-btn-dim');
+      if(dimBtn){
+        dimBtn.classList.remove('play-btn-dim');
+        dimBtn.textContent = '▶ 시작하기';
+      }
+      const waterBtn = card.querySelector('.water-icon-btn');
+      if(waterBtn) waterBtn.style.display = 'none';
+    }
+  });
+}
+
+// (임시 테스트용) 구매 완료 처리 — 실제 결제 연동 전까지 사용
+async function testPurchase(episodeId){
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session){
+    alert('먼저 로그인해주세요!');
+    return;
+  }
+  const { error } = await supabaseClient
+    .from('purchases')
+    .insert({ user_id: session.user.id, episode_id: episodeId });
+
+  if(error){
+    console.error(error);
+    alert('구매 처리 중 오류가 발생했어요.\n\n[디버그 정보]\n' + JSON.stringify(error, null, 2));
+    return;
+  }
+  alert(episodeId + ' 구매 완료! 카드가 열립니다.');
+  unlockPurchasedEpisodes(session.user.id);
+}
+
+// 페이지 로드 시 현재 로그인 상태 확인
+(async function initAuth(){
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  updateAuthUI(session?.user || null);
+  if(session?.user) unlockPurchasedEpisodes(session.user.id);
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    updateAuthUI(session?.user || null);
+    if(session?.user) unlockPurchasedEpisodes(session.user.id);
+  });
+})();
+</script>
+
+<script>
+
+function showWaterInfo(e){
+  e.preventDefault();
+  e.stopPropagation();
+  document.getElementById('water-modal').classList.add('show');
+}
+function hideWaterInfo(){
+  document.getElementById('water-modal').classList.remove('show');
+}
+document.getElementById('water-modal')?.addEventListener('click', function(e){
+  if(e.target === this) hideWaterInfo();
+});
+
+// ══════════════════════════════════════
+// 토스페이먼츠 (카카오페이 / 네이버페이 직접 연동)
+// ══════════════════════════════════════
+// ⚠️ 아래는 이수님 토스페이먼츠 계정의 "테스트 클라이언트 키"예요.
+// 실 서비스 오픈 시에는 심사 완료 후 발급되는 "라이브 클라이언트 키"로 교체해야 해요.
+const TOSS_CLIENT_KEY = 'test_ck_24xLea5zVA6bk5j2aKy6rQAMYNwW';
+const tossPayments = TossPayments(TOSS_CLIENT_KEY);
+
+// 에피소드 → 번들 매핑 (990원 = 2화 묶음, EP.10만 단독)
+const BUNDLE_MAP = {
+  ep02:'bundle_02_03', ep03:'bundle_02_03',
+  ep04:'bundle_04_05', ep05:'bundle_04_05',
+  ep06:'bundle_06_07', ep07:'bundle_06_07',
+  ep08:'bundle_08_09', ep09:'bundle_08_09',
+  ep10:'bundle_10'
+};
+const BUNDLE_NAMES = {
+  bundle_02_03:'아브라함의 믿음 + 야곱의 씨름 (2화)',
+  bundle_04_05:'요셉의 용서 + 기드온의 300용사 (2화)',
+  bundle_06_07:'모세와 금송아지 + 다윗과 사울 (2화)',
+  bundle_08_09:'엘리야와 로뎀나무 + 요나와 니느웨 (2화)',
+  bundle_10:'욥의 고난 (1화)'
+};
+
+let currentBundleId = null;
+
+async function showLockedAlert(e){
+  e.preventDefault();
+  const card = e.currentTarget;
+  const epId = card.dataset.episodeId;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session){
+    alert('💧 이 에피소드는 샘물로 열 수 있어요!\n먼저 카카오로 로그인해주세요.');
+    return;
+  }
+
+  currentBundleId = BUNDLE_MAP[epId];
+  if(!currentBundleId){
+    alert('구매할 수 없는 에피소드예요.');
+    return;
+  }
+  document.getElementById('purchase-modal-name').textContent = BUNDLE_NAMES[currentBundleId];
+  document.getElementById('purchase-modal-price').textContent = '990원';
+  document.getElementById('purchase-modal').classList.add('show');
+}
+
+function hidePurchaseModal(){
+  document.getElementById('purchase-modal').classList.remove('show');
+  currentBundleId = null;
+}
+document.getElementById('purchase-modal')?.addEventListener('click', function(e){
+  if(e.target === this) hidePurchaseModal();
+});
+
+// provider: '카카오페이' 또는 '네이버페이'
+async function payWith(provider){
+  if(!currentBundleId) return;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session){
+    alert('먼저 로그인해주세요!');
+    return;
+  }
+
+  try{
+    const res = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bundleId: currentBundleId, userId: session.user.id })
+    });
+    const order = await res.json();
+    if(!res.ok || order.error){
+      alert('주문 생성 중 오류가 발생했어요.\n' + (order.detail || order.error || ''));
+      return;
+    }
+
+    hidePurchaseModal();
+
+    tossPayments.requestPayment('카드', {
+      amount: order.amount,
+      orderId: order.orderId,
+      orderName: order.orderName,
+      successUrl: window.location.origin + '/api/toss-confirm',
+      failUrl: window.location.origin + '/?payment=fail',
+      flowMode: 'DIRECT',
+      easyPay: provider
+    });
+  }catch(err){
+    console.error(err);
+    alert('결제 요청 중 오류가 발생했어요.');
+  }
+}
+
+// 결제 완료 후 돌아왔을 때 결과 안내
+(function handlePaymentResult(){
+  const params = new URLSearchParams(window.location.search);
+  const result = params.get('payment');
+  if(!result) return;
+
+  if(result === 'success'){
+    alert('💧 구매가 완료됐어요! 카드가 열립니다.');
+  } else if(result === 'fail'){
+    alert('결제가 완료되지 않았어요. 다시 시도해주세요.');
+  }
+  // URL을 깨끗하게 정리
+  window.history.replaceState({}, '', window.location.pathname);
+})();
+
+// 별 생성
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<110;i++){
+    const s=document.createElement('div'); s.className='star';
+    const sz=0.8+Math.random()*2.2;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${1.8+Math.random()*4.5}s;--o:${0.15+Math.random()*0.65};--delay:${Math.random()*6}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// 카드 등장 애니메이션
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{
+        e.target.style.opacity=e.target.classList.contains('card-locked')?'0.55':'1';
+        e.target.style.transform='translateY(0)';
+      },i*55);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.06});
+
+document.querySelectorAll('.card').forEach((el,i)=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(22px)';
+  el.style.transition=`opacity 0.5s ease ${i*0.04}s, transform 0.5s ease ${i*0.04}s, box-shadow 0.22s, border-color 0.22s`;
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
