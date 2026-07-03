@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>다윗과 사울 — 사무엘상 24장</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#F5C842;--gold-dark:#c89010;}
+html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+#game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
+
+/* ── SCENE ── */
+#scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
+.illus{position:absolute;inset:0;background-size:cover;background-position:center top;transition:opacity 1.8s ease;will-change:transform,opacity;}
+#illus1{background-image:url('../images/ep07_img1.jpg');opacity:1;animation:kb1 18s ease-in-out infinite alternate;}
+#illus2{background-image:url('../images/ep07_img2.jpg');opacity:0;animation:kb2 18s ease-in-out infinite alternate;}
+@keyframes kb1{from{transform:scale(1.05) translate(0,0);}to{transform:scale(1.10) translate(-7px,-5px);}}
+@keyframes kb2{from{transform:scale(1.07) translate(3px,0);}to{transform:scale(1.04) translate(-6px,-7px);}}
+
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center 45%,transparent 28%,rgba(0,0,0,0.72) 100%);z-index:5;pointer-events:none;}
+
+/* ── OVERLAYS ── */
+.ov{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity 1.5s;}
+#ov-cave{background:rgba(8,5,2,0.45);opacity:0;}
+#ov-tension{background:rgba(30,5,5,0.48);opacity:0;}
+#ov-divine{background:radial-gradient(ellipse at 50% 8%,rgba(255,240,100,0.42) 0%,transparent 65%);opacity:0;}
+#ov-grace{background:radial-gradient(ellipse at 50% 50%,rgba(180,140,60,0.28) 0%,transparent 65%);opacity:0;}
+#ov-flash{background:rgba(255,200,80,0.65);opacity:0;}
+
+#light-rays{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,200,80,0.20) 8deg,transparent 16deg,transparent 24deg,rgba(255,200,60,0.14) 32deg,transparent 40deg,transparent 48deg,rgba(255,220,80,0.22) 56deg,transparent 64deg);animation:rayRot 10s linear infinite;}
+@keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
+
+#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
+#chapter-title.show{opacity:1;}
+#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
+#verse-badge.show{opacity:1;}
+
+/* ── CHOICE ── */
+#choice-overlay{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.7s;}
+#choice-overlay.show{opacity:1;pointer-events:all;}
+.choice-title{font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
+.choice-title em{color:var(--gold);font-style:normal;}
+.choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
+.choice-btn{position:relative;overflow:hidden;border:none;cursor:pointer;padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;}
+.choice-btn:hover{transform:translateY(-3px) scale(1.01);}
+.choice-btn:active{transform:translateY(0) scale(0.99);}
+.opt-revenge{background:linear-gradient(135deg,#1a0400 0%,#0e0100 100%);box-shadow:0 4px 20px rgba(200,40,20,0.4);border:1px solid rgba(200,50,30,0.4);}
+.opt-revenge:hover{box-shadow:0 6px 28px rgba(240,60,30,0.65);border-color:rgba(255,80,50,0.7);}
+.opt-grace{background:linear-gradient(135deg,#010a14 0%,#000609 100%);box-shadow:0 4px 20px rgba(200,170,40,0.4);border:1px solid rgba(200,170,50,0.38);}
+.opt-grace:hover{box-shadow:0 6px 28px rgba(240,200,60,0.6);border-color:rgba(245,200,66,0.7);}
+.choice-inner{display:flex;align-items:center;gap:14px;padding:clamp(12px,2.5vw,16px) clamp(14px,3vw,20px);}
+.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.opt-revenge .choice-label{color:#ff5030;text-shadow:0 0 12px rgba(255,60,30,0.9);}
+.opt-grace .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(245,200,66,0.8);}
+.choice-text-wrap{flex:1;}
+.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.opt-revenge .choice-main{color:#ffe4dc;}
+.opt-grace .choice-main{color:#fff8d0;}
+.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.opt-revenge .choice-sub{color:#ff7050;}
+.opt-grace .choice-sub{color:var(--gold);}
+.choice-icon{font-size:1.8rem;flex-shrink:0;}
+.choice-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.07) 50%,transparent 60%);transform:translateX(-100%);transition:transform 0.4s;}
+.choice-btn:hover::after{transform:translateX(100%);}
+
+/* ── RESULT ── */
+#choice-result{position:absolute;inset:0;z-index:35;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s;background:rgba(0,0,0,0.68);}
+#choice-result.show{opacity:1;pointer-events:all;}
+.result-card{background:rgba(5,3,1,0.95);border-radius:12px;padding:clamp(20px,4vw,28px) clamp(20px,5vw,34px);max-width:min(430px,90vw);text-align:center;border:1px solid rgba(255,255,255,0.1);}
+.result-icon{font-size:clamp(2.2rem,5vw,3rem);margin-bottom:10px;display:block;}
+.result-title{font-family:'Cinzel',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
+.result-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
+.res-revenge .result-title{color:#ff6040;}
+.res-grace .result-title{color:var(--gold);}
+.result-continue{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
+
+/* ── SPARKS ── */
+.spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
+@keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
+
+#progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#mute-btn{position:absolute;top:12px;right:14px;z-index:25;background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);}
+#mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
+
+/* ── DIALOG ── */
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#060401 0%,#0c0804 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
+#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;}
+.pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
+@keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
+#portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
+@keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
+#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
+.dots{display:flex;gap:5px;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
+#next-btn{font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+#next-btn:active{transform:translateY(0);}
+
+/* ── TITLE ── */
+#title-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at 50% 40%,#0a0500 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:hidden;}
+.title-bg{position:absolute;inset:0;background-image:url('../images/ep07_img3.jpg');background-size:cover;background-position:center;opacity:0.22;filter:blur(2px);animation:kb1 15s ease-in-out infinite alternate;}
+.title-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(10,5,0,0.72) 0%,rgba(0,0,0,0.94) 100%);}
+#title-screen>*{position:relative;z-index:1;}
+.title-emblem{font-size:3.5rem;animation:tFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(200,150,30,0.9));}
+@keyframes tFloat{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-12px) rotate(3deg);}}
+#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,180,30,0.9),0 0 70px rgba(255,140,20,0.4);}
+.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+
+/* ── END ── */
+#end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#080500 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
+.end-bg{position:absolute;inset:0;background-image:url('../images/ep07_img4.jpg');background-size:cover;background-position:center;opacity:0.18;filter:blur(3px);}
+.end-overlay{position:absolute;inset:0;background:rgba(5,3,0,0.84);}
+#end-screen>*{position:relative;z-index:1;}
+#end-screen.show{opacity:1;pointer-events:all;}
+#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,180,30,0.5);}
+#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
+.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(60,45,10,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#replay-btn:hover{background:rgba(100,75,15,0.6);}
+
+/* ── 미디어 쿼리 ── */
+@media (max-width:480px){
+  #portrait-name{font-size:0.48rem;letter-spacing:0.06em;}
+  .choice-icon{font-size:1.3rem;}
+  .choice-main{font-size:0.78rem;}
+  .choice-title{font-size:0.78rem;margin-bottom:16px;}
+  .result-card{padding:18px 18px;}
+  .result-icon{font-size:2.2rem;}
+  .result-title{font-size:0.95rem;}
+  .result-text{font-size:0.78rem;line-height:1.7;}
+  .result-continue{padding:7px 16px;font-size:0.68rem;}
+  #start-btn{padding:11px 32px;font-size:0.88rem;}
+  .title-ep{font-size:0.62rem;}
+  .title-sub{font-size:0.80rem;}
+  #end-screen p{font-size:0.78rem;}
+}
+@media (max-width:360px){
+  #dialog-inner{min-height:100px;}
+  .choice-label{font-size:1.2rem;width:28px;}
+  .dots .dot{width:5px;height:5px;}
+}
+@media (max-height:500px) and (orientation:landscape){
+  #dialog-inner{min-height:80px;max-height:110px;}
+  #portrait-icon{font-size:1.5rem;}
+  #dialog-text{font-size:0.75rem;}
+  .choice-title{font-size:0.72rem;margin-bottom:10px;}
+  .choice-inner{padding:9px 12px;}
+  .result-card{padding:14px 18px;}
+  .title-emblem{font-size:2.4rem;}
+}
+
+/* ── iOS Safe Area ── */
+#game{
+  padding-bottom:env(safe-area-inset-bottom);
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #dialog{
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+<div id="game">
+
+  <!-- TITLE -->
+  <div id="title-screen">
+    <div class="title-bg"></div>
+    <div class="title-overlay"></div>
+    <div class="title-emblem">🗡️</div>
+    <div class="title-ep">EPISODE 7</div>
+    <h1>다윗과 사울</h1>
+    <div class="title-sub">사무엘상 24장</div>
+    <div class="title-verse">"내가 손을 들어 여호와의 기름 부음 받은 자를<br>해하지 아니하리니"<br>— 사무엘상 24:10</div>
+    <button id="start-btn" onclick="startGame()">▶ &nbsp;시작하기</button>
+  </div>
+
+  <!-- SCENE -->
+  <div id="scene">
+    <div class="illus" id="illus1"></div>
+    <div class="illus" id="illus2"></div>
+    <div class="vignette"></div>
+    <div class="ov" id="ov-cave"></div>
+    <div class="ov" id="ov-tension"></div>
+    <div class="ov" id="ov-divine"></div>
+    <div class="ov" id="ov-grace"></div>
+    <div class="ov" id="ov-flash"></div>
+    <div id="light-rays"></div>
+    <div id="chapter-title"></div>
+    <div id="verse-badge"></div>
+
+    <!-- CHOICE -->
+    <div id="choice-overlay">
+      <div class="choice-title">
+        <em>다윗의 결단</em><br>
+        손에는 단검, 눈앞에는 잠든 사울 왕.<br>
+        부하들이 속삭인다. "하나님이 주신 기회입니다!"<br>
+        다윗은 어떻게 할 것인가?
+      </div>
+      <div class="choices">
+        <button class="choice-btn opt-revenge" onclick="choose(false)">
+          <div class="choice-inner">
+            <span class="choice-label">A</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"그동안 나를 괴롭힌 사울 왕.. 복수하겠어!"</span>
+              <span class="choice-sub">분노가 손을 움직인다 — 칼을 들다</span>
+            </div>
+            <span class="choice-icon">⚔️</span>
+          </div>
+        </button>
+        <button class="choice-btn opt-grace" onclick="choose(true)">
+          <div class="choice-inner">
+            <span class="choice-label">B</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"하나님의 뜻을 먼저 구하자"</span>
+              <span class="choice-sub">기름 부음 받은 왕을 건드리지 않는다</span>
+            </div>
+            <span class="choice-icon">🙏</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="choice-result">
+      <div class="result-card" id="result-card">
+        <span class="result-icon" id="result-icon"></span>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-text" id="result-text"></div>
+        <button class="result-continue" id="result-continue-btn">계속 →</button>
+      </div>
+    </div>
+
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+    <button id="mute-btn" onclick="toggleMute()">🔊</button>
+  </div>
+
+  <!-- DIALOG -->
+  <div id="dialog">
+    <div id="dialog-inner">
+      <div id="portrait-wrap">
+        <div class="pglow"></div>
+        <div id="portrait-icon">🗡️</div>
+        <div id="portrait-name">DAVID</div>
+      </div>
+      <div id="dialog-text-wrap">
+        <div id="dialog-text"><span id="dialog-content"></span></div>
+        <div id="dialog-actions">
+          <div class="dots" id="dots"></div>
+          <button id="next-btn" onclick="nextScene()">계속 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div id="end-screen">
+    <div class="end-bg"></div>
+    <div class="end-overlay"></div>
+    <div style="font-size:2.8rem;">🗡️🙏✨</div>
+    <h2>여호와의 기름 부음</h2>
+    <p>다윗은 복수할 기회를 포기했습니다.<br>손에 든 것은 칼이 아닌 옷자락 한 조각.<br>그것으로 충분했습니다.<br><br>"내가 손을 들어 여호와의 기름 부음 받은 자를<br>해하지 아니하리니 그는 여호와의 기름 부음 받은 자임이니라."</p>
+    <div class="end-verse">사무엘상 24:10</div>
+    <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
+  </div>
+</div>
+
+<script>
+const SCENES = [
+  {
+    type:'normal', img:1,
+    icon:'👑', name:"SAUL",
+    chapter:'사울의 추격 — 광야로 몰린 다윗', verse:'삼상 24:1-2',
+    text:'사울이 3,000명의 정예병을 이끌고 다윗을 잡으러 엔게디 광야로 내려왔다. 다윗과 부하들은 동굴 깊숙이 숨어 있었다. 그런데 바로 그 동굴에 사울 왕이 혼자 들어왔다.',
+    btn:'동굴 안으로 →',
+    cave:true, tension:false, divine:false, grace:false, rays:false, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'🗡️', name:"DAVID",
+    chapter:'기회가 왔다 — 잠든 사울', verse:'삼상 24:3-4',
+    text:'사울이 동굴 안에서 잠이 들었다. 부하들이 다윗 곁에서 속삭였다. "보소서, 여호와께서 말씀하신 날이 이것이니이다. 원수를 손에 넘겨주신다 하셨습니다!" 다윗의 손이 서서히 단검 쪽으로 움직였다.',
+    btn:'결단의 순간 →',
+    cave:true, tension:true, divine:false, grace:false, rays:false, flash:false
+  },
+  {
+    type:'choice', img:1,
+    icon:'🗡️', name:"DAVID",
+    chapter:'다윗의 결단', verse:'삼상 24:4-7',
+    text:'단검이 손 안에 있었다. 잠든 사울은 무방비 상태였다. 3년의 도망 생활, 수없이 죽을 뻔했던 순간들이 스쳐갔다. 지금 이 순간, 다윗은 어떤 선택을 할 것인가?',
+    btn:'선택하기',
+    cave:true, tension:true, divine:false, grace:false, rays:false, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'🙏', name:"DAVID",
+    chapter:'옷자락만 — 하나님의 기름 부음을 존중하다', verse:'삼상 24:4-6',
+    text:'다윗은 일어나 사울의 겉옷 자락만 가만히 잘랐다. 그러나 그것조차 마음이 찔렸다. 부하들에게 말했다. "내가 손을 들어 여호와의 기름 부음 받은 내 주를 해하는 것은 여호와께서 금하시는 것이니라."',
+    btn:'동굴 밖으로 →',
+    cave:true, tension:false, divine:true, grace:true, rays:true, flash:false
+  },
+  {
+    type:'normal', img:2,
+    icon:'🗡️', name:"DAVID",
+    chapter:'사울아, 보라 — 동굴 밖의 고백', verse:'삼상 24:8-11',
+    text:'사울이 동굴을 나가자 다윗도 뒤따라 나와 엎드려 절하며 외쳤다. "내 주 왕이여!" 사울이 돌아봤다. 다윗이 잘라낸 옷자락을 들어 보이며 말했다. "이것을 보소서. 내가 왕을 죽일 수도 있었지만, 하지 않았습니다."',
+    btn:'사울의 반응 →',
+    cave:false, tension:false, divine:false, grace:true, rays:false, flash:false
+  },
+  {
+    type:'normal', img:2,
+    icon:'👑', name:"SAUL",
+    chapter:'사울의 눈물 — 왕이 울다', verse:'삼상 24:16-17',
+    text:'다윗이 말을 마치자 사울이 소리를 높여 울었다. "다윗아, 이것이 네 목소리냐?" 그리고 말했다. "너는 나보다 의롭도다. 네가 나를 선대하였거늘 나는 너를 악대하였도다." 3,000명을 이끌고 온 왕이, 한 사람의 옷자락 앞에 눈물을 흘렸다.',
+    btn:'✨ 마치다',
+    cave:false, tension:false, divine:true, grace:true, rays:true, flash:false
+  }
+];
+
+const MOODS = ['cave','tension','tension','divine','grace','holy'];
+
+let cur=-1, muted=false, typeTimer=null;
+
+function setIllus(w){
+  document.getElementById('illus1').style.opacity = w===1?'1':'0';
+  document.getElementById('illus2').style.opacity = w===2?'1':'0';
+}
+function setOverlays(s){
+  document.getElementById('ov-cave').style.opacity     = s.cave    ?'1':'0';
+  document.getElementById('ov-tension').style.opacity  = s.tension ?'1':'0';
+  document.getElementById('ov-divine').style.opacity   = s.divine  ?'1':'0';
+  document.getElementById('ov-grace').style.opacity    = s.grace   ?'1':'0';
+  document.getElementById('light-rays').style.opacity  = s.rays    ?'1':'0';
+}
+function flashEffect(){
+  const el=document.getElementById('ov-flash');
+  el.style.transition='opacity 0s'; el.style.opacity='1';
+  setTimeout(()=>{el.style.transition='opacity 1.4s'; el.style.opacity='0';},90);
+}
+function spawnSparks(n=20,colors){
+  const cols=colors||['#F5C842','#ffe480','#ffffff','#ffd060'];
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const sp=document.createElement('div'); sp.className='spark';
+    const a=Math.random()*Math.PI*2, d=55+Math.random()*130;
+    sp.style.setProperty('--dx',Math.cos(a)*d+'px');
+    sp.style.setProperty('--dy',Math.sin(a)*d+'px');
+    sp.style.width=sp.style.height=(3+Math.random()*6)+'px';
+    sp.style.background=cols[Math.floor(Math.random()*cols.length)];
+    sp.style.left=(10+Math.random()*80)+'vw';
+    sp.style.top=(8+Math.random()*58)+'vh';
+    sp.style.animationDuration=(0.9+Math.random()*0.9)+'s';
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(),1900);
+  },i*40);
+}
+function typeText(text){
+  clearInterval(typeTimer);
+  const el=document.getElementById('dialog-content');
+  el.textContent=''; let i=0;
+  typeTimer=setInterval(()=>{
+    if(i<text.length) el.textContent+=text[i++];
+    else clearInterval(typeTimer);
+  },26);
+}
+function buildDots(){
+  const wrap=document.getElementById('dots'); wrap.innerHTML='';
+  SCENES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i<=cur?' on':'');
+    wrap.appendChild(d);
+  });
+}
+function setChapter(ch,vs){
+  const ct=document.getElementById('chapter-title');
+  ct.classList.remove('show');
+  setTimeout(()=>{ct.textContent=ch; ct.classList.add('show');},300);
+  const vb=document.getElementById('verse-badge');
+  vb.classList.remove('show');
+  if(vs) setTimeout(()=>{vb.textContent=vs; vb.classList.add('show');},600);
+  else vb.classList.remove('show');
+}
+function showChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.add('show');
+  document.getElementById('next-btn').style.visibility='hidden';
+}
+function hideChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+}
+
+function choose(isGrace){
+  hideChoiceOverlay();
+  const resultEl=document.getElementById('choice-result');
+  const card=document.getElementById('result-card');
+  if(isGrace){
+    card.className='result-card res-grace';
+    document.getElementById('result-icon').textContent='✂️';
+    document.getElementById('result-title').textContent='옷자락만 잘랐다';
+    document.getElementById('result-text').textContent='다윗의 손이 멈췄다. 칼끝이 옷자락으로 향했다. 스르륵— 천이 잘렸다. "하나님이 기름 부으신 왕이다. 내 원수라도, 내 손으로 해할 수 없다." 동굴 안에 고요가 흘렀다. 사울은 여전히 잠들어 있었다.';
+    if(!muted) Music.play('divine');
+    spawnSparks(18,['#F5C842','#ffe480','#fff','#c8a020']);
+  } else {
+    card.className='result-card res-revenge';
+    document.getElementById('result-icon').textContent='⚔️';
+    document.getElementById('result-title').textContent='그러나 손이 떨렸다';
+    document.getElementById('result-text').textContent='다윗이 칼을 들었다. 그 순간— 마음 깊은 곳에서 무언가 막아섰다. "이 사람은 여호와의 기름 부음 받은 자다." 손이 떨렸다. 다윗은 결국 칼을 거두고 옷자락만 잘랐다. 복수보다 하나님의 뜻이 더 컸다.';
+    if(!muted) Music.play('tension');
+    spawnSparks(14,['#ff8040','#ffaa20','#F5C842','#ffffff']);
+    setTimeout(flashEffect,300);
+  }
+  const oldBtn=document.getElementById('result-continue-btn');
+  const newBtn=oldBtn.cloneNode(true);
+  oldBtn.parentNode.replaceChild(newBtn,oldBtn);
+  newBtn.addEventListener('click',()=>{
+    resultEl.classList.remove('show');
+    cur++; applyScene(cur);
+  });
+  resultEl.classList.add('show');
+}
+
+function applyScene(idx){
+  const s=SCENES[idx];
+  setIllus(s.img);
+  setOverlays(s);
+  setChapter(s.chapter,s.verse);
+  if(s.flash) setTimeout(flashEffect,400);
+  document.getElementById('portrait-icon').textContent=s.icon;
+  document.getElementById('portrait-name').textContent=s.name;
+  document.getElementById('next-btn').textContent=s.btn;
+  typeText(s.text);
+  buildDots();
+  document.getElementById('progress-fill').style.width=((idx+1)/SCENES.length*100)+'%';
+  const mood=MOODS[idx]; if(!muted&&mood) Music.play(mood);
+  if(s.type==='choice') setTimeout(showChoiceOverlay,1900);
+}
+function nextScene(){
+  cur++;
+  if(cur>=SCENES.length){ showEnd(); return; }
+  applyScene(cur);
+}
+function showEnd(){
+  document.getElementById('end-screen').classList.add('show');
+  if(!muted) Music.play('holy');
+  spawnSparks(40,['#F5C842','#ffe480','#ffffff','#c8a020']);
+  setTimeout(()=>spawnSparks(25,['#fff','#ffe480','#F5C842']),900);
+}
+function replayGame(){
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('choice-result').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+  Music.stop();
+  setTimeout(()=>{ cur=0; applyScene(0); },1400);
+}
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  Music.init(); cur=0; applyScene(0);
+}
+function toggleMute(){
+  muted=!muted;
+  document.getElementById('mute-btn').textContent=muted?'🔇':'🔊';
+  if(muted) Music.stop();
+  else{ Music.init(); const m=MOODS[cur]; if(m) Music.play(m); }
+}
+
+/* ════════════════════════════════════
+   MUSIC ENGINE
+   moods: cave / tension / divine / grace / holy
+════════════════════════════════════ */
+const Music=(()=>{
+  let ctx,masterGain,currentMood=null;
+  let oscList=[],lfoList=[],intervalList=[];
+
+  function init(){
+    if(ctx) return;
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=ctx.createGain();
+    masterGain.gain.setValueAtTime(0,ctx.currentTime);
+    masterGain.connect(ctx.destination);
+  }
+  function stopAll(fade=1.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value,now);
+    masterGain.gain.linearRampToValueAtTime(0,now+fade);
+    intervalList.forEach(id=>clearInterval(id)); intervalList=[];
+    setTimeout(()=>{
+      oscList.forEach(o=>{try{o.stop();}catch(e){}}); oscList=[];
+      lfoList.forEach(o=>{try{o.stop();}catch(e){}}); lfoList=[];
+    },(fade+0.1)*1000);
+  }
+  function fadeIn(vol=0.32,dur=2.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(0,now);
+    masterGain.gain.linearRampToValueAtTime(vol,now+dur);
+  }
+  function makeOsc(type,freq,gainVal){
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type; o.frequency.value=freq; g.gain.value=gainVal;
+    o.connect(g); g.connect(masterGain); o.start();
+    oscList.push(o); return {osc:o,gain:g};
+  }
+  function makeLFO(target,rate,depth,base){
+    const lfo=ctx.createOscillator(),lg=ctx.createGain();
+    lfo.frequency.value=rate; lg.gain.value=depth;
+    lfo.connect(lg); lg.connect(target); target.value=base;
+    lfo.start(); lfoList.push(lfo);
+  }
+  function makeReverb(sec=2,decay=2){
+    const conv=ctx.createConvolver(),rate=ctx.sampleRate,len=rate*sec;
+    const buf=ctx.createBuffer(2,len,rate);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}
+    conv.buffer=buf; return conv;
+  }
+
+  /* CAVE — 동굴, 긴장된 어둠 속 정적 */
+  function playCave(){
+    const rev=makeReverb(3.5,2.5); rev.connect(masterGain);
+    const low=makeOsc('sine',55,0.12); makeLFO(low.gain.gain,0.08,0.05,0.12);
+    const drone=makeOsc('sine',82.41,0.08); makeLFO(drone.osc.frequency,0.12,1.5,82.41);
+    // 동굴 에코 효과
+    const drip=[220,246.94,220,196];
+    let di=0;
+    function pd(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=drip[di%drip.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.06,ctx.currentTime+0.05);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1.2);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.3);
+      oscList.push(o); di++;
+    }
+    pd(); intervalList.push(setInterval(pd,2800));
+    fadeIn(0.28,3.5);
+  }
+
+  /* TENSION — 긴박감, 결단의 순간 */
+  function playTension(){
+    const rev=makeReverb(1.5,3.2); rev.connect(masterGain);
+    const tense=[164.81,174.61,164.81,155.56,164.81,174.61,185,174.61];
+    let ti=0;
+    function pt(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='triangle'; o.frequency.value=tense[ti%tense.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.11,ctx.currentTime+0.08);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.55);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.6);
+      oscList.push(o); ti++;
+    }
+    pt(); intervalList.push(setInterval(pt,520));
+    const bass=makeOsc('sine',82,0.10); makeLFO(bass.gain.gain,4.5,0.06,0.10);
+    fadeIn(0.34,2);
+  }
+
+  /* DIVINE — 신성한 순간, 결단 후 고요 */
+  function playDivine(){
+    const rev=makeReverb(4.0,1.5); rev.connect(masterGain);
+    const chords=[[174.61,261.63,349.23,523.25],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let ci=0;
+    function pc(){
+      chords[ci%chords.length].forEach((freq,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=i<2?'sine':'triangle'; o.frequency.value=freq;
+        o.detune.value=(Math.random()-0.5)*5;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.10,ctx.currentTime+0.9);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.2);
+        o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+3.3);
+        oscList.push(o);
+      }); ci++;
+    }
+    pc(); intervalList.push(setInterval(pc,3200));
+    makeOsc('sine',87.31,0.11); fadeIn(0.40,3);
+  }
+
+  /* GRACE — 은혜, 화해의 따뜻한 선율 */
+  function playGrace(){
+    const rev=makeReverb(3.8,1.6); rev.connect(masterGain);
+    const mel=[261.63,293.66,329.63,392,349.23,329.63,261.63,293.66,
+               329.63,392,440,392,349.23,329.63,293.66,261.63];
+    let mi=0;
+    function pm(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=mel[mi%mel.length];
+      o.detune.value=(Math.random()-0.5)*4;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.13,ctx.currentTime+0.28);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.95);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.0);
+      oscList.push(o); mi++;
+    }
+    pm(); intervalList.push(setInterval(pm,880));
+    [[130.81,0.09],[164.81,0.07]].forEach(([f,v])=>{
+      const p=makeOsc('sine',f,v); makeLFO(p.gain.gain,0.20,0.04,v);
+    });
+    fadeIn(0.38,3);
+  }
+
+  /* HOLY — 엔딩 합창 */
+  function playHoly(){
+    const rev=makeReverb(5,1.4); rev.connect(masterGain);
+    const rev2=makeReverb(3,2.0); rev2.connect(masterGain);
+    const sop=[329.63,369.99,415.30,493.88,523.25,493.88,554.37,523.25,493.88,415.30,369.99,440,493.88,523.25,587.33,523.25];
+    const alt=[261.63,293.66,329.63,392,415.30,392,440,415.30,392,329.63,293.66,349.23,392,415.30,493.88,415.30];
+    let si=0,ai=0;
+    function pS(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=sop[si%sop.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.15,ctx.currentTime+0.3);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); si++;
+    }
+    function pA(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=alt[ai%alt.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.11,ctx.currentTime+0.4);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); ai++;
+    }
+    const org=[[164.81,246.94,329.63,493.88],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let oi=0;
+    function pO(){
+      org[oi%org.length].forEach((freq,hi)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=hi<2?'sine':'triangle'; o.frequency.value=freq;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.058,ctx.currentTime+1.0);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.9);
+        o.connect(g); g.connect(rev2); o.start(); o.stop(ctx.currentTime+4.0);
+        oscList.push(o);
+      }); oi++;
+    }
+    [[164.81,0.10],[196,0.08],[246.94,0.06]].forEach(([f,v])=>{
+      const p=makeOsc('sine',f,v); makeLFO(p.gain.gain,0.18,0.03,v);
+    });
+    pS();pA();pO();
+    intervalList.push(setInterval(()=>{pS();pA();},1100));
+    intervalList.push(setInterval(pO,4000));
+    fadeIn(0.44,4);
+  }
+
+  const MAP={cave:playCave,tension:playTension,divine:playDivine,grace:playGrace,holy:playHoly};
+
+  function play(mood){
+    if(!ctx) return;
+    if(mood===currentMood) return;
+    currentMood=mood;
+    stopAll(1.2);
+    setTimeout(()=>{if(currentMood!==mood)return; MAP[mood]?.();},1300);
+  }
+  function stop(){stopAll(2);currentMood=null;}
+  return {init,play,stop};
+})();
+</script>
+</body>
+</html>

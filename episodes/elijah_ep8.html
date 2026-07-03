@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>엘리야와 로뎀나무 — 열왕기상 19장</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#F5C842;--gold-dark:#c89010;}
+html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+#game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
+
+/* ── SCENE ── */
+#scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
+.illus{position:absolute;inset:0;background-size:cover;background-position:center top;transition:opacity 1.8s ease;will-change:transform,opacity;}
+#illus1{background-image:url('../images/ep08_img1.jpg');opacity:1;animation:kb1 18s ease-in-out infinite alternate;}
+#illus2{background-image:url('../images/ep08_img2.jpg');opacity:0;animation:kb2 18s ease-in-out infinite alternate;}
+@keyframes kb1{from{transform:scale(1.05) translate(0,0);}to{transform:scale(1.10) translate(-6px,-5px);}}
+@keyframes kb2{from{transform:scale(1.07) translate(3px,0);}to{transform:scale(1.04) translate(-5px,-7px);}}
+
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center 45%,transparent 28%,rgba(0,0,0,0.68) 100%);z-index:5;pointer-events:none;}
+
+/* ── OVERLAYS ── */
+.ov{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity 1.5s;}
+#ov-weary{background:rgba(10,6,2,0.50);opacity:0;}
+#ov-warm{background:radial-gradient(ellipse at 70% 60%,rgba(255,200,80,0.30) 0%,transparent 60%);opacity:0;}
+#ov-divine{background:radial-gradient(ellipse at 50% 5%,rgba(255,240,160,0.45) 0%,transparent 65%);opacity:0;}
+#ov-rest{background:radial-gradient(ellipse at 50% 50%,rgba(180,220,255,0.18) 0%,transparent 65%);opacity:0;}
+#ov-flash{background:rgba(255,240,180,0.70);opacity:0;}
+
+#light-rays{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,220,120,0.22) 8deg,transparent 16deg,transparent 24deg,rgba(255,210,80,0.16) 32deg,transparent 40deg,transparent 48deg,rgba(255,230,100,0.24) 56deg,transparent 64deg);animation:rayRot 12s linear infinite;}
+@keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
+
+#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
+#chapter-title.show{opacity:1;}
+#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
+#verse-badge.show{opacity:1;}
+
+/* ── CHOICE ── */
+#choice-overlay{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.7s;}
+#choice-overlay.show{opacity:1;pointer-events:all;}
+.choice-title{font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
+.choice-title em{color:var(--gold);font-style:normal;}
+.choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
+.choice-btn{position:relative;overflow:hidden;border:none;cursor:pointer;padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;}
+.choice-btn:hover{transform:translateY(-3px) scale(1.01);}
+.choice-btn:active{transform:translateY(0) scale(0.99);}
+.opt-quit{background:linear-gradient(135deg,#0e0800 0%,#060400 100%);box-shadow:0 4px 20px rgba(100,80,30,0.35);border:1px solid rgba(120,90,30,0.35);}
+.opt-quit:hover{box-shadow:0 6px 28px rgba(160,120,40,0.5);border-color:rgba(180,140,50,0.6);}
+.opt-rest{background:linear-gradient(135deg,#000a14 0%,#00060e 100%);box-shadow:0 4px 20px rgba(80,160,220,0.35);border:1px solid rgba(100,170,220,0.32);}
+.opt-rest:hover{box-shadow:0 6px 28px rgba(100,180,255,0.55);border-color:rgba(130,200,255,0.65);}
+.choice-inner{display:flex;align-items:center;gap:14px;padding:clamp(12px,2.5vw,16px) clamp(14px,3vw,20px);}
+.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.opt-quit .choice-label{color:#c8a040;text-shadow:0 0 10px rgba(200,160,60,0.8);}
+.opt-rest .choice-label{color:#80c8ff;text-shadow:0 0 12px rgba(120,190,255,0.8);}
+.choice-text-wrap{flex:1;}
+.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.opt-quit .choice-main{color:#fff0d0;}
+.opt-rest .choice-main{color:#d0eeff;}
+.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.opt-quit .choice-sub{color:#c8a040;}
+.opt-rest .choice-sub{color:#80c8ff;}
+.choice-icon{font-size:1.8rem;flex-shrink:0;}
+.choice-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.07) 50%,transparent 60%);transform:translateX(-100%);transition:transform 0.4s;}
+.choice-btn:hover::after{transform:translateX(100%);}
+
+/* ── RESULT ── */
+#choice-result{position:absolute;inset:0;z-index:35;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s;background:rgba(0,0,0,0.68);}
+#choice-result.show{opacity:1;pointer-events:all;}
+.result-card{background:rgba(4,3,1,0.95);border-radius:12px;padding:clamp(20px,4vw,28px) clamp(20px,5vw,34px);max-width:min(430px,90vw);text-align:center;border:1px solid rgba(255,255,255,0.10);}
+.result-icon{font-size:clamp(2.2rem,5vw,3rem);margin-bottom:10px;display:block;}
+.result-title{font-family:'Cinzel',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
+.result-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
+.res-quit .result-title{color:#c8a040;}
+.res-rest .result-title{color:#80c8ff;}
+.result-continue{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
+
+/* ── SPARKS ── */
+.spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
+@keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
+
+#progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#mute-btn{position:absolute;top:12px;right:14px;z-index:25;background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);}
+#mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
+
+/* ── DIALOG ── */
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#060401 0%,#0a0702 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
+#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;}
+.pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
+@keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
+#portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
+@keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
+#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
+.dots{display:flex;gap:5px;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
+#next-btn{font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+#next-btn:active{transform:translateY(0);}
+
+/* ── TITLE ── */
+#title-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at 50% 40%,#080500 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:hidden;}
+.title-bg{position:absolute;inset:0;background-image:url('../images/ep08_img3.jpg');background-size:cover;background-position:center;opacity:0.22;filter:blur(2px);animation:kb1 15s ease-in-out infinite alternate;}
+.title-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(8,5,0,0.72) 0%,rgba(0,0,0,0.94) 100%);}
+#title-screen>*{position:relative;z-index:1;}
+.title-emblem{font-size:3.5rem;animation:tFloat 3.5s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(255,200,80,0.85));}
+@keyframes tFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,190,40,0.9),0 0 70px rgba(255,150,20,0.4);}
+.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+
+/* ── END ── */
+#end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#060400 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
+.end-bg{position:absolute;inset:0;background-image:url('../images/ep08_img4.jpg');background-size:cover;background-position:center;opacity:0.18;filter:blur(3px);}
+.end-overlay{position:absolute;inset:0;background:rgba(4,3,0,0.84);}
+#end-screen>*{position:relative;z-index:1;}
+#end-screen.show{opacity:1;pointer-events:all;}
+#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,180,30,0.5);}
+#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
+.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(55,40,8,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#replay-btn:hover{background:rgba(90,65,12,0.6);}
+
+/* ── 미디어 쿼리 ── */
+@media (max-width:480px){
+  #portrait-name{font-size:0.48rem;letter-spacing:0.06em;}
+  .choice-icon{font-size:1.3rem;}
+  .choice-main{font-size:0.78rem;}
+  .choice-title{font-size:0.78rem;margin-bottom:16px;}
+  .result-card{padding:18px 18px;}
+  .result-icon{font-size:2.2rem;}
+  .result-title{font-size:0.95rem;}
+  .result-text{font-size:0.78rem;line-height:1.7;}
+  .result-continue{padding:7px 16px;font-size:0.68rem;}
+  #start-btn{padding:11px 32px;font-size:0.88rem;}
+  .title-ep,.title-sub{font-size:0.62rem;}
+  #end-screen p{font-size:0.78rem;}
+}
+@media (max-width:360px){
+  #dialog-inner{min-height:100px;}
+  .choice-label{font-size:1.2rem;width:28px;}
+  .dots .dot{width:5px;height:5px;}
+}
+@media (max-height:500px) and (orientation:landscape){
+  #dialog-inner{min-height:80px;max-height:110px;}
+  #portrait-icon{font-size:1.5rem;}
+  #dialog-text{font-size:0.75rem;}
+  .choice-title{font-size:0.72rem;margin-bottom:10px;}
+  .choice-inner{padding:9px 12px;}
+  .result-card{padding:14px 18px;}
+  .title-emblem{font-size:2.4rem;}
+}
+
+/* ── iOS Safe Area ── */
+#game{
+  padding-bottom:env(safe-area-inset-bottom);
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #dialog{
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+<div id="game">
+
+  <!-- TITLE -->
+  <div id="title-screen">
+    <div class="title-bg"></div>
+    <div class="title-overlay"></div>
+    <div class="title-emblem">🍞</div>
+    <div class="title-ep">EPISODE 8</div>
+    <h1>엘리야와 로뎀나무</h1>
+    <div class="title-sub">열왕기상 19장</div>
+    <div class="title-verse">"일어나 먹으라, 네가 갈 길이 멀도다"<br>— 열왕기상 19:7</div>
+    <button id="start-btn" onclick="startGame()">▶ &nbsp;시작하기</button>
+  </div>
+
+  <!-- SCENE -->
+  <div id="scene">
+    <div class="illus" id="illus1"></div>
+    <div class="illus" id="illus2"></div>
+    <div class="vignette"></div>
+    <div class="ov" id="ov-weary"></div>
+    <div class="ov" id="ov-warm"></div>
+    <div class="ov" id="ov-divine"></div>
+    <div class="ov" id="ov-rest"></div>
+    <div class="ov" id="ov-flash"></div>
+    <div id="light-rays"></div>
+    <div id="chapter-title"></div>
+    <div id="verse-badge"></div>
+
+    <!-- CHOICE -->
+    <div id="choice-overlay">
+      <div class="choice-title">
+        <em>엘리야의 마음</em><br>
+        로뎀나무 아래, 몸도 마음도 바닥났다.<br>
+        하나님의 천사가 가만히 곁에 다가왔다.<br>
+        지금 이 순간, 엘리야는 어떤 마음인가?
+      </div>
+      <div class="choices">
+        <button class="choice-btn opt-quit" onclick="choose(false)">
+          <div class="choice-inner">
+            <span class="choice-label">A</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"너무 지쳤어. 모두 다 내려놓을래"</span>
+              <span class="choice-sub">탈진과 절망 — "이젠 충분하오니 목숨을 거두소서"</span>
+            </div>
+            <span class="choice-icon">😞</span>
+          </div>
+        </button>
+        <button class="choice-btn opt-rest" onclick="choose(true)">
+          <div class="choice-inner">
+            <span class="choice-label">B</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"하나님 품에서 잠시 쉬며 생각해 보자"</span>
+              <span class="choice-sub">쉼을 받아들인다 — 천사의 손길을 허락하다</span>
+            </div>
+            <span class="choice-icon">🌿</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="choice-result">
+      <div class="result-card" id="result-card">
+        <span class="result-icon" id="result-icon"></span>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-text" id="result-text"></div>
+        <button class="result-continue" id="result-continue-btn">계속 →</button>
+      </div>
+    </div>
+
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+    <button id="mute-btn" onclick="toggleMute()">🔊</button>
+  </div>
+
+  <!-- DIALOG -->
+  <div id="dialog">
+    <div id="dialog-inner">
+      <div id="portrait-wrap">
+        <div class="pglow"></div>
+        <div id="portrait-icon">😔</div>
+        <div id="portrait-name">ELIJAH</div>
+      </div>
+      <div id="dialog-text-wrap">
+        <div id="dialog-text"><span id="dialog-content"></span></div>
+        <div id="dialog-actions">
+          <div class="dots" id="dots"></div>
+          <button id="next-btn" onclick="nextScene()">계속 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div id="end-screen">
+    <div class="end-bg"></div>
+    <div class="end-overlay"></div>
+    <div style="font-size:2.8rem;">🍞💧✨</div>
+    <h2>일어나 먹으라</h2>
+    <p>지쳐 쓰러진 그 자리에서<br>하나님은 책망하지 않으셨습니다.<br>천사를 보내 먹이시고 재우시고<br>다시 일으켜 세우셨습니다.<br><br>"일어나 먹으라,<br>네가 갈 길이 멀도다."</p>
+    <div class="end-verse">열왕기상 19:7</div>
+    <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
+  </div>
+</div>
+
+<script>
+const SCENES = [
+  {
+    type:'normal', img:1,
+    icon:'⚔️', name:"NARRATOR",
+    chapter:'갈멜산 이후 — 이세벨의 위협', verse:'왕상 19:1-3',
+    text:'갈멜산에서 바알 선지자 450명과 맞서 싸운 엘리야. 하나님의 불이 하늘에서 내려와 제단을 불살랐다. 그러나 이세벨 왕비가 전령을 보냈다. "내일 이맘때까지 네 목숨을 저 선지자들처럼 만들겠다." 엘리야는 광야로 도망쳤다.',
+    btn:'광야로 →',
+    weary:false, warm:false, divine:false, rest:false, rays:false, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'😔', name:"ELIJAH",
+    chapter:'로뎀나무 아래 — 탈진한 엘리야', verse:'왕상 19:4',
+    text:'하루 길을 광야로 들어가 로뎀나무 아래 앉아 자기가 죽기를 원하여 말하되, "여호와여 이미 충분하오니 내 생명을 거두소서. 나는 내 조상들보다 낫지 못하니이다." 그리고 로뎀나무 아래 누워 잠이 들었다.',
+    btn:'천사가 오다 →',
+    weary:true, warm:false, divine:false, rest:false, rays:false, flash:false
+  },
+  {
+    type:'choice', img:1,
+    icon:'😔', name:"ELIJAH",
+    chapter:'엘리야의 마음', verse:'왕상 19:4-5',
+    text:'로뎀나무 그늘 아래, 뜨거운 광야 바람이 불었다. 눈을 감으니 갈멜산의 불꽃도, 이세벨의 협박도, 3년의 가뭄도 한꺼번에 밀려왔다. 그 순간 천사가 가만히 다가왔다. 엘리야의 마음은 지금 어디에 있는가?',
+    btn:'선택하기',
+    weary:true, warm:false, divine:false, rest:false, rays:false, flash:false
+  },
+  {
+    type:'normal', img:2,
+    icon:'✨', name:"ANGEL",
+    chapter:'천사의 손길 — 일어나 먹으라', verse:'왕상 19:5-6',
+    text:'천사가 엘리야를 어루만지며 말했다. "일어나 먹으라." 보니 머리맡에 숯불에 구운 떡 한 개와 물 한 병이 있었다. 엘리야가 먹고 마시고 다시 누웠다. 하나님은 지친 종에게 먼저 음식을 주셨다. 질문도, 책망도 없이.',
+    btn:'두 번째 손길 →',
+    weary:false, warm:true, divine:true, rest:true, rays:true, flash:false
+  },
+  {
+    type:'normal', img:2,
+    icon:'✨', name:"ANGEL",
+    chapter:'두 번째 — 네가 갈 길이 멀도다', verse:'왕상 19:7',
+    text:'천사가 다시 와서 어루만지며 말했다. "일어나 먹으라, 네가 갈 길이 멀도다." 엘리야가 일어나 먹고 마셨다. 그 음식의 힘을 힘입어 사십 일 사십 야를 걸어 하나님의 산 호렙에 이르렀다. 쉼은 포기가 아니었다. 다음 걸음을 위한 준비였다.',
+    btn:'호렙산으로 →',
+    weary:false, warm:true, divine:true, rest:true, rays:true, flash:false
+  },
+  {
+    type:'normal', img:2,
+    icon:'✨', name:"GOD",
+    chapter:'호렙산 — 하나님의 세미한 소리', verse:'왕상 19:11-12',
+    text:'호렙산 굴에서 하나님이 말씀하셨다. "너는 나와 함께 산에 서라." 크고 강한 바람이 산을 가르고, 지진이 일고, 불이 왔다. 그러나 하나님은 그 안에 계시지 않았다. 불 후에 — 세미한 소리. 고요하고 작은 그 소리 안에 하나님이 계셨다.',
+    btn:'✨ 마치다',
+    weary:false, warm:false, divine:true, rest:true, rays:true, flash:false
+  }
+];
+
+const MOODS = ['weary','weary','weary','angel','angel','holy'];
+
+let cur=-1, muted=false, typeTimer=null;
+
+function setIllus(w){
+  document.getElementById('illus1').style.opacity = w===1?'1':'0';
+  document.getElementById('illus2').style.opacity = w===2?'1':'0';
+}
+function setOverlays(s){
+  document.getElementById('ov-weary').style.opacity  = s.weary ?'1':'0';
+  document.getElementById('ov-warm').style.opacity   = s.warm  ?'1':'0';
+  document.getElementById('ov-divine').style.opacity = s.divine?'1':'0';
+  document.getElementById('ov-rest').style.opacity   = s.rest  ?'1':'0';
+  document.getElementById('light-rays').style.opacity= s.rays  ?'1':'0';
+}
+function flashEffect(){
+  const el=document.getElementById('ov-flash');
+  el.style.transition='opacity 0s'; el.style.opacity='1';
+  setTimeout(()=>{el.style.transition='opacity 1.6s'; el.style.opacity='0';},80);
+}
+function spawnSparks(n=20, colors){
+  const cols=colors||['#F5C842','#ffe480','#ffffff','#80d8ff'];
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const sp=document.createElement('div'); sp.className='spark';
+    const a=Math.random()*Math.PI*2, d=50+Math.random()*120;
+    sp.style.setProperty('--dx',Math.cos(a)*d+'px');
+    sp.style.setProperty('--dy',Math.sin(a)*d+'px');
+    sp.style.width=sp.style.height=(3+Math.random()*5)+'px';
+    sp.style.background=cols[Math.floor(Math.random()*cols.length)];
+    sp.style.left=(10+Math.random()*80)+'vw';
+    sp.style.top=(8+Math.random()*58)+'vh';
+    sp.style.animationDuration=(0.9+Math.random()*1.0)+'s';
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(),2000);
+  },i*42);
+}
+function typeText(text){
+  clearInterval(typeTimer);
+  const el=document.getElementById('dialog-content');
+  el.textContent=''; let i=0;
+  typeTimer=setInterval(()=>{
+    if(i<text.length) el.textContent+=text[i++];
+    else clearInterval(typeTimer);
+  },26);
+}
+function buildDots(){
+  const wrap=document.getElementById('dots'); wrap.innerHTML='';
+  SCENES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i<=cur?' on':'');
+    wrap.appendChild(d);
+  });
+}
+function setChapter(ch,vs){
+  const ct=document.getElementById('chapter-title');
+  ct.classList.remove('show');
+  setTimeout(()=>{ct.textContent=ch; ct.classList.add('show');},300);
+  const vb=document.getElementById('verse-badge');
+  vb.classList.remove('show');
+  if(vs) setTimeout(()=>{vb.textContent=vs; vb.classList.add('show');},600);
+  else vb.classList.remove('show');
+}
+function showChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.add('show');
+  document.getElementById('next-btn').style.visibility='hidden';
+}
+function hideChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+}
+
+function choose(isRest){
+  hideChoiceOverlay();
+  const resultEl=document.getElementById('choice-result');
+  const card=document.getElementById('result-card');
+  if(isRest){
+    card.className='result-card res-rest';
+    document.getElementById('result-icon').textContent='🌿';
+    document.getElementById('result-title').textContent='쉼을 받아들이다';
+    document.getElementById('result-text').textContent='엘리야는 눈을 감았다. "지금은 모르겠다. 그냥 이 자리에 있자." 거부하지 않았다. 도망치지도 않았다. 천사의 손길이 어깨에 닿았을 때— 따뜻했다. 광야의 냄새, 숯불 향, 갓 구운 떡 내음. 하나님은 설교 대신 밥을 주셨다.';
+    if(!muted) Music.play('angel');
+    spawnSparks(20,['#ffe4a0','#ffffff','#80d8ff','#F5C842']);
+  } else {
+    card.className='result-card res-quit';
+    document.getElementById('result-icon').textContent='😞';
+    document.getElementById('result-title').textContent='하나님은 그래도 오셨다';
+    document.getElementById('result-text').textContent='"충분하오니 거두소서." 엘리야는 눈을 감았다. 그런데 하나님은 그 기도를 들으시고— 천사를 보내셨다. 내려놓겠다는 그 자리에, 하나님은 먼저 다가오셨다. 포기하는 종을 책망하지 않으시고, 먹이셨다.';
+    if(!muted) Music.play('angel');
+    spawnSparks(16,['#c8a040','#ffe4a0','#ffffff','#F5C842']);
+  }
+  const oldBtn=document.getElementById('result-continue-btn');
+  const newBtn=oldBtn.cloneNode(true);
+  oldBtn.parentNode.replaceChild(newBtn,oldBtn);
+  newBtn.addEventListener('click',()=>{
+    resultEl.classList.remove('show');
+    cur++; applyScene(cur);
+  });
+  resultEl.classList.add('show');
+}
+
+function applyScene(idx){
+  const s=SCENES[idx];
+  setIllus(s.img);
+  setOverlays(s);
+  setChapter(s.chapter,s.verse);
+  if(s.flash) setTimeout(flashEffect,400);
+  document.getElementById('portrait-icon').textContent=s.icon;
+  document.getElementById('portrait-name').textContent=s.name;
+  document.getElementById('next-btn').textContent=s.btn;
+  typeText(s.text);
+  buildDots();
+  document.getElementById('progress-fill').style.width=((idx+1)/SCENES.length*100)+'%';
+  const mood=MOODS[idx]; if(!muted&&mood) Music.play(mood);
+  if(s.type==='choice') setTimeout(showChoiceOverlay,1900);
+}
+function nextScene(){
+  cur++;
+  if(cur>=SCENES.length){ showEnd(); return; }
+  applyScene(cur);
+}
+function showEnd(){
+  document.getElementById('end-screen').classList.add('show');
+  if(!muted) Music.play('holy');
+  spawnSparks(38,['#F5C842','#ffe480','#ffffff','#80d8ff']);
+  setTimeout(()=>spawnSparks(22,['#fff','#ffe4a0','#F5C842']),1000);
+}
+function replayGame(){
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('choice-result').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+  Music.stop();
+  setTimeout(()=>{ cur=0; applyScene(0); },1400);
+}
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  Music.init(); cur=0; applyScene(0);
+}
+function toggleMute(){
+  muted=!muted;
+  document.getElementById('mute-btn').textContent=muted?'🔇':'🔊';
+  if(muted) Music.stop();
+  else{ Music.init(); const m=MOODS[cur]; if(m) Music.play(m); }
+}
+
+/* ════════════════════════════════════
+   MUSIC ENGINE
+   moods: weary / angel / holy
+════════════════════════════════════ */
+const Music=(()=>{
+  let ctx,masterGain,currentMood=null;
+  let oscList=[],lfoList=[],intervalList=[];
+
+  function init(){
+    if(ctx) return;
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=ctx.createGain();
+    masterGain.gain.setValueAtTime(0,ctx.currentTime);
+    masterGain.connect(ctx.destination);
+  }
+  function stopAll(fade=1.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value,now);
+    masterGain.gain.linearRampToValueAtTime(0,now+fade);
+    intervalList.forEach(id=>clearInterval(id)); intervalList=[];
+    setTimeout(()=>{
+      oscList.forEach(o=>{try{o.stop();}catch(e){}}); oscList=[];
+      lfoList.forEach(o=>{try{o.stop();}catch(e){}}); lfoList=[];
+    },(fade+0.1)*1000);
+  }
+  function fadeIn(vol=0.32,dur=2.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(0,now);
+    masterGain.gain.linearRampToValueAtTime(vol,now+dur);
+  }
+  function makeOsc(type,freq,gainVal){
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type; o.frequency.value=freq; g.gain.value=gainVal;
+    o.connect(g); g.connect(masterGain); o.start();
+    oscList.push(o); return {osc:o,gain:g};
+  }
+  function makeLFO(target,rate,depth,base){
+    const lfo=ctx.createOscillator(),lg=ctx.createGain();
+    lfo.frequency.value=rate; lg.gain.value=depth;
+    lfo.connect(lg); lg.connect(target); target.value=base;
+    lfo.start(); lfoList.push(lfo);
+  }
+  function makeReverb(sec=2,decay=2){
+    const conv=ctx.createConvolver(),rate=ctx.sampleRate,len=rate*sec;
+    const buf=ctx.createBuffer(2,len,rate);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}
+    conv.buffer=buf; return conv;
+  }
+
+  /* WEARY — 광야의 탈진, 느리고 무거운 드론 */
+  function playWeary(){
+    const rev=makeReverb(4.5,2.2); rev.connect(masterGain);
+    const low=makeOsc('sine',49,0.14); makeLFO(low.gain.gain,0.06,0.05,0.14);
+    const mid=makeOsc('sine',73.42,0.08); makeLFO(mid.osc.frequency,0.09,1.2,73.42);
+    // 광야 바람 소리 (노이즈 느낌)
+    const wind=[130.81,123.47,116.54,110,116.54,123.47];
+    let wi=0;
+    function pw(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=wind[wi%wind.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.05,ctx.currentTime+0.5);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+2.5);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+2.6);
+      oscList.push(o); wi++;
+    }
+    pw(); intervalList.push(setInterval(pw,3500));
+    fadeIn(0.26,4.0);
+  }
+
+  /* ANGEL — 천사의 방문, 따뜻하고 밝은 선율 */
+  function playAngel(){
+    const rev=makeReverb(4.2,1.4); rev.connect(masterGain);
+    // 부드럽고 따뜻한 멜로디 — "일어나 먹으라"
+    const mel=[329.63,369.99,415.30,440,493.88,440,415.30,369.99,
+               329.63,349.23,392,440,415.30,369.99,329.63,293.66];
+    let mi=0;
+    function pm(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=mel[mi%mel.length];
+      o.detune.value=(Math.random()-0.5)*4;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.13,ctx.currentTime+0.35);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); mi++;
+    }
+    pm(); intervalList.push(setInterval(pm,950));
+    // 따뜻한 패드
+    [[164.81,0.09],[196,0.07],[246.94,0.05]].forEach(([f,v])=>{
+      const p=makeOsc('sine',f,v); makeLFO(p.gain.gain,0.15,0.03,v);
+    });
+    // shimmer 고음
+    const shim=makeOsc('sine',987.77,0.04); makeLFO(shim.gain.gain,3.2,0.02,0.04);
+    fadeIn(0.36,3.2);
+  }
+
+  /* HOLY — 엔딩 합창 */
+  function playHoly(){
+    const rev=makeReverb(5,1.4); rev.connect(masterGain);
+    const rev2=makeReverb(3,2.0); rev2.connect(masterGain);
+    const sop=[329.63,369.99,415.30,493.88,523.25,493.88,554.37,523.25,493.88,415.30,369.99,440,493.88,523.25,587.33,523.25];
+    const alt=[261.63,293.66,329.63,392,415.30,392,440,415.30,392,329.63,293.66,349.23,392,415.30,493.88,415.30];
+    let si=0,ai=0;
+    function pS(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=sop[si%sop.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.15,ctx.currentTime+0.3);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); si++;
+    }
+    function pA(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=alt[ai%alt.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.10,ctx.currentTime+0.4);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); ai++;
+    }
+    const org=[[164.81,246.94,329.63,493.88],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let oi=0;
+    function pO(){
+      org[oi%org.length].forEach((freq,hi)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=hi<2?'sine':'triangle'; o.frequency.value=freq;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.055,ctx.currentTime+1.0);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.9);
+        o.connect(g); g.connect(rev2); o.start(); o.stop(ctx.currentTime+4.0);
+        oscList.push(o);
+      }); oi++;
+    }
+    [[164.81,0.10],[196,0.08],[246.94,0.06]].forEach(([f,v])=>{
+      const p=makeOsc('sine',f,v); makeLFO(p.gain.gain,0.18,0.03,v);
+    });
+    pS();pA();pO();
+    intervalList.push(setInterval(()=>{pS();pA();},1100));
+    intervalList.push(setInterval(pO,4000));
+    fadeIn(0.44,4);
+  }
+
+  const MAP={weary:playWeary,angel:playAngel,holy:playHoly};
+
+  function play(mood){
+    if(!ctx) return;
+    if(mood===currentMood) return;
+    currentMood=mood;
+    stopAll(1.2);
+    setTimeout(()=>{if(currentMood!==mood)return; MAP[mood]?.();},1300);
+  }
+  function stop(){stopAll(2);currentMood=null;}
+  return {init,play,stop};
+})();
+</script>
+</body>
+</html>

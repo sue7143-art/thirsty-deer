@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기드온의 300용사 — 사사기 7장</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#F5C842;--gold-dark:#c89010;}
+html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+#game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
+#scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
+
+.illus{
+  position:absolute;inset:0;background-size:cover;background-position:center top;
+  transition:opacity 1.8s ease;will-change:transform,opacity;
+}
+#illus1{background-image:url('../images/ep05_img1.jpg');opacity:1;animation:kb1 16s ease-in-out infinite alternate;}
+#illus2{background-image:url('../images/ep05_img2.jpg');opacity:0;animation:kb2 16s ease-in-out infinite alternate;}
+@keyframes kb1{from{transform:scale(1.04) translate(0,0);}to{transform:scale(1.10) translate(-7px,-5px);}}
+@keyframes kb2{from{transform:scale(1.07) translate(3px,0);}to{transform:scale(1.04) translate(-5px,-7px);}}
+
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center 40%,transparent 30%,rgba(0,0,0,0.65) 100%);z-index:5;pointer-events:none;}
+.ov{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity 1.5s;}
+#ov-night{background:rgba(5,8,25,0.40);opacity:0;}
+#ov-fear{background:rgba(10,5,25,0.52);opacity:0;transition:opacity 0.8s;}
+#ov-fire{background:radial-gradient(ellipse at 50% 80%,rgba(255,100,20,0.28) 0%,transparent 65%);opacity:0;}
+#ov-divine{background:radial-gradient(ellipse at 50% 8%,rgba(255,240,100,0.45) 0%,transparent 65%);opacity:0;}
+#ov-flash{background:rgba(255,220,80,0.75);opacity:0;}
+
+#light-rays{
+  position:absolute;top:-20%;left:50%;transform:translateX(-50%);
+  width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;
+  background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,200,80,0.20) 8deg,transparent 16deg,transparent 24deg,rgba(255,200,60,0.14) 32deg,transparent 40deg,transparent 48deg,rgba(255,220,80,0.22) 56deg,transparent 64deg);
+  animation:rayRot 9s linear infinite;
+}
+@keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
+
+/* 달빛 */
+#moonlight{
+  position:absolute;top:0;right:10%;
+  width:200px;height:200px;
+  background:radial-gradient(circle at 60% 20%,rgba(200,220,255,0.22) 0%,transparent 65%);
+  z-index:6;pointer-events:none;opacity:0;transition:opacity 1.5s;
+}
+#moonlight.show{opacity:1;}
+
+#chapter-title{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);
+  letter-spacing:0.22em;color:rgba(255,220,100,0.92);
+  text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;
+  transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;
+}
+#chapter-title.show{opacity:1;}
+#verse-badge{
+  position:absolute;top:40px;left:50%;transform:translateX(-50%);
+  font-family:'Noto Serif KR',serif;font-size:0.68rem;
+  color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);
+  z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;
+}
+#verse-badge.show{opacity:1;}
+
+/* ── CHOICE ── */
+#choice-overlay{
+  position:absolute;inset:0;z-index:30;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.7s;
+}
+#choice-overlay.show{opacity:1;pointer-events:all;}
+.choice-title{
+  font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);
+  color:#fff;text-align:center;letter-spacing:0.08em;
+  text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);
+  margin-bottom:22px;padding:0 20px;line-height:1.65;
+}
+.choice-title em{color:var(--gold);font-style:normal;}
+.choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
+.choice-btn{
+  position:relative;overflow:hidden;border:none;cursor:pointer;
+  padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;
+}
+.choice-btn:hover{transform:translateY(-3px) scale(1.01);}
+.choice-btn:active{transform:translateY(0) scale(0.99);}
+.opt-faith{
+  background:linear-gradient(135deg,#1a1400 0%,#0a0c00 100%);
+  box-shadow:0 4px 20px rgba(200,160,20,0.4);
+  border:1px solid rgba(200,170,40,0.4);
+}
+.opt-faith:hover{box-shadow:0 6px 28px rgba(245,200,66,0.6);border-color:rgba(245,200,66,0.7);}
+.opt-doubt{
+  background:linear-gradient(135deg,#0d0818 0%,#060310 100%);
+  box-shadow:0 4px 20px rgba(80,40,160,0.4);
+  border:1px solid rgba(120,80,200,0.35);
+}
+.opt-doubt:hover{box-shadow:0 6px 28px rgba(120,80,200,0.6);border-color:rgba(150,100,220,0.7);}
+.choice-inner{display:flex;align-items:center;gap:14px;padding:16px 20px;}
+.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.opt-faith .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(245,200,66,0.8);}
+.opt-doubt .choice-label{color:#b090ff;text-shadow:0 0 12px rgba(150,100,220,0.8);}
+.choice-text-wrap{flex:1;}
+.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.opt-faith .choice-main{color:#fff8d0;}
+.opt-doubt .choice-main{color:#d8c8ff;}
+.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.opt-faith .choice-sub{color:var(--gold);}
+.opt-doubt .choice-sub{color:#b090ff;}
+.choice-icon{font-size:1.8rem;flex-shrink:0;}
+.choice-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.07) 50%,transparent 60%);
+  transform:translateX(-100%);transition:transform 0.4s;
+}
+.choice-btn:hover::after{transform:translateX(100%);}
+
+/* ── RESULT ── */
+#choice-result{
+  position:absolute;inset:0;z-index:35;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.4s;
+  background:rgba(0,0,0,0.68);
+}
+#choice-result.show{opacity:1;pointer-events:all;}
+.result-card{
+  background:rgba(8,5,2,0.94);border-radius:12px;
+  padding:28px 34px;max-width:min(430px,90vw);
+  text-align:center;border:1px solid rgba(255,255,255,0.1);
+}
+.result-icon{font-size:3rem;margin-bottom:10px;display:block;}
+.result-title{font-family:'Cinzel',serif;font-size:1.15rem;margin-bottom:10px;}
+.result-text{font-family:'Noto Serif KR',serif;font-size:0.88rem;line-height:1.88;color:rgba(255,255,255,0.88);}
+.res-faith .result-title{color:var(--gold);}
+.res-doubt .result-title{color:#b090ff;}
+.result-continue{
+  display:inline-block;margin-top:16px;
+  font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;
+  color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  border:none;padding:8px 22px;border-radius:3px;cursor:pointer;
+}
+
+.spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
+@keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
+
+#progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+
+#mute-btn{
+  position:absolute;top:12px;right:14px;z-index:25;
+  background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);
+  color:#fff;font-size:1.1rem;width:36px;height:36px;
+  border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);
+}
+#mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
+
+/* ── DIALOG ── */
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#080510 0%,#100c18 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
+#portrait-wrap{
+  width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:10px 6px;
+  border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;
+}
+.pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
+@keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
+#portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
+@keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
+#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
+.dots{display:flex;gap:5px;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
+#next-btn{
+  font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;
+  letter-spacing:0.10em;color:#120a02;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;
+  transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);
+}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+#next-btn:active{transform:translateY(0);}
+
+/* ── TITLE ── */
+#title-screen{
+  position:absolute;inset:0;z-index:200;
+  background:radial-gradient(ellipse at 50% 40%,#0d0a00 0%,#000 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:hidden;
+}
+.title-bg{
+  position:absolute;inset:0;
+  background-image:url('../images/ep05_img3.jpg');
+  background-size:cover;background-position:center;
+  opacity:0.22;filter:blur(2px);animation:kb1 15s ease-in-out infinite alternate;
+}
+.title-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(10,8,0,0.72) 0%,rgba(0,0,0,0.93) 100%);}
+#title-screen>*{position:relative;z-index:1;}
+.title-emblem{font-size:3.5rem;animation:tFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,150,30,0.9));}
+@keyframes tFloat{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-12px) rotate(4deg);}}
+#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,180,30,0.9),0 0 70px rgba(255,150,20,0.4);}
+.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+
+/* ── END ── */
+#end-screen{
+  position:absolute;inset:0;z-index:200;
+  background:radial-gradient(ellipse at center,#100800 0%,#000 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;
+}
+.end-bg{position:absolute;inset:0;background-image:url('../images/ep05_img4.jpg');background-size:cover;background-position:center;opacity:0.18;filter:blur(3px);}
+.end-overlay{position:absolute;inset:0;background:rgba(5,3,0,0.84);}
+#end-screen>*{position:relative;z-index:1;}
+#end-screen.show{opacity:1;pointer-events:all;}
+#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,180,30,0.5);}
+#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:0.88rem;text-align:center;max-width:370px;line-height:2.0;}
+.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(80,60,10,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#replay-btn:hover{background:rgba(120,90,15,0.6);}
+
+/* ── 소형 모바일 (≤480px) ── */
+@media (max-width:480px){
+  #portrait-name{font-size:0.48rem;letter-spacing:0.06em;}
+  .choice-icon{font-size:1.3rem;}
+  .choice-main{font-size:0.78rem;}
+  .choice-inner{padding:12px 14px;gap:10px;}
+  .result-card{padding:20px 20px;}
+  .result-icon{font-size:2.2rem;}
+  .result-title{font-size:0.95rem;}
+  .result-text{font-size:0.78rem;line-height:1.7;}
+  .result-continue{padding:7px 16px;font-size:0.68rem;}
+  #start-btn{padding:11px 32px;font-size:0.88rem;}
+  .title-ep{font-size:0.62rem;}
+  .title-sub{font-size:0.80rem;}
+  .choice-title{font-size:0.78rem;margin-bottom:16px;}
+  #end-screen p{font-size:0.78rem;max-width:92vw;}
+}
+/* ── 초소형 (≤360px) ── */
+@media (max-width:360px){
+  #dialog-inner{min-height:100px;}
+  .choice-label{font-size:1.2rem;width:28px;}
+  .dots .dot{width:5px;height:5px;}
+}
+/* ── 가로모드(landscape) ── */
+@media (max-height:500px) and (orientation:landscape){
+  #dialog-inner{min-height:80px;max-height:110px;}
+  #portrait-icon{font-size:1.5rem;}
+  #dialog-text{font-size:0.75rem;}
+  .choice-title{font-size:0.72rem;margin-bottom:10px;}
+  .choice-inner{padding:9px 12px;}
+  .result-card{padding:14px 18px;}
+  .title-emblem{font-size:2.4rem;}
+}
+
+/* ── iOS Safe Area ── */
+#game{
+  padding-bottom:env(safe-area-inset-bottom);
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #dialog{
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+<div id="game">
+
+  <!-- TITLE -->
+  <div id="title-screen">
+    <div class="title-bg"></div>
+    <div class="title-overlay"></div>
+    <div class="title-emblem">🔥</div>
+    <div class="title-ep">EPISODE 5</div>
+    <h1>기드온의 300용사</h1>
+    <div class="title-sub">사사기 7장</div>
+    <div class="title-verse">"여호와의 칼이여, 기드온의 칼이여!"<br>— 사사기 7:20</div>
+    <button id="start-btn" onclick="startGame()">▶ &nbsp;시작하기</button>
+  </div>
+
+  <!-- SCENE -->
+  <div id="scene">
+    <div class="illus" id="illus1"></div>
+    <div class="illus" id="illus2"></div>
+    <div class="vignette"></div>
+    <div class="ov" id="ov-night"></div>
+    <div class="ov" id="ov-fear"></div>
+    <div class="ov" id="ov-fire"></div>
+    <div class="ov" id="ov-divine"></div>
+    <div class="ov" id="ov-flash"></div>
+    <div id="light-rays"></div>
+    <div id="moonlight"></div>
+    <div id="chapter-title"></div>
+    <div id="verse-badge"></div>
+
+    <!-- CHOICE -->
+    <div id="choice-overlay">
+      <div class="choice-title">
+        <em>기드온의 결단</em><br>
+        32,000명이 300명으로 줄었다. 미디안 군대는 메뚜기 떼처럼 골짜기를 가득 채웠다.<br>손에는 나팔과 횃불뿐이다. 어떻게 할 것인가?
+      </div>
+      <div class="choices">
+        <button class="choice-btn opt-faith" onclick="choose(true)">
+          <div class="choice-inner">
+            <span class="choice-label">A</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"하나님을 믿으면 모두 무찌를 수 있어!"</span>
+              <span class="choice-sub">믿음으로 나아간다 — 숫자가 아닌 하나님을 의지</span>
+            </div>
+            <span class="choice-icon">🔥</span>
+          </div>
+        </button>
+        <button class="choice-btn opt-doubt" onclick="choose(false)">
+          <div class="choice-inner">
+            <span class="choice-label">B</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"겨우 300명으로 가능할까?"</span>
+              <span class="choice-sub">숫자 앞에 흔들린다 — 인간적 계산의 한계</span>
+            </div>
+            <span class="choice-icon">😰</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="choice-result">
+      <div class="result-card" id="result-card">
+        <span class="result-icon" id="result-icon"></span>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-text" id="result-text"></div>
+        <button class="result-continue" id="result-continue-btn">계속 →</button>
+      </div>
+    </div>
+
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+    <button id="mute-btn" onclick="toggleMute()">🔊</button>
+  </div>
+
+  <!-- DIALOG -->
+  <div id="dialog">
+    <div id="dialog-inner">
+      <div id="portrait-wrap">
+        <div class="pglow"></div>
+        <div id="portrait-icon">⚔️</div>
+        <div id="portrait-name">GIDEON</div>
+      </div>
+      <div id="dialog-text-wrap">
+        <div id="dialog-text"><span id="dialog-content"></span></div>
+        <div id="dialog-actions">
+          <div class="dots" id="dots"></div>
+          <button id="next-btn" onclick="nextScene()">계속 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div id="end-screen">
+    <div class="end-bg"></div>
+    <div class="end-overlay"></div>
+    <div style="font-size:2.8rem;">🔥📯✨</div>
+    <h2>여호와의 칼!</h2>
+    <p>300명의 나팔 소리와 횃불 하나가<br>미디안의 대군을 무너뜨렸습니다.<br>전쟁은 사람의 수가 아니라<br>하나님의 능력으로 이기는 것입니다.<br><br>"이는 힘으로 되지 아니하며 능으로 되지 아니하고<br>오직 나의 영으로 되느니라."</p>
+    <div class="end-verse">사사기 7:22 / 스가랴 4:6</div>
+    <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
+  </div>
+</div>
+
+<script>
+const SCENES = [
+  {
+    type:'normal', img:2,
+    icon:'😰', name:'GIDEON',
+    chapter:'사사기 6장 — 두려운 기드온', verse:'삿 6:15',
+    text:'기드온이 여호와의 사자에게 말하였다. "나는 므낫세 중에 가장 약하고 나는 내 아버지 집에서 가장 작은 자입니다. 제가 어찌 이스라엘을 구원할 수 있겠습니까?" 그러나 하나님이 말씀하셨다. "내가 반드시 너와 함께하리라."',
+    btn:'군대를 모으다 →',
+    night:true, fear:false, fire:false, divine:false, rays:false, spark:false, flash:false,
+  },
+  {
+    type:'normal', img:2,
+    icon:'✨', name:'GOD',
+    chapter:'하나님의 선발 — 32,000명에서 300명으로', verse:'삿 7:2-3',
+    text:'"너와 함께한 백성이 너무 많다. 내가 미디안을 그들의 손에 넘겨준다면 이스라엘이 나를 거슬러 스스로 자랑하기를 내 손이 나를 구원하였다 할 것이다." 두려운 자는 돌아가라 하니 22,000명이 떠났다. 그래도 아직 10,000명.',
+    btn:'더 줄이다 →',
+    night:true, fear:false, fire:false, divine:true, rays:true, spark:false, flash:false,
+  },
+  {
+    type:'normal', img:2,
+    icon:'✨', name:'GOD',
+    chapter:'물 마시는 방법으로 선발', verse:'삿 7:5-7',
+    text:'하나님이 말씀하셨다. "손으로 움켜 핥아 마시는 자를 따로 세우라." 손으로 입에 대고 핥아 마신 자는 300명이었다. 나머지는 무릎을 꿇고 마셨다. "이 300명으로 내가 너희를 구원하리라. 미디안을 네 손에 넘기겠다!"',
+    btn:'기드온의 결단 →',
+    night:true, fear:false, fire:false, divine:true, rays:true, spark:true, flash:false,
+  },
+  {
+    type:'choice', img:2,
+    icon:'⚔️', name:'GIDEON',
+    chapter:'기드온의 결단', verse:'삿 7:9-11',
+    text:'밤이 되었다. 골짜기 아래 미디안 진영의 횃불들이 메뚜기 떼처럼 빛났다. 낙타도 셀 수 없을 만큼 많았다. 기드온의 손에는 나팔 하나, 빈 항아리 하나, 그 안에 든 횃불 하나. 두 마음이 충돌했다…',
+    btn:'선택하기',
+    night:true, fear:true, fire:false, divine:false, rays:false, spark:false, flash:false,
+  },
+  {
+    type:'normal', img:2,
+    icon:'⚔️', name:'GIDEON',
+    chapter:'미디안 진영에 내려간 기드온', verse:'삿 7:13-14',
+    text:'하나님이 말씀하셨다. "두렵거든 적진에 내려가 그들의 말을 들어라." 기드온이 내려가 들으니 한 병사가 꿈 이야기를 하고 있었다. "기드온의 칼에 미디안이 패배할 것이다!" 기드온이 절하고 돌아와 외쳤다. "일어나라! 하나님이 미디안을 우리 손에 넘기셨다!"',
+    btn:'나팔을 불어라! →',
+    night:true, fear:false, fire:false, divine:true, rays:false, spark:true, flash:false,
+  },
+  {
+    type:'normal', img:1,
+    icon:'🔥', name:'300 WARRIORS',
+    chapter:'나팔과 횃불 — 한밤의 기습', verse:'삿 7:19-20',
+    text:'기드온과 100명이 한밤중에 진영 가에 이르렀다. 나팔을 불며 항아리를 부수었다. 세 부대가 일제히 나팔을 불고 항아리를 부수어 왼손에 횃불을 들고 오른손에 나팔을 들고 외쳤다. "여호와의 칼이여! 기드온의 칼이여!"',
+    btn:'미디안이 무너지다 →',
+    night:true, fear:false, fire:true, divine:false, rays:false, spark:true, flash:true,
+  },
+  {
+    type:'normal', img:1,
+    icon:'✨', name:'GOD',
+    chapter:'하나님이 전쟁을 이기시다', verse:'삿 7:21-22',
+    text:'300명은 각자 자기 자리에 서 있고 미디안 군대가 진영에서 도망쳐 도망갔다. 하나님이 미디안 군대로 각 사람의 칼이 그 동무를 치게 하셨다! 사람의 칼이 아닌 하나님의 능력이 전쟁을 이기셨다. 300명은 단 한 명도 싸우지 않았다.',
+    btn:'✨ 마치다',
+    night:false, fear:false, fire:true, divine:true, rays:true, spark:true, flash:false,
+  },
+];
+
+const MOODS = ['fear','divine','divine','doubt','courage','battle','holy'];
+
+let cur=-1, muted=false, typeTimer=null;
+
+function setIllus(w){
+  document.getElementById('illus1').style.opacity = w===1?'1':'0';
+  document.getElementById('illus2').style.opacity = w===2?'1':'0';
+}
+function setOverlays(s){
+  document.getElementById('ov-night').style.opacity  = s.night ?'1':'0';
+  document.getElementById('ov-fear').style.opacity   = s.fear  ?'1':'0';
+  document.getElementById('ov-fire').style.opacity   = s.fire  ?'1':'0';
+  document.getElementById('ov-divine').style.opacity = s.divine?'1':'0';
+  document.getElementById('light-rays').style.opacity= s.rays  ?'1':'0';
+  document.getElementById('moonlight').className     = s.night ?'show':'';
+}
+function flashEffect(){
+  const el=document.getElementById('ov-flash');
+  el.style.transition='opacity 0s'; el.style.opacity='1';
+  setTimeout(()=>{el.style.transition='opacity 1.4s'; el.style.opacity='0';},80);
+}
+function spawnSparks(n=28){
+  const colors=['#F5C842','#ff8020','#ffe480','#ff6010','#ffffff','#ffd060'];
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const sp=document.createElement('div'); sp.className='spark';
+    const a=Math.random()*Math.PI*2, d=55+Math.random()*140;
+    sp.style.setProperty('--dx',Math.cos(a)*d+'px');
+    sp.style.setProperty('--dy',Math.sin(a)*d+'px');
+    sp.style.width=sp.style.height=(3+Math.random()*6)+'px';
+    sp.style.background=colors[Math.floor(Math.random()*colors.length)];
+    sp.style.left=(10+Math.random()*80)+'vw';
+    sp.style.top=(8+Math.random()*58)+'vh';
+    sp.style.animationDuration=(0.9+Math.random()*0.9)+'s';
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(),1900);
+  },i*38);
+}
+function typeText(text){
+  clearInterval(typeTimer);
+  const el=document.getElementById('dialog-content');
+  el.textContent=''; let i=0;
+  typeTimer=setInterval(()=>{
+    if(i<text.length) el.textContent+=text[i++];
+    else clearInterval(typeTimer);
+  },26);
+}
+function buildDots(){
+  const wrap=document.getElementById('dots'); wrap.innerHTML='';
+  SCENES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i<=cur?' on':'');
+    wrap.appendChild(d);
+  });
+}
+function setChapter(ch,vs){
+  const ct=document.getElementById('chapter-title');
+  ct.classList.remove('show');
+  setTimeout(()=>{ct.textContent=ch; ct.classList.add('show');},300);
+  const vb=document.getElementById('verse-badge');
+  vb.classList.remove('show');
+  if(vs) setTimeout(()=>{vb.textContent=vs; vb.classList.add('show');},600);
+  else vb.classList.remove('show');
+}
+function showChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.add('show');
+  document.getElementById('next-btn').style.visibility='hidden';
+}
+function hideChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+}
+
+function choose(isFaith){
+  hideChoiceOverlay();
+  const resultEl=document.getElementById('choice-result');
+  const card=document.getElementById('result-card');
+  if(isFaith){
+    card.className='result-card res-faith';
+    document.getElementById('result-icon').textContent='🔥';
+    document.getElementById('result-title').textContent='믿음이 두려움을 삼켰다!';
+    document.getElementById('result-text').textContent=
+      '기드온은 300개의 나팔을 바라보았다. "하나님이 32,000명을 300명으로 줄이신 이유가 있다. 이것이 사람의 힘이 아님을 보이시려는 것이다." 기드온이 일어섰다. "여호와의 칼이여, 기드온의 칼이여!" 나팔 소리가 밤하늘을 가르기 시작했다!';
+    if(!muted) Music.play('battle');
+    spawnSparks(25);
+  } else {
+    card.className='result-card res-doubt';
+    document.getElementById('result-icon').textContent='😰';
+    document.getElementById('result-title').textContent='숫자 앞에 흔들렸다…';
+    document.getElementById('result-text').textContent=
+      '"32,000명도 부족할 판에 300명이라니." 기드온은 손이 떨렸다. 그러나 하나님이 말씀하셨다. "두렵거든 적진에 내려가 그들의 말을 들어라." 기드온이 몰래 내려가 미디안 병사의 꿈 이야기를 들었다. "기드온의 칼에 우리가 패한다!" 두려움이 사라졌다. 믿음이 생겼다!';
+    if(!muted) Music.play('courage');
+  }
+  const oldBtn=document.getElementById('result-continue-btn');
+  const newBtn=oldBtn.cloneNode(true);
+  oldBtn.parentNode.replaceChild(newBtn,oldBtn);
+  newBtn.addEventListener('click',()=>{
+    resultEl.classList.remove('show');
+    cur++; applyScene(cur);
+  });
+  resultEl.classList.add('show');
+}
+
+function applyScene(idx){
+  const s=SCENES[idx];
+  setIllus(s.img);
+  setOverlays(s);
+  setChapter(s.chapter,s.verse);
+  if(s.spark) spawnSparks();
+  if(s.flash) setTimeout(flashEffect,400);
+  document.getElementById('portrait-icon').textContent=s.icon;
+  document.getElementById('portrait-name').textContent=s.name;
+  document.getElementById('next-btn').textContent=s.btn;
+  typeText(s.text);
+  buildDots();
+  document.getElementById('progress-fill').style.width=((idx+1)/SCENES.length*100)+'%';
+  if(!muted){ const m=MOODS[idx]; if(m) Music.play(m); }
+  if(s.type==='choice') setTimeout(showChoiceOverlay,1900);
+}
+function nextScene(){
+  cur++;
+  if(cur>=SCENES.length){ showEnd(); return; }
+  applyScene(cur);
+}
+function showEnd(){
+  document.getElementById('end-screen').classList.add('show');
+  if(!muted) Music.play('holy');
+  spawnSparks(45); setTimeout(()=>spawnSparks(30),900);
+}
+function replayGame(){
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('choice-result').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+  Music.stop();
+  setTimeout(()=>{ cur=0; applyScene(0); },1400);
+}
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  Music.init(); cur=0; applyScene(0);
+}
+function toggleMute(){
+  muted=!muted;
+  document.getElementById('mute-btn').textContent=muted?'🔇':'🔊';
+  if(muted) Music.stop();
+  else{ Music.init(); const m=MOODS[cur]; if(m) Music.play(m); }
+}
+
+/* ════════════════════════════════════
+   MUSIC ENGINE
+   moods: fear / divine / doubt / courage / battle / holy
+════════════════════════════════════ */
+const Music=(()=>{
+  let ctx,masterGain,currentMood=null;
+  let oscList=[],lfoList=[],intervalList=[];
+
+  function init(){
+    if(ctx) return;
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=ctx.createGain();
+    masterGain.gain.setValueAtTime(0,ctx.currentTime);
+    masterGain.connect(ctx.destination);
+  }
+  function stopAll(fade=1.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value,now);
+    masterGain.gain.linearRampToValueAtTime(0,now+fade);
+    intervalList.forEach(id=>clearInterval(id)); intervalList=[];
+    setTimeout(()=>{
+      oscList.forEach(o=>{try{o.stop();}catch(e){}}); oscList=[];
+      lfoList.forEach(o=>{try{o.stop();}catch(e){}}); lfoList=[];
+    },(fade+0.1)*1000);
+  }
+  function fadeIn(vol=0.32,dur=2.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(0,now);
+    masterGain.gain.linearRampToValueAtTime(vol,now+dur);
+  }
+  function makeOsc(type,freq,gainVal){
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type; o.frequency.value=freq; g.gain.value=gainVal;
+    o.connect(g); g.connect(masterGain); o.start();
+    oscList.push(o); return {osc:o,gain:g};
+  }
+  function makeLFO(target,rate,depth,base){
+    const lfo=ctx.createOscillator(),lg=ctx.createGain();
+    lfo.frequency.value=rate; lg.gain.value=depth;
+    lfo.connect(lg); lg.connect(target); target.value=base;
+    lfo.start(); lfoList.push(lfo);
+  }
+  function makeReverb(sec=2,decay=2){
+    const conv=ctx.createConvolver(),rate=ctx.sampleRate,len=rate*sec;
+    const buf=ctx.createBuffer(2,len,rate);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}
+    conv.buffer=buf; return conv;
+  }
+
+  /* FEAR — 두려운 기드온, 어두운 밤 */
+  function playFear(){
+    const rev=makeReverb(2.5,3); rev.connect(masterGain);
+    const d=makeOsc('sine',55,0.12); makeLFO(d.osc.frequency,0.10,2,55);
+    const u=[146.83,138.59,146.83,130.81,146.83,155.56,138.59];
+    let ui=0;
+    function pu(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=u[ui%u.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.11,ctx.currentTime+0.15);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.8);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.9);
+      oscList.push(o); ui++;
+    }
+    pu(); intervalList.push(setInterval(pu,700)); fadeIn(0.30,2.5);
+  }
+
+  /* DIVINE — 하나님의 말씀 */
+  function playDivine(){
+    const rev=makeReverb(3.2,1.8); rev.connect(masterGain);
+    const chords=[[174.61,261.63,349.23,523.25],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,587.33]];
+    let ci=0;
+    function pc(){
+      chords[ci%chords.length].forEach((freq,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=i<2?'sine':'triangle'; o.frequency.value=freq;
+        o.detune.value=(Math.random()-0.5)*7;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.11,ctx.currentTime+0.9);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.0);
+        o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+3.1);
+        oscList.push(o);
+      }); ci++;
+    }
+    pc(); intervalList.push(setInterval(pc,3000));
+    makeOsc('sine',87.31,0.13); fadeIn(0.42,3);
+  }
+
+  /* DOUBT — 결단 앞 갈등 */
+  function playDoubt(){
+    const rev=makeReverb(2,2.8); rev.connect(masterGain);
+    const u=[220,207.65,233.08,220,196,207.65,220,233.08];
+    let ui=0;
+    function pu(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=u[ui%u.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.12,ctx.currentTime+0.12);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.62);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.7);
+      oscList.push(o); ui++;
+    }
+    pu(); intervalList.push(setInterval(pu,640));
+    const low=makeOsc('sine',110,0.09); makeLFO(low.gain.gain,5.5,0.07,0.09);
+    fadeIn(0.32,2);
+  }
+
+  /* COURAGE — 용기가 솟아오르다 */
+  function playCourage(){
+    const rev=makeReverb(2,2); rev.connect(masterGain);
+    const rise=[196,220,246.94,261.63,293.66,329.63,369.99,392,440,493.88,523.25];
+    let ri=0;
+    function pr(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='triangle'; o.frequency.value=rise[Math.min(ri,rise.length-1)];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.18,ctx.currentTime+0.08);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.55);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.6);
+      oscList.push(o);
+      if(ri<rise.length-1) ri++;
+    }
+    pr(); intervalList.push(setInterval(pr,400));
+    makeOsc('sine',98,0.12); fadeIn(0.40,2);
+  }
+
+  /* BATTLE — 나팔과 횃불, 박진감 넘치는 전투 */
+  function playBattle(){
+    const rev=makeReverb(1.2,3.5); rev.connect(masterGain);
+    // 드럼 킥
+    function kick(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(150,ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(50,ctx.currentTime+0.15);
+      g.gain.setValueAtTime(0.3,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.25);
+      o.connect(g); g.connect(masterGain); o.start(); o.stop(ctx.currentTime+0.3);
+      oscList.push(o);
+    }
+    // 나팔 느낌 — 밝고 강한 5도
+    const trumpet=[392,440,523.25,587.33,659.25,523.25,440,392,
+                   440,523.25,659.25,783.99,659.25,523.25,440,523.25];
+    let ti=0;
+    function pt(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sawtooth'; o.frequency.value=trumpet[ti%trumpet.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.14,ctx.currentTime+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.32);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.35);
+      oscList.push(o); ti++;
+    }
+    // 베이스 드론
+    const bass=makeOsc('sawtooth',55,0.08); makeLFO(bass.gain.gain,2,0.05,0.08);
+
+    kick(); pt();
+    const rhythm=[280,280,420,280,560,280,280,420];
+    let ri=0;
+    function schedK(){
+      intervalList.push(setTimeout(()=>{kick();pt();ri++;schedK();},rhythm[ri%rhythm.length]));
+    }
+    schedK(); fadeIn(0.48,1.5);
+  }
+
+  /* HOLY — 성스러운 합창 엔딩 */
+  function playHoly(){
+    const rev=makeReverb(5,1.4); rev.connect(masterGain);
+    const rev2=makeReverb(3,2.2); rev2.connect(masterGain);
+    const sop=[329.63,369.99,415.30,493.88,523.25,493.88,554.37,523.25,493.88,415.30,369.99,440,493.88,523.25,587.33,523.25];
+    const alt=[261.63,293.66,329.63,392,415.30,392,440,415.30,392,329.63,293.66,349.23,392,415.30,493.88,415.30];
+    let si=0,ai=0;
+    function pS(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=sop[si%sop.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.17,ctx.currentTime+0.3);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); si++;
+    }
+    function pA(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=alt[ai%alt.length];
+      o.detune.value=(Math.random()-0.5)*6;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.12,ctx.currentTime+0.4);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); ai++;
+    }
+    const org=[[164.81,246.94,329.63,493.88],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let oi=0;
+    function pO(){
+      org[oi%org.length].forEach((freq,hi)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=hi<2?'sine':'triangle'; o.frequency.value=freq;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.062,ctx.currentTime+1.0);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.9);
+        o.connect(g); g.connect(rev2); o.start(); o.stop(ctx.currentTime+4.0);
+        oscList.push(o);
+      }); oi++;
+    }
+    [[164.81,0.11],[196,0.09],[246.94,0.07]].forEach(([f,v])=>{const p=makeOsc('sine',f,v);makeLFO(p.gain.gain,0.17,0.03,v);});
+    pS();pA();pO();
+    intervalList.push(setInterval(()=>{pS();pA();},1100));
+    intervalList.push(setInterval(pO,4000));
+    fadeIn(0.46,4);
+  }
+
+  const MAP={fear:playFear,divine:playDivine,doubt:playDoubt,courage:playCourage,battle:playBattle,holy:playHoly};
+
+  function play(mood){
+    if(!ctx) return;
+    if(mood===currentMood) return;
+    currentMood=mood;
+    stopAll(1.2);
+    setTimeout(()=>{if(currentMood!==mood)return; MAP[mood]?.();},1300);
+  }
+  function stop(){stopAll(2);currentMood=null;}
+  return {init,play,stop};
+})();
+</script>
+</body>
+</html>

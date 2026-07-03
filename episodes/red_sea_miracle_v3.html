@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>홍해의 기적 — 출애굽기 14장</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#F5C842;--gold-dark:#c89010;--parchment:#FDF3DC;--dark:#1a0e04;}
+html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+#game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
+#scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
+
+.illus{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center top;
+  transition:opacity 1.5s ease;
+  will-change:transform,opacity;
+}
+#illus1{background-image:url('../images/ep01_img1.jpg');opacity:1;animation:kb1 14s ease-in-out infinite alternate;}
+#illus2{background-image:url('../images/ep01_img2.jpg');opacity:0;animation:kb2 14s ease-in-out infinite alternate;}
+@keyframes kb1{from{transform:scale(1.04) translate(0,0);}to{transform:scale(1.10) translate(-8px,-6px);}}
+@keyframes kb2{from{transform:scale(1.08) translate(4px,0);}to{transform:scale(1.04) translate(-4px,-8px);}}
+
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center 40%,transparent 35%,rgba(0,0,0,0.55) 100%);z-index:5;pointer-events:none;}
+.overlay-layer{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity 1.5s;}
+#overlay-danger{background:rgba(120,20,10,0.38);opacity:0;}
+#overlay-divine{background:radial-gradient(ellipse at 50% 10%,rgba(255,240,100,0.5) 0%,transparent 65%);opacity:0;}
+#overlay-doubt{background:rgba(30,20,50,0.55);opacity:0;transition:opacity 0.8s;}
+#overlay-flash{background:rgba(100,200,255,0.7);opacity:0;}
+
+#light-rays{
+  position:absolute;top:-20%;left:50%;transform:translateX(-50%);
+  width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;
+  background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,255,180,0.18) 8deg,transparent 16deg,transparent 24deg,rgba(255,255,180,0.12) 32deg,transparent 40deg,transparent 48deg,rgba(255,255,180,0.20) 56deg,transparent 64deg);
+  animation:rayRot 8s linear infinite;
+}
+@keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
+
+#chapter-title{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);
+  letter-spacing:0.22em;color:rgba(255,220,100,0.92);
+  text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;
+  transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;
+}
+#chapter-title.show{opacity:1;}
+#verse-badge{
+  position:absolute;top:40px;left:50%;transform:translateX(-50%);
+  font-family:'Noto Serif KR',serif;font-size:0.68rem;
+  color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);
+  z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;
+}
+#verse-badge.show{opacity:1;}
+
+/* ── CHOICE OVERLAY ── */
+#choice-overlay{
+  position:absolute;inset:0;z-index:30;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:0;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.6s;
+  background:rgba(0,0,0,0.0);
+}
+#choice-overlay.show{opacity:1;pointer-events:all;}
+
+.choice-title{
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.9rem,2.5vw,1.3rem);
+  color:#fff;
+  text-align:center;
+  letter-spacing:0.1em;
+  text-shadow:0 0 20px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);
+  margin-bottom:24px;
+  padding:0 20px;
+  line-height:1.5;
+}
+.choice-title em{color:var(--gold);font-style:normal;}
+
+.choices{
+  display:flex;flex-direction:column;gap:14px;
+  width:min(480px,88vw);
+}
+
+.choice-btn{
+  position:relative;overflow:hidden;
+  border:none;cursor:pointer;
+  padding:0;border-radius:8px;
+  transition:transform 0.15s,box-shadow 0.15s;
+  text-align:left;
+}
+.choice-btn:hover{transform:translateY(-3px) scale(1.01);}
+.choice-btn:active{transform:translateY(0) scale(0.99);}
+
+/* Option A — doubt/fear */
+.choice-btn.opt-a{
+  background:linear-gradient(135deg,#3a1a1a 0%,#1a0808 100%);
+  box-shadow:0 4px 20px rgba(180,40,20,0.4);
+  border:1px solid rgba(200,60,40,0.4);
+}
+.choice-btn.opt-a:hover{box-shadow:0 6px 28px rgba(200,50,30,0.6);border-color:rgba(220,80,60,0.7);}
+
+/* Option B — faith */
+.choice-btn.opt-b{
+  background:linear-gradient(135deg,#1a1400 0%,#0a0c00 100%);
+  box-shadow:0 4px 20px rgba(200,160,20,0.4);
+  border:1px solid rgba(200,170,40,0.4);
+}
+.choice-btn.opt-b:hover{box-shadow:0 6px 28px rgba(245,200,66,0.6);border-color:rgba(245,200,66,0.7);}
+
+.choice-inner{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 20px;
+}
+.choice-label{
+  flex-shrink:0;
+  font-family:'Cinzel',serif;
+  font-size:1.5rem;font-weight:900;
+  width:36px;text-align:center;
+}
+.opt-a .choice-label{color:#e05040;text-shadow:0 0 12px rgba(220,60,40,0.8);}
+.opt-b .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(245,200,66,0.8);}
+
+.choice-text-wrap{flex:1;}
+.choice-main{
+  font-family:'Noto Serif KR',serif;
+  font-size:clamp(0.82rem,2.2vw,0.95rem);
+  font-weight:700;
+  line-height:1.5;
+  display:block;
+  margin-bottom:3px;
+}
+.opt-a .choice-main{color:#ffb8a8;}
+.opt-b .choice-main{color:#fff8d0;}
+.choice-sub{
+  font-size:0.68rem;
+  font-family:'Noto Serif KR',serif;
+  opacity:0.65;display:block;
+}
+.opt-a .choice-sub{color:#ffb8a8;}
+.opt-b .choice-sub{color:var(--gold);}
+
+.choice-icon{font-size:1.8rem;flex-shrink:0;}
+
+/* shimmer on hover */
+.choice-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.08) 50%,transparent 60%);
+  transform:translateX(-100%);transition:transform 0.4s;
+}
+.choice-btn:hover::after{transform:translateX(100%);}
+
+/* result flash */
+#choice-result{
+  position:absolute;inset:0;z-index:35;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.4s;
+  background:rgba(0,0,0,0.6);
+}
+#choice-result.show{opacity:1;pointer-events:all;}
+.result-card{
+  background:rgba(0,0,0,0.88);
+  border-radius:12px;
+  padding:28px 36px;
+  max-width:min(420px,88vw);
+  text-align:center;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.result-icon{font-size:3rem;margin-bottom:10px;display:block;}
+.result-title{
+  font-family:'Cinzel',serif;font-size:1.2rem;
+  margin-bottom:10px;
+}
+.result-text{
+  font-family:'Noto Serif KR',serif;
+  font-size:0.9rem;line-height:1.8;
+  color:rgba(255,255,255,0.85);
+}
+.result-a .result-title{color:#ff7060;}
+.result-b .result-title{color:var(--gold);}
+.result-continue{
+  display:inline-block;
+  margin-top:16px;
+  font-family:'Cinzel',serif;font-size:0.75rem;
+  letter-spacing:0.12em;color:#120a02;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  border:none;padding:8px 22px;border-radius:3px;cursor:pointer;
+}
+
+/* progress */
+#progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+
+/* sparkles */
+.spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
+@keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
+@keyframes waveFlash{0%{opacity:0;}20%{opacity:1;}100%{opacity:0;}}
+
+/* ── DIALOG ── */
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#120a02 0%,#1e1005 100%);border-top:2px solid rgba(245,200,66,0.5);flex-shrink:0;}
+#dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
+#portrait-wrap{
+  width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:10px 6px;
+  border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;
+}
+.pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
+@keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
+#portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
+@keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
+#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.82rem,2.2vw,0.96rem);line-height:1.75;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
+.dots{display:flex;gap:5px;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
+#next-btn{
+  font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;
+  letter-spacing:0.12em;color:#120a02;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  border:none;padding:7px 20px;border-radius:3px;cursor:pointer;
+  transition:transform 0.12s,box-shadow 0.12s;
+  box-shadow:0 2px 10px rgba(245,200,66,0.35);
+}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+#next-btn:active{transform:translateY(0);}
+
+/* ── TITLE ── */
+#title-screen{
+  position:absolute;inset:0;z-index:200;
+  background:radial-gradient(ellipse at 50% 40%,#1a0800 0%,#000 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;overflow:hidden;
+}
+.title-bg{position:absolute;inset:0;background-image:url('../images/ep01_img3.jpg');background-size:cover;background-position:center;opacity:0.18;filter:blur(2px);animation:kb1 15s ease-in-out infinite alternate;}
+.title-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(10,5,0,0.7) 0%,rgba(0,0,0,0.9) 100%);}
+#title-screen>*{position:relative;z-index:1;}
+.title-emblem{font-size:3.5rem;animation:tFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,200,50,0.8));}
+@keyframes tFloat{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-12px) rotate(4deg);}}
+#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(2rem,6vw,3.8rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,200,50,0.9),0 0 70px rgba(255,200,50,0.4);}
+.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:1rem;letter-spacing:0.2em;}
+.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.65);font-size:0.8rem;font-style:italic;text-align:center;max-width:380px;line-height:1.8;}
+#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+
+/* ── END ── */
+#end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#001a08 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
+.end-bg{position:absolute;inset:0;background-image:url('../images/ep01_img4.jpg');background-size:cover;background-position:center;opacity:0.15;filter:blur(3px);}
+.end-overlay{position:absolute;inset:0;background:rgba(0,10,5,0.82);}
+#end-screen>*{position:relative;z-index:1;}
+#end-screen.show{opacity:1;pointer-events:all;}
+#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.4rem,4vw,2.5rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(100,255,100,0.4);}
+#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(200,255,200,0.9);font-size:0.9rem;text-align:center;max-width:360px;line-height:1.9;}
+.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.7);font-size:0.75rem;letter-spacing:0.12em;}
+#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(40,100,60,0.5);border:1px solid rgba(100,255,150,0.35);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#replay-btn:hover{background:rgba(40,140,70,0.6);}
+
+/* MUTE BUTTON */
+#mute-btn{
+  position:absolute;top:12px;right:14px;z-index:25;
+  background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);
+  color:#fff;font-size:1.1rem;width:36px;height:36px;
+  border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);
+}
+#mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
+
+
+/* ── 소형 모바일 (≤480px) ── */
+@media (max-width:480px){
+  #portrait-name{font-size:0.48rem;letter-spacing:0.06em;}
+  .choice-icon{font-size:1.3rem;}
+  .choice-text{font-size:0.78rem;}
+  .choice-btn{padding:10px 14px;}
+  #start-btn{padding:11px 32px;font-size:0.88rem;}
+  #dialog-text{font-size:0.80rem;}
+}
+/* ── 초소형 (≤360px) ── */
+@media (max-width:360px){
+  #dialog-inner{min-height:100px;}
+  .dots .dot{width:5px;height:5px;}
+}
+/* ── 가로모드 ── */
+@media (max-height:500px) and (orientation:landscape){
+  #dialog-inner{min-height:80px;max-height:110px;}
+  #portrait-icon{font-size:1.5rem;}
+  #dialog-text{font-size:0.75rem;}
+}
+
+/* ── iOS Safe Area ── */
+#game{
+  padding-bottom:env(safe-area-inset-bottom);
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #dialog{
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+<div id="game">
+
+  <!-- TITLE -->
+  <div id="title-screen">
+    <div class="title-bg"></div>
+    <div class="title-overlay"></div>
+    <div class="title-emblem">🌊</div>
+    <h1>홍해의 기적</h1>
+    <div class="title-sub">출애굽기 14장</div>
+    <div class="title-verse">"너는 지팡이를 들고 손을 바다 위로 내밀어<br>그것이 갈라지게 하라" — 출애굽기 14:16</div>
+    <button id="start-btn" onclick="startGame()">▶ &nbsp;시작하기</button>
+  </div>
+
+  <!-- SCENE -->
+  <div id="scene">
+    <div class="illus" id="illus1"></div>
+    <div class="illus" id="illus2"></div>
+    <div class="vignette"></div>
+    <div class="overlay-layer" id="overlay-danger"></div>
+    <div class="overlay-layer" id="overlay-divine"></div>
+    <div class="overlay-layer" id="overlay-doubt"></div>
+    <div class="overlay-layer" id="overlay-flash"></div>
+    <div id="light-rays"></div>
+    <div id="chapter-title"></div>
+    <div id="verse-badge"></div>
+
+    <!-- CHOICE OVERLAY -->
+    <div id="choice-overlay">
+      <div class="choice-title">
+        <em>모세의 내적 갈등</em><br>
+        군대가 등 뒤에서 쫓아온다. 앞엔 넘을 수 없는 바다.<br>어떻게 할 것인가?
+      </div>
+      <div class="choices">
+        <button class="choice-btn opt-a" onclick="chooseA()">
+          <div class="choice-inner">
+            <span class="choice-label">A</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"이 넓은 바다를 건넌다고? 이건 미친 짓이야!"</span>
+              <span class="choice-sub">두려움에 굴복한다 — 인간적 이성의 선택</span>
+            </div>
+            <span class="choice-icon">😰</span>
+          </div>
+        </button>
+        <button class="choice-btn opt-b" onclick="chooseB()">
+          <div class="choice-inner">
+            <span class="choice-label">B</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"하나님을 믿고 지팡이를 높이 들자!"</span>
+              <span class="choice-sub">믿음으로 나아간다 — 하나님의 능력을 신뢰</span>
+            </div>
+            <span class="choice-icon">✨</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- CHOICE RESULT -->
+    <div id="choice-result">
+      <div class="result-card" id="result-card">
+        <span class="result-icon" id="result-icon"></span>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-text" id="result-text"></div>
+        <button class="result-continue" id="result-continue-btn">계속 →</button>
+      </div>
+    </div>
+
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+
+    <!-- 음소거 버튼 -->
+    <button id="mute-btn" onclick="toggleMute()" title="음악 켜기/끄기">🔊</button>
+  </div>
+
+  <!-- DIALOG -->
+  <div id="dialog">
+    <div id="dialog-inner">
+      <div id="portrait-wrap">
+        <div class="pglow"></div>
+        <div id="portrait-icon">🧙‍♂️</div>
+        <div id="portrait-name">MOSES</div>
+      </div>
+      <div id="dialog-text-wrap">
+        <div id="dialog-text"><span id="dialog-content"></span></div>
+        <div id="dialog-actions">
+          <div class="dots" id="dots"></div>
+          <button id="next-btn" onclick="nextScene()">계속 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div id="end-screen">
+    <div class="end-bg"></div>
+    <div class="end-overlay"></div>
+    <div style="font-size:2.8rem;">✨🌊✨</div>
+    <h2>이스라엘이 구원받았다</h2>
+    <p>홍해가 갈라지고 이스라엘 백성은<br>마른 땅을 밟으며 바다를 건너갔습니다.<br>뒤따르던 바로의 군대는 다시 합쳐진<br>바다 속으로 사라졌습니다.</p>
+    <div class="end-verse">출애굽기 14:31</div>
+    <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
+  </div>
+
+</div>
+
+<script>
+/* ── SCENE DATA ──
+   type: 'normal' | 'choice'
+   choiceScene 이후엔 choiceResultA / choiceResultB 가 분기됨
+*/
+const SCENES = [
+  {
+    type:'normal', img:1,
+    icon:'🧙‍♂️', name:'MOSES',
+    chapter:'출애굽기 14장 — 바다 앞에 선 이스라엘', verse:'',
+    text:'"두려워하지 마라! 가만히 서서 오늘 하나님께서 너희를 위해 행하실 구원을 보라. 너희가 오늘 본 이집트인들을 다시는 영원히 볼 수 없을 것이다!"',
+    btn:'바로의 군대가 나타나다 →',
+    danger:false,divine:false,rays:false,spark:false,flash:false,doubt:false,
+  },
+  {
+    type:'normal', img:2,
+    icon:'👥', name:'ISRAELITES',
+    chapter:'바로의 군대가 쫓아온다', verse:'출 14:11',
+    text:'"이집트에 무덤이 없어서 광야에서 죽으라고 우리를 데려왔습니까?! 어찌하여 우리를 이집트에서 이끌어냈습니까? 이집트인들을 섬기는 것이 광야에서 죽는 것보다 낫겠습니다!"',
+    btn:'모세의 내적 갈등 →',
+    danger:true,divine:false,rays:false,spark:false,flash:false,doubt:false,
+  },
+  // ── CHOICE SCENE ──
+  {
+    type:'choice', img:2,
+    icon:'🧙‍♂️', name:'MOSES',
+    chapter:'모세의 내적 갈등', verse:'출 14:13',
+    text:'군대가 등 뒤에서 쫓아오고, 앞에는 광활한 홍해가 가로막혀 있다. 백성들은 울부짖고 있다. 지금 이 순간, 모세의 마음속에서 두 목소리가 충돌한다…',
+    btn:'선택하기',
+    danger:true,divine:false,rays:false,spark:false,flash:false,doubt:true,
+  },
+  // ── AFTER CHOICE (always same) ──
+  {
+    type:'normal', img:2,
+    icon:'✨', name:'GOD',
+    chapter:'하나님이 모세에게 말씀하시다', verse:'출 14:16',
+    text:'"어찌하여 내게 부르짖느냐? 이스라엘 자손에게 앞으로 나아가게 하라. 너는 지팡이를 들고 손을 바다 위로 내밀어 그것이 갈라지게 하라. 이스라엘 자손이 바다 가운데 마른 땅으로 행하리라."',
+    btn:'지팡이를 들다 →',
+    danger:false,divine:true,rays:true,spark:true,flash:false,doubt:false,
+  },
+  {
+    type:'normal', img:1,
+    icon:'🧙‍♂️', name:'MOSES',
+    chapter:'바다가 갈라지다', verse:'출 14:21',
+    text:'모세가 손을 바다 위로 내밀자, 하나님이 강한 동풍으로 밤새 바닷물을 물러가게 하셨다. 물이 갈라지고 마른 땅이 드러났다! 물은 좌우로 벽이 되었다.',
+    btn:'이스라엘이 건너가다 →',
+    danger:false,divine:true,rays:true,spark:true,flash:false,doubt:false,
+  },
+  {
+    type:'normal', img:1,
+    icon:'🙌', name:'ISRAELITES',
+    chapter:'이스라엘이 마른 땅을 건너가다', verse:'출 14:22',
+    text:'"보라! 마른 땅이 나타났다! 하나님이 길을 내셨도다! 어서 건너가자, 두려워 말라! 하나님의 손이 우리와 함께하신다!"',
+    btn:'바로의 군대가 뒤따르다 →',
+    danger:false,divine:true,rays:false,spark:false,flash:false,doubt:false,
+  },
+  {
+    type:'normal', img:2,
+    icon:'⚔️', name:"PHARAOH'S GENERAL",
+    chapter:'바로의 군대가 바다로 들어오다', verse:'출 14:23',
+    text:'"이스라엘을 뒤쫓아라! 바다 한가운데로 진격하라! 바로 폐하의 명을 받들어 단 한 명도 살려두지 마라!"',
+    btn:'바다를 닫아라 →',
+    danger:true,divine:false,rays:false,spark:false,flash:false,doubt:false,
+  },
+  {
+    type:'normal', img:2,
+    icon:'🧙‍♂️', name:'MOSES',
+    chapter:'바다가 닫히다', verse:'출 14:27',
+    text:'새벽에 하나님이 불과 구름 기둥으로 이집트 군대를 어지럽게 하셨다. 모세가 다시 손을 바다 위로 내밀자, 바다가 제자리로 돌아와 바로의 군대 전체를 덮쳤다!',
+    btn:'찬양 →',
+    danger:true,divine:false,rays:false,spark:false,flash:true,doubt:false,
+  },
+  {
+    type:'normal', img:1,
+    icon:'🎵', name:'MIRIAM',
+    chapter:'미리암의 노래', verse:'출 15:21',
+    text:'"여호와를 찬송하라! 그는 높고 영화로우심이여, 말과 그 탄 자를 바다에 던지셨도다!" 이스라엘은 하나님의 능력을 눈으로 보고 하나님과 그의 종 모세를 믿었다.',
+    btn:'✨ 마치다',
+    danger:false,divine:true,rays:true,spark:true,flash:false,doubt:false,
+  },
+];
+
+let cur = -1;
+let choiceMade = false; // tracks if choice was made this run
+let typeTimer = null;
+
+function setIllus(which) {
+  document.getElementById('illus1').style.opacity = which===1?'1':'0';
+  document.getElementById('illus2').style.opacity = which===2?'1':'0';
+}
+function setOverlays(s) {
+  document.getElementById('overlay-danger').style.opacity = s.danger?'1':'0';
+  document.getElementById('overlay-divine').style.opacity = s.divine?'1':'0';
+  document.getElementById('overlay-doubt').style.opacity  = s.doubt?'1':'0';
+  document.getElementById('light-rays').style.opacity = s.rays?'1':'0';
+}
+function flashEffect() {
+  const el=document.getElementById('overlay-flash');
+  el.style.transition='opacity 0s';el.style.opacity='1';
+  setTimeout(()=>{el.style.transition='opacity 1.2s';el.style.opacity='0';},80);
+}
+function spawnSparks(n=30) {
+  const colors=['#F5C842','#ffe480','#fff8a0','#ffffff','#ffd060'];
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const sp=document.createElement('div');
+    sp.className='spark';
+    const a=Math.random()*Math.PI*2, d=60+Math.random()*140;
+    sp.style.setProperty('--dx',Math.cos(a)*d+'px');
+    sp.style.setProperty('--dy',Math.sin(a)*d+'px');
+    sp.style.width=sp.style.height=(3+Math.random()*5)+'px';
+    sp.style.background=colors[Math.floor(Math.random()*colors.length)];
+    sp.style.left=(15+Math.random()*70)+'vw';
+    sp.style.top=(10+Math.random()*55)+'vh';
+    sp.style.animationDuration=(0.9+Math.random()*0.8)+'s';
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(),1800);
+  },i*40);
+}
+function typeText(text) {
+  clearInterval(typeTimer);
+  const el=document.getElementById('dialog-content');
+  el.textContent='';let i=0;
+  typeTimer=setInterval(()=>{
+    if(i<text.length) el.textContent+=text[i++];
+    else clearInterval(typeTimer);
+  },28);
+}
+function buildDots() {
+  const wrap=document.getElementById('dots');
+  wrap.innerHTML='';
+  // total visual steps = SCENES.length (choice counts as 1)
+  SCENES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i<=cur?' on':'');
+    wrap.appendChild(d);
+  });
+}
+function updateProgress() {
+  document.getElementById('progress-fill').style.width=((cur+1)/SCENES.length*100)+'%';
+}
+function setChapter(chapter,verse) {
+  const ct=document.getElementById('chapter-title');
+  ct.classList.remove('show');
+  setTimeout(()=>{ct.textContent=chapter;ct.classList.add('show');},300);
+  const vb=document.getElementById('verse-badge');
+  vb.classList.remove('show');
+  if(verse) setTimeout(()=>{vb.textContent=verse;vb.classList.add('show');},600);
+  else vb.classList.remove('show');
+}
+
+function showChoiceOverlay() {
+  document.getElementById('choice-overlay').classList.add('show');
+  // hide dialog button while choice is shown
+  document.getElementById('next-btn').style.visibility='hidden';
+}
+function hideChoiceOverlay() {
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+}
+
+function showResult(isB) {
+  const resultEl = document.getElementById('choice-result');
+  const card = document.getElementById('result-card');
+  card.className = 'result-card ' + (isB ? 'result-b' : 'result-a');
+  document.getElementById('result-icon').textContent = isB ? '✨' : '😰';
+  document.getElementById('result-title').textContent = isB
+    ? '믿음이 두려움을 이겼다!'
+    : '두려움이 엄습했다…';
+  document.getElementById('result-text').textContent = isB
+    ? '모세는 흔들림 없이 지팡이를 높이 들었다. 하나님의 명령이 마음속에 울렸다. "앞으로 나아가라!" 바로 그 순간, 강한 동풍이 불어오기 시작했다…'
+    : '모세도 잠시 흔들렸다. 거대한 파도 앞에 서자 다리가 떨렸다. 그러나 그 순간, 하나님의 음성이 들려왔다. "어찌하여 내게 부르짖느냐? 앞으로 나아가라!" 두려움은 믿음을 이길 수 없었다.';
+
+  // 버튼 복제로 이전 onclick 이벤트 완전 제거
+  const oldBtn = document.getElementById('result-continue-btn');
+  const newBtn = oldBtn.cloneNode(true);
+  oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+  newBtn.addEventListener('click', function() {
+    resultEl.classList.remove('show');
+    cur++;
+    applyScene(cur);
+  });
+
+  resultEl.classList.add('show');
+}
+
+function chooseA() {
+  hideChoiceOverlay();
+  choiceMade = true;
+  showResult(false);
+}
+
+function chooseB() {
+  hideChoiceOverlay();
+  choiceMade = true;
+  spawnSparks(25);
+  showResult(true);
+}
+
+function applyScene(idx) {
+  const s=SCENES[idx];
+  setIllus(s.img);
+  setOverlays(s);
+  setChapter(s.chapter, s.verse);
+  if(s.spark) spawnSparks();
+  if(s.flash) setTimeout(flashEffect,500);
+
+  document.getElementById('portrait-icon').textContent=s.icon;
+  document.getElementById('portrait-name').textContent=s.name;
+  document.getElementById('next-btn').textContent=s.btn;
+  typeText(s.text);
+  buildDots();
+  updateProgress();
+
+  // 음악 전환
+  const mood = SCENE_MOODS[idx];
+  if (mood) Music.play(mood);
+
+  if(s.type==='choice') {
+    setTimeout(showChoiceOverlay, 1800);
+  }
+}
+
+function nextScene() {
+  cur++;
+  if(cur>=SCENES.length){ showEnd(); return; }
+  const s=SCENES[cur];
+  // if this is a choice scene, applyScene handles showing overlay
+  applyScene(cur);
+}
+
+function showEnd() {
+  document.getElementById('end-screen').classList.add('show');
+  spawnSparks(40); setTimeout(()=>spawnSparks(30),800);
+}
+
+function replayGame() {
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('choice-result').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+  choiceMade=false;
+  Music.stop();
+  setTimeout(()=>{ cur=0; applyScene(0); }, 1400);
+}
+
+let muted = false;
+function toggleMute() {
+  muted = !muted;
+  const btn = document.getElementById('mute-btn');
+  if (muted) {
+    Music.stop();
+    btn.textContent = '🔇';
+  } else {
+    btn.textContent = '🔊';
+    const mood = SCENE_MOODS[cur];
+    if (mood) { Music.init(); Music.play(mood); }
+  }
+}
+
+function startGame() {
+  document.getElementById('title-screen').style.display='none';
+  Music.init();
+  cur=0; applyScene(0);
+}
+
+/* ═══════════════════════════════════════════
+   MUSIC ENGINE — Web Audio API
+   장면별 분위기:
+   'peaceful'  → 서정적 현악 아르페지오
+   'tension'   → 긴박한 저음 + 불규칙 리듬
+   'divine'    → 웅장한 합창풍 화음
+   'triumph'   → 밝고 웅장한 팡파르 느낌
+   'doubt'     → 불안한 반음계 진행
+═══════════════════════════════════════════ */
+const Music = (() => {
+  let ctx, masterGain, currentMood = null;
+  let oscList = [], lfoList = [], intervalList = [];
+
+  function init() {
+    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return; }
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0.0, ctx.currentTime);
+    masterGain.connect(ctx.destination);
+  }
+
+  function stopAll(fadeSec = 1.5) {
+    const now = ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, now);
+    masterGain.gain.linearRampToValueAtTime(0, now + fadeSec);
+    intervalList.forEach(id => clearInterval(id));
+    intervalList = [];
+    setTimeout(() => {
+      oscList.forEach(o => { try { o.stop(); } catch(e){} });
+      oscList = [];
+      lfoList.forEach(o => { try { o.stop(); } catch(e){} });
+      lfoList = [];
+    }, (fadeSec + 0.1) * 1000);
+  }
+
+  function fadeIn(vol = 0.32, dur = 2.5) {
+    const now = ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(0, now);
+    masterGain.gain.linearRampToValueAtTime(vol, now + dur);
+  }
+
+  /* ── 오실레이터 헬퍼 ── */
+  function makeOsc(type, freq, gainVal, detune=0) {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+    o.detune.value = detune;
+    g.gain.value = gainVal;
+    o.connect(g); g.connect(masterGain);
+    o.start();
+    oscList.push(o);
+    return { osc: o, gain: g };
+  }
+
+  function makeLFO(target, rate, depth, base) {
+    const lfo = ctx.createOscillator();
+    const lg  = ctx.createGain();
+    lfo.frequency.value = rate;
+    lg.gain.value = depth;
+    lfo.connect(lg); lg.connect(target);
+    target.value = base;
+    lfo.start();
+    lfoList.push(lfo);
+    return lfo;
+  }
+
+  /* reverb via convolver (simple impulse) */
+  function makeReverb(sec=2, decay=2) {
+    const conv = ctx.createConvolver();
+    const rate = ctx.sampleRate;
+    const len  = rate * sec;
+    const buf  = ctx.createBuffer(2, len, rate);
+    for (let c=0;c<2;c++) {
+      const d = buf.getChannelData(c);
+      for (let i=0;i<len;i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/len, decay);
+    }
+    conv.buffer = buf;
+    return conv;
+  }
+
+  /* ── MOODS ── */
+
+  function playPeaceful() {
+    // 서정적 아르페지오 — D장조 느낌
+    const rev = makeReverb(2.5, 2.5);
+    rev.connect(masterGain);
+    const notes = [293.66, 369.99, 440, 523.25, 587.33, 440, 369.99, 293.66]; // D4 F#4 A4 C5 D5
+    let step = 0;
+    const pad1 = makeOsc('sine', 146.83, 0.18);   // D3 pad
+    const pad2 = makeOsc('sine', 220.00, 0.12);   // A3 pad
+    makeLFO(pad1.gain.gain, 0.3, 0.06, 0.18);
+
+    function playNote() {
+      const freq = notes[step % notes.length];
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(0, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.22, ctx.currentTime + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
+      o.connect(g); g.connect(rev);
+      o.start(); o.stop(ctx.currentTime + 1);
+      oscList.push(o);
+      step++;
+    }
+    playNote();
+    intervalList.push(setInterval(playNote, 480));
+    fadeIn(0.38, 3);
+  }
+
+  function playTension() {
+    // 긴박 — 낮은 드론 + 불규칙 타악 + 반음계
+    const rev = makeReverb(1.2, 3);
+    rev.connect(masterGain);
+
+    // low drone
+    const d1 = makeOsc('sawtooth', 55,  0.08);
+    const d2 = makeOsc('sawtooth', 55.5,0.07);
+    const d3 = makeOsc('square',   110, 0.04);
+    makeLFO(d1.osc.frequency, 0.15, 3, 55);
+
+    // tension pulse
+    const pulseNotes = [116.54, 123.47, 110, 116.54, 103.83, 110]; // Bb2 B2 A2...
+    let ps = 0;
+    function pulse() {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.value = pulseNotes[ps % pulseNotes.length];
+      g.gain.setValueAtTime(0.18, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      o.connect(g); g.connect(rev);
+      o.start(); o.stop(ctx.currentTime + 0.3);
+      oscList.push(o);
+      ps++;
+    }
+    pulse();
+    // irregular rhythm
+    let delay = 0;
+    const rhythm = [300, 300, 450, 300, 600, 300, 300, 450];
+    let ri = 0;
+    function schedulePulse() {
+      intervalList.push(setTimeout(() => {
+        pulse();
+        ri++;
+        schedulePulse();
+      }, rhythm[ri % rhythm.length]));
+    }
+    schedulePulse();
+    fadeIn(0.42, 1.5);
+  }
+
+  function playDivine() {
+    // 웅장 합창풍 — 5도 화음 + 느린 스웰
+    const rev = makeReverb(3.5, 1.8);
+    rev.connect(masterGain);
+
+    const chords = [
+      [174.61, 261.63, 349.23, 523.25],  // F3 C4 F4 C5
+      [196.00, 293.66, 392.00, 587.33],  // G3 D4 G4 D5
+      [220.00, 329.63, 440.00, 659.25],  // A3 E4 A4 E5
+      [196.00, 293.66, 392.00, 587.33],
+    ];
+    let ci = 0;
+    function playChord() {
+      chords[ci % chords.length].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = i < 2 ? 'sine' : 'triangle';
+        o.frequency.value = freq;
+        o.detune.value = (Math.random()-0.5)*8;
+        g.gain.setValueAtTime(0, ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 0.8);
+        g.gain.linearRampToValueAtTime(0.09, ctx.currentTime + 2.8);
+        g.gain.linearRampToValueAtTime(0, ctx.currentTime + 3.2);
+        o.connect(g); g.connect(rev);
+        o.start(); o.stop(ctx.currentTime + 3.3);
+        oscList.push(o);
+      });
+      ci++;
+    }
+    playChord();
+    intervalList.push(setInterval(playChord, 3000));
+    // sub bass
+    makeOsc('sine', 87.31, 0.15); // F2
+    fadeIn(0.45, 3);
+  }
+
+  function playTriumph() {
+    // 성스러운 합창 — 천상의 보이스 레이어 + 긴 리버브 + 할렐루야 느낌
+    const rev = makeReverb(5, 1.4);
+    rev.connect(masterGain);
+    const rev2 = makeReverb(3, 2.2);
+    rev2.connect(masterGain);
+
+    // 소프라노 라인 — 느린 상행 멜로디 (E장조 느낌)
+    const soprano = [
+      329.63, 369.99, 415.30, 493.88, 523.25,
+      493.88, 554.37, 523.25, 493.88, 415.30,
+      369.99, 440.00, 493.88, 523.25, 587.33, 523.25
+    ];
+    let si = 0;
+    function playSoprano() {
+      const freq = soprano[si % soprano.length];
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      o.detune.value = (Math.random() - 0.5) * 5; // 인간적인 미세 피치 떨림
+      g.gain.setValueAtTime(0, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.3);
+      g.gain.linearRampToValueAtTime(0.14, ctx.currentTime + 0.9);
+      g.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.2);
+      o.connect(g); g.connect(rev);
+      o.start(); o.stop(ctx.currentTime + 1.3);
+      oscList.push(o);
+      si++;
+    }
+
+    // 알토 라인 — 3도 아래 화음
+    const alto = [
+      261.63, 293.66, 329.63, 392.00, 415.30,
+      392.00, 440.00, 415.30, 392.00, 329.63,
+      293.66, 349.23, 392.00, 415.30, 493.88, 415.30
+    ];
+    let ai = 0;
+    function playAlto() {
+      const freq = alto[ai % alto.length];
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      o.detune.value = (Math.random() - 0.5) * 6;
+      g.gain.setValueAtTime(0, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.13, ctx.currentTime + 0.4);
+      g.gain.linearRampToValueAtTime(0.10, ctx.currentTime + 0.9);
+      g.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.2);
+      o.connect(g); g.connect(rev);
+      o.start(); o.stop(ctx.currentTime + 1.3);
+      oscList.push(o);
+      ai++;
+    }
+
+    // 베이스 패드 — 깊고 성스러운 저음 지속
+    const bassPad = [
+      [164.81, 0.12], // E3
+      [196.00, 0.10], // G3
+      [246.94, 0.08], // B3
+    ];
+    bassPad.forEach(([freq, vol]) => {
+      const p = makeOsc('sine', freq, vol);
+      makeLFO(p.gain.gain, 0.18, 0.03, vol); // 아주 느린 떨림
+    });
+
+    // 오르간 풍 화음 패드 (5도+3도 겹침)
+    const organChords = [
+      [164.81, 246.94, 329.63, 493.88], // E3 B3 E4 B4
+      [196.00, 293.66, 392.00, 587.33], // G3 D4 G4 D5
+      [220.00, 329.63, 440.00, 659.25], // A3 E4 A4 E5
+      [196.00, 293.66, 392.00, 523.25], // G3 D4 G4 C5
+    ];
+    let oi = 0;
+    function playOrgan() {
+      organChords[oi % organChords.length].forEach((freq, hi) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = hi < 2 ? 'sine' : 'triangle';
+        o.frequency.value = freq;
+        o.detune.value = (Math.random() - 0.5) * 4;
+        g.gain.setValueAtTime(0, ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 1.0);
+        g.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 3.5);
+        g.gain.linearRampToValueAtTime(0, ctx.currentTime + 4.2);
+        o.connect(g); g.connect(rev2);
+        o.start(); o.stop(ctx.currentTime + 4.3);
+        oscList.push(o);
+      });
+      oi++;
+    }
+
+    // 하이 심벌 느낌 — 아주 가볍게 반짝이는 고음
+    function playShimmer() {
+      [2093, 2637, 3136].forEach(freq => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0, ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.025, ctx.currentTime + 0.1);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+        o.connect(g); g.connect(rev);
+        o.start(); o.stop(ctx.currentTime + 2.6);
+        oscList.push(o);
+      });
+    }
+
+    // 시작
+    playSoprano(); playAlto(); playOrgan(); playShimmer();
+    intervalList.push(setInterval(() => { playSoprano(); playAlto(); }, 1100));
+    intervalList.push(setInterval(playOrgan, 4000));
+    intervalList.push(setInterval(playShimmer, 5000));
+    fadeIn(0.46, 4); // 천천히 웅장하게 페이드인
+  }
+
+  function playDoubt() {
+    // 불안 — 반음계 + 트레몰로
+    const rev = makeReverb(2, 2.5);
+    rev.connect(masterGain);
+    const uneasy = [220, 233.08, 220, 207.65, 220, 246.94, 233.08, 220];
+    let ui = 0;
+    function playU() {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = uneasy[ui % uneasy.length];
+      g.gain.setValueAtTime(0, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.1);
+      g.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.5);
+      g.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.7);
+      o.connect(g); g.connect(rev);
+      o.start(); o.stop(ctx.currentTime + 0.8);
+      oscList.push(o);
+      ui++;
+    }
+    playU();
+    intervalList.push(setInterval(playU, 600));
+    // tremolo low
+    const low = makeOsc('sine', 110, 0.1);
+    makeLFO(low.gain.gain, 6, 0.08, 0.1);
+    fadeIn(0.35, 2);
+  }
+
+  /* ── 장면별 mood 매핑 ── */
+  const MOOD_MAP = {
+    peaceful: playPeaceful,
+    tension:  playTension,
+    divine:   playDivine,
+    triumph:  playTriumph,
+    doubt:    playDoubt,
+  };
+
+  function play(mood) {
+    if (!ctx) return;
+    if (mood === currentMood) return;
+    currentMood = mood;
+    stopAll(1.2);
+    setTimeout(() => {
+      if (currentMood !== mood) return; // mood changed again during fade
+      MOOD_MAP[mood]?.();
+    }, 1300);
+  }
+
+  function stop() { stopAll(2); currentMood = null; }
+
+  return { init, play, stop };
+})();
+
+/* 장면 index → mood 매핑 */
+const SCENE_MOODS = [
+  'peaceful',  // 0: 바다 앞에 선 이스라엘
+  'tension',   // 1: 군대가 쫓아온다
+  'doubt',     // 2: 모세의 내적 갈등
+  'divine',    // 3: 하나님 말씀
+  'divine',    // 4: 바다가 갈라지다
+  'triumph',   // 5: 이스라엘이 건너가다
+  'tension',   // 6: 군대가 뒤따르다
+  'tension',   // 7: 바다가 닫히다
+  'triumph',   // 8: 미리암의 노래
+];
+</script>
+</body>
+</html>

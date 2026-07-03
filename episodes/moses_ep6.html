@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모세와 금송아지 — 출애굽기 32장</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#F5C842;--gold-dark:#c89010;--red:#e04040;--blue:#4a90d9;}
+html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+#game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
+
+/* ── SCENE ── */
+#scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
+.illus{position:absolute;inset:0;background-size:cover;background-position:center top;transition:opacity 1.8s ease;will-change:transform,opacity;}
+#illus1{background-image:url('../images/ep06_img1.jpg');opacity:1;animation:kb1 18s ease-in-out infinite alternate;}
+#illus2{background-image:url('../images/ep06_img2.jpg');opacity:0;animation:kb2 18s ease-in-out infinite alternate;}
+@keyframes kb1{from{transform:scale(1.05) translate(0,0);}to{transform:scale(1.10) translate(-8px,-6px);}}
+@keyframes kb2{from{transform:scale(1.07) translate(4px,0);}to{transform:scale(1.04) translate(-6px,-8px);}}
+
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center 45%,transparent 28%,rgba(0,0,0,0.68) 100%);z-index:5;pointer-events:none;}
+
+/* ── OVERLAYS ── */
+.ov{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity 1.5s;}
+#ov-anger{background:rgba(60,10,10,0.52);opacity:0;}
+#ov-divine{background:radial-gradient(ellipse at 50% 5%,rgba(255,240,100,0.48) 0%,transparent 65%);opacity:0;}
+#ov-mercy{background:radial-gradient(ellipse at 50% 0%,rgba(100,160,255,0.38) 0%,transparent 60%);opacity:0;}
+#ov-flash{background:rgba(255,80,40,0.7);opacity:0;}
+#ov-gold{background:radial-gradient(ellipse at 60% 35%,rgba(255,200,50,0.32) 0%,transparent 55%);opacity:0;}
+
+#light-rays{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,200,80,0.22) 8deg,transparent 16deg,transparent 24deg,rgba(255,200,60,0.16) 32deg,transparent 40deg,transparent 48deg,rgba(255,220,80,0.24) 56deg,transparent 64deg);animation:rayRot 10s linear infinite;}
+@keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
+
+#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
+#chapter-title.show{opacity:1;}
+#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
+#verse-badge.show{opacity:1;}
+
+/* ── CHOICE ── */
+#choice-overlay{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.7s;}
+#choice-overlay.show{opacity:1;pointer-events:all;}
+.choice-title{font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
+.choice-title em{color:var(--gold);font-style:normal;}
+.choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
+.choice-btn{position:relative;overflow:hidden;border:none;cursor:pointer;padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;}
+.choice-btn:hover{transform:translateY(-3px) scale(1.01);}
+.choice-btn:active{transform:translateY(0) scale(0.99);}
+.opt-anger{background:linear-gradient(135deg,#1a0500 0%,#0d0200 100%);box-shadow:0 4px 20px rgba(220,60,30,0.4);border:1px solid rgba(220,80,40,0.4);}
+.opt-anger:hover{box-shadow:0 6px 28px rgba(255,80,40,0.65);border-color:rgba(255,100,60,0.7);}
+.opt-mercy{background:linear-gradient(135deg,#00081a 0%,#00050f 100%);box-shadow:0 4px 20px rgba(60,120,220,0.4);border:1px solid rgba(80,140,220,0.35);}
+.opt-mercy:hover{box-shadow:0 6px 28px rgba(80,150,255,0.6);border-color:rgba(100,170,255,0.7);}
+.choice-inner{display:flex;align-items:center;gap:14px;padding:clamp(12px,2.5vw,16px) clamp(14px,3vw,20px);}
+.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.opt-anger .choice-label{color:#ff6640;text-shadow:0 0 12px rgba(255,80,40,0.9);}
+.opt-mercy .choice-label{color:#6ab0ff;text-shadow:0 0 12px rgba(100,170,255,0.9);}
+.choice-text-wrap{flex:1;}
+.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.opt-anger .choice-main{color:#ffe8e0;}
+.opt-mercy .choice-main{color:#d0e8ff;}
+.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.opt-anger .choice-sub{color:#ff8060;}
+.opt-mercy .choice-sub{color:#6ab0ff;}
+.choice-icon{font-size:1.8rem;flex-shrink:0;}
+.choice-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.07) 50%,transparent 60%);transform:translateX(-100%);transition:transform 0.4s;}
+.choice-btn:hover::after{transform:translateX(100%);}
+
+/* ── RESULT ── */
+#choice-result{position:absolute;inset:0;z-index:35;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s;background:rgba(0,0,0,0.68);}
+#choice-result.show{opacity:1;pointer-events:all;}
+.result-card{background:rgba(6,4,2,0.94);border-radius:12px;padding:clamp(20px,4vw,28px) clamp(20px,5vw,34px);max-width:min(430px,90vw);text-align:center;border:1px solid rgba(255,255,255,0.1);}
+.result-icon{font-size:clamp(2.2rem,5vw,3rem);margin-bottom:10px;display:block;}
+.result-title{font-family:'Cinzel',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
+.result-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
+.res-anger .result-title{color:#ff7050;}
+.res-mercy .result-title{color:#6ab0ff;}
+.result-continue{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
+
+/* ── SPARKS ── */
+.spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
+@keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
+
+#progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#mute-btn{position:absolute;top:12px;right:14px;z-index:25;background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);}
+#mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
+
+/* ── DIALOG ── */
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#08050a 0%,#10080c 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
+#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;}
+.pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
+@keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
+#portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
+@keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
+#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
+.dots{display:flex;gap:5px;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
+#next-btn{font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+#next-btn:active{transform:translateY(0);}
+
+/* ── TITLE ── */
+#title-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at 50% 40%,#100500 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:hidden;}
+.title-bg{position:absolute;inset:0;background-image:url('../images/ep06_img3.jpg');background-size:cover;background-position:center;opacity:0.22;filter:blur(2px);animation:kb1 15s ease-in-out infinite alternate;}
+.title-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(12,4,0,0.72) 0%,rgba(0,0,0,0.94) 100%);}
+#title-screen>*{position:relative;z-index:1;}
+.title-emblem{font-size:3.5rem;animation:tFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,80,20,0.9));}
+@keyframes tFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,160,30,0.9),0 0 70px rgba(255,120,20,0.4);}
+.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+
+/* ── END ── */
+#end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#080010 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
+.end-bg{position:absolute;inset:0;background-image:url('../images/ep06_img4.jpg');background-size:cover;background-position:center;opacity:0.18;filter:blur(3px);}
+.end-overlay{position:absolute;inset:0;background:rgba(4,2,8,0.84);}
+#end-screen>*{position:relative;z-index:1;}
+#end-screen.show{opacity:1;pointer-events:all;}
+#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,160,30,0.5);}
+#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
+.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(60,40,10,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#replay-btn:hover{background:rgba(100,70,15,0.6);}
+
+/* ── 미디어 쿼리 ── */
+@media (max-width:480px){
+  #portrait-name{font-size:0.48rem;letter-spacing:0.06em;}
+  .choice-icon{font-size:1.3rem;}
+  .choice-main{font-size:0.78rem;}
+  .choice-title{font-size:0.78rem;margin-bottom:16px;}
+  .result-card{padding:18px 18px;}
+  .result-icon{font-size:2.2rem;}
+  .result-title{font-size:0.95rem;}
+  .result-text{font-size:0.78rem;line-height:1.7;}
+  .result-continue{padding:7px 16px;font-size:0.68rem;}
+  #start-btn{padding:11px 32px;font-size:0.88rem;}
+  .title-ep{font-size:0.62rem;}
+  .title-sub{font-size:0.80rem;}
+  #end-screen p{font-size:0.78rem;}
+}
+@media (max-width:360px){
+  #dialog-inner{min-height:100px;}
+  .choice-label{font-size:1.2rem;width:28px;}
+  .dots .dot{width:5px;height:5px;}
+}
+@media (max-height:500px) and (orientation:landscape){
+  #dialog-inner{min-height:80px;max-height:110px;}
+  #portrait-icon{font-size:1.5rem;}
+  #dialog-text{font-size:0.75rem;}
+  .choice-title{font-size:0.72rem;margin-bottom:10px;}
+  .choice-inner{padding:9px 12px;}
+  .result-card{padding:14px 18px;}
+  .title-emblem{font-size:2.4rem;}
+}
+
+/* ── iOS Safe Area ── */
+#game{
+  padding-bottom:env(safe-area-inset-bottom);
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #dialog{
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+<div id="game">
+
+  <!-- TITLE -->
+  <div id="title-screen">
+    <div class="title-bg"></div>
+    <div class="title-overlay"></div>
+    <div class="title-emblem">🐂</div>
+    <div class="title-ep">EPISODE 6</div>
+    <h1>모세와 금송아지</h1>
+    <div class="title-sub">출애굽기 32장</div>
+    <div class="title-verse">"그들이 이미 내가 명령한 길에서 속히 떠나<br>자기를 위하여 금송아지를 만들었도다"<br>— 출애굽기 32:8</div>
+    <button id="start-btn" onclick="startGame()">▶ &nbsp;시작하기</button>
+  </div>
+
+  <!-- SCENE -->
+  <div id="scene">
+    <div class="illus" id="illus1"></div>
+    <div class="illus" id="illus2"></div>
+    <div class="vignette"></div>
+    <div class="ov" id="ov-anger"></div>
+    <div class="ov" id="ov-divine"></div>
+    <div class="ov" id="ov-mercy"></div>
+    <div class="ov" id="ov-gold"></div>
+    <div class="ov" id="ov-flash"></div>
+    <div id="light-rays"></div>
+    <div id="chapter-title"></div>
+    <div id="verse-badge"></div>
+
+    <!-- CHOICE -->
+    <div id="choice-overlay">
+      <div class="choice-title">
+        <em>모세의 결단</em><br>
+        금송아지 앞에서 춤추는 백성들, 손에는 하나님의 말씀이 새겨진 돌판.<br>
+        모세의 가슴에 두 마음이 충돌했다…
+      </div>
+      <div class="choices">
+        <button class="choice-btn opt-anger" onclick="choose(false)">
+          <div class="choice-inner">
+            <span class="choice-label">A</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"그 사이를 못 참고 신상을 만들다니.. 용서할 수 없어!"</span>
+              <span class="choice-sub">분노가 폭발한다 — 돌판을 내던지다</span>
+            </div>
+            <span class="choice-icon">💢</span>
+          </div>
+        </button>
+        <button class="choice-btn opt-mercy" onclick="choose(true)">
+          <div class="choice-inner">
+            <span class="choice-label">B</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"하나님께 긍휼을 구하자"</span>
+              <span class="choice-sub">중보의 기도로 나아간다 — 백성을 위해 엎드리다</span>
+            </div>
+            <span class="choice-icon">🙏</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="choice-result">
+      <div class="result-card" id="result-card">
+        <span class="result-icon" id="result-icon"></span>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-text" id="result-text"></div>
+        <button class="result-continue" id="result-continue-btn">계속 →</button>
+      </div>
+    </div>
+
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+    <button id="mute-btn" onclick="toggleMute()">🔊</button>
+  </div>
+
+  <!-- DIALOG -->
+  <div id="dialog">
+    <div id="dialog-inner">
+      <div id="portrait-wrap">
+        <div class="pglow"></div>
+        <div id="portrait-icon">⚡</div>
+        <div id="portrait-name">MOSES</div>
+      </div>
+      <div id="dialog-text-wrap">
+        <div id="dialog-text"><span id="dialog-content"></span></div>
+        <div id="dialog-actions">
+          <div class="dots" id="dots"></div>
+          <button id="next-btn" onclick="nextScene()">계속 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div id="end-screen">
+    <div class="end-bg"></div>
+    <div class="end-overlay"></div>
+    <div style="font-size:2.8rem;">🙏✨📜</div>
+    <h2>회복의 십계명</h2>
+    <p>모세는 깨뜨린 돌판 대신<br>새 돌판을 가지고 다시 산에 올랐습니다.<br>실패와 분노 뒤에도 하나님은<br>다시 말씀을 새겨 주셨습니다.<br><br>"하나님이 언약의 말씀 곧<br>십계명을 그 판들에 기록하셨더라."</p>
+    <div class="end-verse">출애굽기 34:28</div>
+    <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
+  </div>
+</div>
+
+<script>
+const SCENES = [
+  {
+    type:'normal', img:2,
+    icon:'✨', name:"GOD",
+    chapter:'시내산 40일 — 하나님의 말씀', verse:'출 32:1',
+    text:'모세가 시내산에 올라간 지 사십 일이 지났다. 하나님은 손수 두 돌판에 십계명을 새겨 모세에게 주셨다. 그 사이, 산 아래 백성들은 기다림을 견디지 못하고 있었다.',
+    btn:'산 아래에서 →',
+    anger:false, divine:true, mercy:false, gold:false, rays:true, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'😤', name:"PEOPLE",
+    chapter:'참지 못한 백성들', verse:'출 32:2-4',
+    text:'"일어나라, 우리를 위해 우리 앞에서 인도할 신을 만들라. 이 모세는 어찌 됐는지 알 수 없도다." 아론이 금 귀고리를 모아 금송아지를 만들었다. 백성은 외쳤다. "이스라엘아, 이것이 너희를 이집트에서 데려낸 신이다!"',
+    btn:'하나님의 진노 →',
+    anger:false, divine:false, mercy:false, gold:true, rays:false, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'✨', name:"GOD",
+    chapter:'하나님의 진노', verse:'출 32:7-10',
+    text:'여호와께서 모세에게 말씀하셨다. "내려가라! 네가 이집트에서 인도해 낸 백성이 타락했다. 그들이 금송아지를 만들고 그 앞에 절하며 제사를 드렸다. 나의 진노가 그들을 불태울 것이다. 너는 비켜라!"',
+    btn:'모세의 결단 →',
+    anger:true, divine:false, mercy:false, gold:false, rays:false, flash:true
+  },
+  {
+    type:'choice', img:1,
+    icon:'⚡', name:"MOSES",
+    chapter:'모세의 결단', verse:'출 32:11-19',
+    text:'돌판을 두 손에 든 채 모세는 산을 내려왔다. 금송아지 앞에서 춤추며 노래하는 백성의 소리가 들려왔다. 모세의 심장이 타올랐다. 지금 이 순간, 어떻게 할 것인가?',
+    btn:'선택하기',
+    anger:true, divine:false, mercy:false, gold:true, rays:false, flash:false
+  },
+  {
+    type:'normal', img:2,
+    icon:'🙏', name:"MOSES",
+    chapter:'중보의 기도 — 백성을 위해 엎드리다', verse:'출 32:11-13',
+    text:'모세가 간구했다. "여호와여, 어찌하여 진노하시나이까. 이집트에서 큰 능력으로 인도하신 주의 백성에게 하나님은 아브라함과 이삭과 야곱에게 언약하신 것을 기억하소서. 주의 종들에게 하신 언약을 기억하소서."',
+    btn:'하나님의 응답 →',
+    anger:false, divine:true, mercy:true, gold:false, rays:true, flash:false
+  },
+  {
+    type:'normal', img:2,
+    icon:'✨', name:"GOD",
+    chapter:'하나님이 뜻을 돌이키시다', verse:'출 32:14',
+    text:'여호와께서 그 뜻을 돌이키사 말씀하신 재앙을 그 백성에게 내리지 아니하셨다. 한 사람의 중보 기도가 하나님의 마음을 움직였다. 모세는 분노보다 긍휼을 선택했고, 그 긍휼이 이스라엘 민족을 살렸다.',
+    btn:'돌판을 산산이 →',
+    anger:false, divine:true, mercy:true, gold:false, rays:true, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'⚡', name:"MOSES",
+    chapter:'돌판을 깨뜨리다', verse:'출 32:19-20',
+    text:'진영에 가까이 와서 금송아지와 백성의 춤추는 것을 보고 모세가 크게 노하여 손에서 두 돌판을 산 아래로 던져 깨뜨렸다. 그리고 금송아지를 불살라 가루로 만들어 물에 뿌려 이스라엘 자손에게 마시게 했다.',
+    btn:'다시 산으로 →',
+    anger:true, divine:false, mercy:false, gold:false, rays:false, flash:true
+  },
+  {
+    type:'normal', img:2,
+    icon:'✨', name:"GOD",
+    chapter:'새 돌판 — 하나님의 회복', verse:'출 34:28',
+    text:'모세가 새 돌판 둘을 다듬어 새벽에 시내산에 올랐다. 사십 일 사십 야를 하나님과 함께하며, 깨뜨린 돌판 대신 새 십계명이 새겨졌다. 실패 뒤에도 하나님은 다시 말씀을 주셨다. "언약의 말씀 곧 십계명을 그 판들에 기록하셨더라."',
+    btn:'✨ 마치다',
+    anger:false, divine:true, mercy:true, gold:false, rays:true, flash:false
+  }
+];
+
+const MOODS = ['divine','gold','anger','choice_anger','mercy','divine','anger','divine'];
+
+let cur=-1, muted=false, typeTimer=null;
+
+function setIllus(w){
+  document.getElementById('illus1').style.opacity = w===1?'1':'0';
+  document.getElementById('illus2').style.opacity = w===2?'1':'0';
+}
+function setOverlays(s){
+  document.getElementById('ov-anger').style.opacity  = s.anger ?'1':'0';
+  document.getElementById('ov-divine').style.opacity = s.divine?'1':'0';
+  document.getElementById('ov-mercy').style.opacity  = s.mercy ?'1':'0';
+  document.getElementById('ov-gold').style.opacity   = s.gold  ?'1':'0';
+  document.getElementById('light-rays').style.opacity= s.rays  ?'1':'0';
+}
+function flashEffect(){
+  const el=document.getElementById('ov-flash');
+  el.style.transition='opacity 0s'; el.style.opacity='1';
+  setTimeout(()=>{el.style.transition='opacity 1.4s'; el.style.opacity='0';},90);
+}
+function spawnSparks(n=28, colors){
+  const cols = colors || ['#F5C842','#ff8020','#ffe480','#ff6010','#ffffff'];
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const sp=document.createElement('div'); sp.className='spark';
+    const a=Math.random()*Math.PI*2, d=55+Math.random()*140;
+    sp.style.setProperty('--dx',Math.cos(a)*d+'px');
+    sp.style.setProperty('--dy',Math.sin(a)*d+'px');
+    sp.style.width=sp.style.height=(3+Math.random()*6)+'px';
+    sp.style.background=cols[Math.floor(Math.random()*cols.length)];
+    sp.style.left=(10+Math.random()*80)+'vw';
+    sp.style.top=(8+Math.random()*58)+'vh';
+    sp.style.animationDuration=(0.9+Math.random()*0.9)+'s';
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(),1900);
+  },i*38);
+}
+function typeText(text){
+  clearInterval(typeTimer);
+  const el=document.getElementById('dialog-content');
+  el.textContent=''; let i=0;
+  typeTimer=setInterval(()=>{
+    if(i<text.length) el.textContent+=text[i++];
+    else clearInterval(typeTimer);
+  },26);
+}
+function buildDots(){
+  const wrap=document.getElementById('dots'); wrap.innerHTML='';
+  SCENES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i<=cur?' on':'');
+    wrap.appendChild(d);
+  });
+}
+function setChapter(ch,vs){
+  const ct=document.getElementById('chapter-title');
+  ct.classList.remove('show');
+  setTimeout(()=>{ct.textContent=ch; ct.classList.add('show');},300);
+  const vb=document.getElementById('verse-badge');
+  vb.classList.remove('show');
+  if(vs) setTimeout(()=>{vb.textContent=vs; vb.classList.add('show');},600);
+  else vb.classList.remove('show');
+}
+function showChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.add('show');
+  document.getElementById('next-btn').style.visibility='hidden';
+}
+function hideChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+}
+
+function choose(isMercy){
+  hideChoiceOverlay();
+  const resultEl=document.getElementById('choice-result');
+  const card=document.getElementById('result-card');
+  if(isMercy){
+    card.className='result-card res-mercy';
+    document.getElementById('result-icon').textContent='🙏';
+    document.getElementById('result-title').textContent='긍휼이 분노를 이기다';
+    document.getElementById('result-text').textContent='모세는 치솟는 분노를 꾹 눌렀다. "하나님이 아브라함에게, 이삭에게, 야곱에게 하신 언약이 있다. 이 백성은 나의 백성이 아니라 하나님의 백성이다." 모세는 무릎을 꿇었다. 손에 든 돌판보다 하나님의 마음이 먼저였다.';
+    if(!muted) Music.play('mercy');
+    spawnSparks(20, ['#6ab0ff','#a0d0ff','#ffffff','#60c0ff']);
+  } else {
+    card.className='result-card res-anger';
+    document.getElementById('result-icon').textContent='💢';
+    document.getElementById('result-title').textContent='분노가 폭발하다';
+    document.getElementById('result-text').textContent='"어떻게 이럴 수가 있느냐!" 모세는 손에 쥔 돌판을 내동댕이쳤다. 돌판이 산산조각 났다. 하나님의 말씀이 새겨진 그 판이 먼지가 됐다. 분노는 정당했다. 그러나 그 순간, 모세도 하나님의 말씀을 깨뜨린 자가 됐다. 이후 모세는 다시 하나님 앞에 엎드렸다.';
+    if(!muted) Music.play('anger');
+    spawnSparks(22, ['#ff6040','#ff8020','#ffcc00','#ff3030']);
+    setTimeout(flashEffect, 200);
+  }
+  const oldBtn=document.getElementById('result-continue-btn');
+  const newBtn=oldBtn.cloneNode(true);
+  oldBtn.parentNode.replaceChild(newBtn,oldBtn);
+  newBtn.addEventListener('click',()=>{
+    resultEl.classList.remove('show');
+    cur++; applyScene(cur);
+  });
+  resultEl.classList.add('show');
+}
+
+function applyScene(idx){
+  const s=SCENES[idx];
+  setIllus(s.img);
+  setOverlays(s);
+  setChapter(s.chapter, s.verse);
+  if(s.flash) setTimeout(flashEffect,400);
+  if(s.anger && !s.divine) spawnSparks(12, ['#ff6040','#ff8020','#ffaa00']);
+  document.getElementById('portrait-icon').textContent=s.icon;
+  document.getElementById('portrait-name').textContent=s.name;
+  document.getElementById('next-btn').textContent=s.btn;
+  typeText(s.text);
+  buildDots();
+  document.getElementById('progress-fill').style.width=((idx+1)/SCENES.length*100)+'%';
+  const mood=MOODS[idx]; if(!muted && mood && mood!=='choice_anger') Music.play(mood);
+  if(s.type==='choice') setTimeout(showChoiceOverlay,1900);
+}
+function nextScene(){
+  cur++;
+  if(cur>=SCENES.length){ showEnd(); return; }
+  applyScene(cur);
+}
+function showEnd(){
+  document.getElementById('end-screen').classList.add('show');
+  if(!muted) Music.play('holy');
+  spawnSparks(40, ['#6ab0ff','#a0d0ff','#F5C842','#ffffff']);
+  setTimeout(()=>spawnSparks(25,['#F5C842','#fff','#aaddff']),900);
+}
+function replayGame(){
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('choice-result').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+  Music.stop();
+  setTimeout(()=>{ cur=0; applyScene(0); },1400);
+}
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  Music.init(); cur=0; applyScene(0);
+}
+function toggleMute(){
+  muted=!muted;
+  document.getElementById('mute-btn').textContent=muted?'🔇':'🔊';
+  if(muted) Music.stop();
+  else{ Music.init(); const m=MOODS[cur]; if(m && m!=='choice_anger') Music.play(m); }
+}
+
+/* ════════════════════════════════════
+   MUSIC ENGINE
+   moods: divine / gold / anger / mercy / holy
+════════════════════════════════════ */
+const Music=(()=>{
+  let ctx,masterGain,currentMood=null;
+  let oscList=[],lfoList=[],intervalList=[];
+
+  function init(){
+    if(ctx) return;
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=ctx.createGain();
+    masterGain.gain.setValueAtTime(0,ctx.currentTime);
+    masterGain.connect(ctx.destination);
+  }
+  function stopAll(fade=1.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value,now);
+    masterGain.gain.linearRampToValueAtTime(0,now+fade);
+    intervalList.forEach(id=>clearInterval(id)); intervalList=[];
+    setTimeout(()=>{
+      oscList.forEach(o=>{try{o.stop();}catch(e){}}); oscList=[];
+      lfoList.forEach(o=>{try{o.stop();}catch(e){}}); lfoList=[];
+    },(fade+0.1)*1000);
+  }
+  function fadeIn(vol=0.32,dur=2.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(0,now);
+    masterGain.gain.linearRampToValueAtTime(vol,now+dur);
+  }
+  function makeOsc(type,freq,gainVal){
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type; o.frequency.value=freq; g.gain.value=gainVal;
+    o.connect(g); g.connect(masterGain); o.start();
+    oscList.push(o); return {osc:o,gain:g};
+  }
+  function makeLFO(target,rate,depth,base){
+    const lfo=ctx.createOscillator(),lg=ctx.createGain();
+    lfo.frequency.value=rate; lg.gain.value=depth;
+    lfo.connect(lg); lg.connect(target); target.value=base;
+    lfo.start(); lfoList.push(lfo);
+  }
+  function makeReverb(sec=2,decay=2){
+    const conv=ctx.createConvolver(),rate=ctx.sampleRate,len=rate*sec;
+    const buf=ctx.createBuffer(2,len,rate);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}
+    conv.buffer=buf; return conv;
+  }
+
+  /* DIVINE — 하나님의 임재, 장엄한 코드 */
+  function playDivine(){
+    const rev=makeReverb(3.5,1.6); rev.connect(masterGain);
+    const chords=[[174.61,261.63,349.23,523.25],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let ci=0;
+    function pc(){
+      chords[ci%chords.length].forEach((freq,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=i<2?'sine':'triangle'; o.frequency.value=freq;
+        o.detune.value=(Math.random()-0.5)*6;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.10,ctx.currentTime+1.0);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.2);
+        o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+3.3);
+        oscList.push(o);
+      }); ci++;
+    }
+    pc(); intervalList.push(setInterval(pc,3200));
+    makeOsc('sine',87.31,0.12); fadeIn(0.40,3);
+  }
+
+  /* GOLD — 금송아지, 왜곡된 축제 느낌 */
+  function playGold(){
+    const rev=makeReverb(1.8,2.8); rev.connect(masterGain);
+    const festive=[392,440,392,523.25,440,392,349.23,392,440,523.25,587.33,523.25];
+    let fi=0;
+    function pf(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='triangle'; o.frequency.value=festive[fi%festive.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.13,ctx.currentTime+0.06);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.45);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.5);
+      oscList.push(o); fi++;
+    }
+    pf(); intervalList.push(setInterval(pf,320));
+    const bass=makeOsc('sine',98,0.10); makeLFO(bass.gain.gain,3.5,0.06,0.10);
+    fadeIn(0.36,2);
+  }
+
+  /* ANGER — 분노, 불협화음 긴장감 */
+  function playAnger(){
+    const rev=makeReverb(1.2,3.8); rev.connect(masterGain);
+    const tense=[220,233.08,220,207.65,220,246.94,220,233.08,196,220,233.08,246.94];
+    let ti=0;
+    function pt(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sawtooth'; o.frequency.value=tense[ti%tense.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.14,ctx.currentTime+0.04);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.38);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.4);
+      oscList.push(o); ti++;
+    }
+    // 드럼 킥
+    function kick(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(120,ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(45,ctx.currentTime+0.18);
+      g.gain.setValueAtTime(0.28,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.28);
+      o.connect(g); g.connect(masterGain); o.start(); o.stop(ctx.currentTime+0.3);
+      oscList.push(o);
+    }
+    kick(); pt();
+    const rhythm=[300,300,450,300,600,300];
+    let ri=0;
+    function schedK(){
+      intervalList.push(setTimeout(()=>{kick();pt();ri++;schedK();},rhythm[ri%rhythm.length]));
+    }
+    schedK(); fadeIn(0.44,1.5);
+  }
+
+  /* MERCY — 긍휼/기도, 부드럽고 따뜻한 선율 */
+  function playMercy(){
+    const rev=makeReverb(4.0,1.5); rev.connect(masterGain);
+    const mel=[261.63,293.66,329.63,392,349.23,329.63,293.66,261.63,
+               246.94,261.63,293.66,329.63,392,440,392,349.23];
+    let mi=0;
+    function pm(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=mel[mi%mel.length];
+      o.detune.value=(Math.random()-0.5)*4;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.14,ctx.currentTime+0.25);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.95);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.0);
+      oscList.push(o); mi++;
+    }
+    pm(); intervalList.push(setInterval(pm,900));
+    [[130.81,0.10],[164.81,0.08]].forEach(([f,v])=>{const p=makeOsc('sine',f,v);makeLFO(p.gain.gain,0.22,0.04,v);});
+    fadeIn(0.38,3);
+  }
+
+  /* HOLY — 엔딩 합창 */
+  function playHoly(){
+    const rev=makeReverb(5,1.4); rev.connect(masterGain);
+    const rev2=makeReverb(3,2.0); rev2.connect(masterGain);
+    const sop=[329.63,369.99,415.30,493.88,523.25,493.88,554.37,523.25,493.88,415.30,369.99,440,493.88,523.25,587.33,523.25];
+    const alt=[261.63,293.66,329.63,392,415.30,392,440,415.30,392,329.63,293.66,349.23,392,415.30,493.88,415.30];
+    let si=0,ai=0;
+    function pS(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=sop[si%sop.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.16,ctx.currentTime+0.3);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); si++;
+    }
+    function pA(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=alt[ai%alt.length];
+      o.detune.value=(Math.random()-0.5)*6;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.11,ctx.currentTime+0.4);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); ai++;
+    }
+    const org=[[164.81,246.94,329.63,493.88],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let oi=0;
+    function pO(){
+      org[oi%org.length].forEach((freq,hi)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=hi<2?'sine':'triangle'; o.frequency.value=freq;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.058,ctx.currentTime+1.0);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.9);
+        o.connect(g); g.connect(rev2); o.start(); o.stop(ctx.currentTime+4.0);
+        oscList.push(o);
+      }); oi++;
+    }
+    [[164.81,0.10],[196,0.08],[246.94,0.06]].forEach(([f,v])=>{const p=makeOsc('sine',f,v);makeLFO(p.gain.gain,0.18,0.03,v);});
+    pS();pA();pO();
+    intervalList.push(setInterval(()=>{pS();pA();},1100));
+    intervalList.push(setInterval(pO,4000));
+    fadeIn(0.44,4);
+  }
+
+  const MAP={divine:playDivine, gold:playGold, anger:playAnger, mercy:playMercy, holy:playHoly};
+
+  function play(mood){
+    if(!ctx) return;
+    if(mood===currentMood) return;
+    currentMood=mood;
+    stopAll(1.2);
+    setTimeout(()=>{if(currentMood!==mood)return; MAP[mood]?.();},1300);
+  }
+  function stop(){stopAll(2);currentMood=null;}
+  return {init,play,stop};
+})();
+</script>
+</body>
+</html>

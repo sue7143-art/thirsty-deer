@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>욥의 고난 — 욥기 1-2장</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#F5C842;--gold-dark:#c89010;}
+html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+#game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
+
+#scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
+.illus{position:absolute;inset:0;background-size:cover;background-position:center top;transition:opacity 1.8s ease;will-change:transform,opacity;}
+#illus1{background-image:url('../images/ep10_img1.jpg');opacity:1;animation:kb1 18s ease-in-out infinite alternate;}
+#illus2{background-image:url('../images/ep10_img2.jpg');opacity:0;animation:kb2 18s ease-in-out infinite alternate;}
+#illus3{background-image:url('../images/ep10_img3.jpg');opacity:0;animation:kb1 18s ease-in-out infinite alternate;}
+@keyframes kb1{from{transform:scale(1.05) translate(0,0);}to{transform:scale(1.10) translate(-7px,-5px);}}
+@keyframes kb2{from{transform:scale(1.07) translate(3px,0);}to{transform:scale(1.04) translate(-5px,-7px);}}
+
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center 45%,transparent 28%,rgba(0,0,0,0.70) 100%);z-index:5;pointer-events:none;}
+
+.ov{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity 1.5s;}
+#ov-grief{background:rgba(15,8,4,0.52);opacity:0;}
+#ov-smoke{background:radial-gradient(ellipse at 20% 20%,rgba(60,40,20,0.38) 0%,transparent 55%);opacity:0;}
+#ov-divine{background:radial-gradient(ellipse at 50% 5%,rgba(255,240,140,0.44) 0%,transparent 65%);opacity:0;}
+#ov-restore{background:radial-gradient(ellipse at 50% 40%,rgba(180,220,130,0.22) 0%,transparent 60%);opacity:0;}
+#ov-flash{background:rgba(60,20,10,0.75);opacity:0;}
+
+#light-rays{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,220,100,0.22) 8deg,transparent 16deg,transparent 24deg,rgba(255,200,80,0.16) 32deg,transparent 40deg,transparent 48deg,rgba(255,230,120,0.24) 56deg,transparent 64deg);animation:rayRot 10s linear infinite;}
+@keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
+
+#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
+#chapter-title.show{opacity:1;}
+#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
+#verse-badge.show{opacity:1;}
+
+/* ── CHOICE ── */
+#choice-overlay{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.7s;}
+#choice-overlay.show{opacity:1;pointer-events:all;}
+.choice-title{font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
+.choice-title em{color:var(--gold);font-style:normal;}
+.choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
+.choice-btn{position:relative;overflow:hidden;border:none;cursor:pointer;padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;}
+.choice-btn:hover{transform:translateY(-3px) scale(1.01);}
+.choice-btn:active{transform:translateY(0) scale(0.99);}
+.opt-demand{background:linear-gradient(135deg,#120600 0%,#080200 100%);box-shadow:0 4px 20px rgba(180,60,10,0.40);border:1px solid rgba(180,70,20,0.38);}
+.opt-demand:hover{box-shadow:0 6px 28px rgba(220,80,20,0.60);border-color:rgba(240,100,40,0.70);}
+.opt-trust{background:linear-gradient(135deg,#000810 0%,#000408 100%);box-shadow:0 4px 20px rgba(180,160,40,0.38);border:1px solid rgba(200,170,50,0.35);}
+.opt-trust:hover{box-shadow:0 6px 28px rgba(245,200,66,0.58);border-color:rgba(245,200,66,0.70);}
+.choice-inner{display:flex;align-items:center;gap:14px;padding:clamp(12px,2.5vw,16px) clamp(14px,3vw,20px);}
+.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.opt-demand .choice-label{color:#ff7040;text-shadow:0 0 12px rgba(255,80,30,0.9);}
+.opt-trust .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(245,200,66,0.8);}
+.choice-text-wrap{flex:1;}
+.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.opt-demand .choice-main{color:#ffe0d0;}
+.opt-trust .choice-main{color:#fff8d0;}
+.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.opt-demand .choice-sub{color:#ff8050;}
+.opt-trust .choice-sub{color:var(--gold);}
+.choice-icon{font-size:1.8rem;flex-shrink:0;}
+.choice-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.07) 50%,transparent 60%);transform:translateX(-100%);transition:transform 0.4s;}
+.choice-btn:hover::after{transform:translateX(100%);}
+
+/* ── RESULT ── */
+#choice-result{position:absolute;inset:0;z-index:35;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s;background:rgba(0,0,0,0.68);}
+#choice-result.show{opacity:1;pointer-events:all;}
+.result-card{background:rgba(5,3,1,0.95);border-radius:12px;padding:clamp(20px,4vw,28px) clamp(20px,5vw,34px);max-width:min(430px,90vw);text-align:center;border:1px solid rgba(255,255,255,0.10);}
+.result-icon{font-size:clamp(2.2rem,5vw,3rem);margin-bottom:10px;display:block;}
+.result-title{font-family:'Cinzel',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
+.result-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
+.res-demand .result-title{color:#ff7040;}
+.res-trust .result-title{color:var(--gold);}
+.result-continue{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
+
+.spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
+@keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
+
+#progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#mute-btn{position:absolute;top:12px;right:14px;z-index:25;background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);}
+#mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
+
+/* ── DIALOG ── */
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#060402 0%,#0a0603 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
+#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;}
+.pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
+@keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
+#portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
+@keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
+#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
+.dots{display:flex;gap:5px;flex-wrap:wrap;max-width:140px;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
+#next-btn{font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+#next-btn:active{transform:translateY(0);}
+
+/* ── TITLE ── */
+#title-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at 50% 40%,#0c0500 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:hidden;}
+.title-bg{position:absolute;inset:0;background-image:url('../images/ep10_img4.jpg');background-size:cover;background-position:center;opacity:0.20;filter:blur(2px);animation:kb1 15s ease-in-out infinite alternate;}
+.title-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(12,5,0,0.74) 0%,rgba(0,0,0,0.94) 100%);}
+#title-screen>*{position:relative;z-index:1;}
+.title-emblem{font-size:3.5rem;animation:tFloat 3.5s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(255,160,40,0.85));}
+@keyframes tFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,180,30,0.9),0 0 70px rgba(255,120,20,0.4);}
+.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+
+/* ── END ── */
+#end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#060400 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
+.end-bg{position:absolute;inset:0;background-image:url('../images/ep10_img5.jpg');background-size:cover;background-position:center;opacity:0.18;filter:blur(3px);}
+.end-overlay{position:absolute;inset:0;background:rgba(4,3,0,0.84);}
+#end-screen>*{position:relative;z-index:1;}
+#end-screen.show{opacity:1;pointer-events:all;}
+#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,180,30,0.5);}
+#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
+.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(55,40,8,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#replay-btn:hover{background:rgba(90,65,12,0.6);}
+
+@media (max-width:480px){
+  #portrait-name{font-size:0.48rem;letter-spacing:0.06em;}
+  .choice-icon{font-size:1.3rem;}
+  .choice-main{font-size:0.78rem;}
+  .choice-title{font-size:0.78rem;margin-bottom:16px;}
+  .result-card{padding:18px 16px;}
+  .result-icon{font-size:2.2rem;}
+  .result-title{font-size:0.95rem;}
+  .result-text{font-size:0.78rem;line-height:1.7;}
+  .result-continue{padding:7px 14px;font-size:0.68rem;}
+  #start-btn{padding:11px 30px;font-size:0.88rem;}
+  #end-screen p{font-size:0.78rem;}
+}
+@media (max-width:360px){
+  #dialog-inner{min-height:100px;}
+  .choice-label{font-size:1.2rem;width:28px;}
+  .dots .dot{width:5px;height:5px;}
+}
+@media (max-height:500px) and (orientation:landscape){
+  #dialog-inner{min-height:80px;max-height:110px;}
+  #portrait-icon{font-size:1.5rem;}
+  #dialog-text{font-size:0.75rem;}
+  .choice-title{font-size:0.72rem;margin-bottom:10px;}
+  .choice-inner{padding:9px 12px;}
+  .result-card{padding:14px 16px;}
+  .title-emblem{font-size:2.4rem;}
+}
+
+/* ── iOS Safe Area ── */
+#game{
+  padding-bottom:env(safe-area-inset-bottom);
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #dialog{
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+<div id="game">
+
+  <!-- TITLE -->
+  <div id="title-screen">
+    <div class="title-bg"></div>
+    <div class="title-overlay"></div>
+    <div class="title-emblem">📜</div>
+    <div class="title-ep">EPISODE 10</div>
+    <h1>욥의 고난</h1>
+    <div class="title-sub">욥기 1-2장</div>
+    <div class="title-verse">"주신 이도 여호와시요 거두신 이도 여호와시오니<br>여호와의 이름이 찬송을 받으실지니이다"<br>— 욥기 1:21</div>
+    <button id="start-btn" onclick="startGame()">▶ &nbsp;시작하기</button>
+  </div>
+
+  <!-- SCENE -->
+  <div id="scene">
+    <div class="illus" id="illus1"></div>
+    <div class="illus" id="illus2"></div>
+    <div class="illus" id="illus3"></div>
+    <div class="vignette"></div>
+    <div class="ov" id="ov-grief"></div>
+    <div class="ov" id="ov-smoke"></div>
+    <div class="ov" id="ov-divine"></div>
+    <div class="ov" id="ov-restore"></div>
+    <div class="ov" id="ov-flash"></div>
+    <div id="light-rays"></div>
+    <div id="chapter-title"></div>
+    <div id="verse-badge"></div>
+
+    <div id="choice-overlay">
+      <div class="choice-title">
+        <em>욥의 결단</em><br>
+        아내가 말했다. "하나님을 욕하고 죽으라!"<br>
+        몸도 마음도 한계에 달한 욥. 지금 어떻게 반응할 것인가?
+      </div>
+      <div class="choices">
+        <button class="choice-btn opt-demand" onclick="choose(false)">
+          <div class="choice-inner">
+            <span class="choice-label">A</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"억울하다. 하나님께 직접 따져 묻겠어"</span>
+              <span class="choice-sub">정직하게 부르짖는다 — 하나님께 등 돌리지 않고 정면으로</span>
+            </div>
+            <span class="choice-icon">😤</span>
+          </div>
+        </button>
+        <button class="choice-btn opt-trust" onclick="choose(true)">
+          <div class="choice-inner">
+            <span class="choice-label">B</span>
+            <div class="choice-text-wrap">
+              <span class="choice-main">"하나님은 어떠한 경우에도 선하신 분이야"</span>
+              <span class="choice-sub">신뢰 속에서 하나님께 정직하게 나아간다</span>
+            </div>
+            <span class="choice-icon">🙏</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <div id="choice-result">
+      <div class="result-card" id="result-card">
+        <span class="result-icon" id="result-icon"></span>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-text" id="result-text"></div>
+        <button class="result-continue" id="result-continue-btn">계속 →</button>
+      </div>
+    </div>
+
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+    <button id="mute-btn" onclick="toggleMute()">🔊</button>
+  </div>
+
+  <!-- DIALOG -->
+  <div id="dialog">
+    <div id="dialog-inner">
+      <div id="portrait-wrap">
+        <div class="pglow"></div>
+        <div id="portrait-icon">😔</div>
+        <div id="portrait-name">JOB</div>
+      </div>
+      <div id="dialog-text-wrap">
+        <div id="dialog-text"><span id="dialog-content"></span></div>
+        <div id="dialog-actions">
+          <div class="dots" id="dots"></div>
+          <button id="next-btn" onclick="nextScene()">계속 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div id="end-screen">
+    <div class="end-bg"></div>
+    <div class="end-overlay"></div>
+    <div style="font-size:2.8rem;">📜🙏✨</div>
+    <h2>정직한 대면</h2>
+    <p>하나님은 "불평하지 말라"고 하지 않으셨습니다.<br>오히려 정직하게 부르짖은 욥이 옳았다 하시고,<br>신학적인 말로 욥을 정죄한 친구들을 책망하셨습니다.<br><br>하나님이 원하시는 것은 침묵이 아니라<br>진실한 마음으로 그분 앞에 서는 것입니다.<br><br>"너희가 나를 가리켜 욥처럼<br>옳게 말하지 못하였도다."</p>
+    <div class="end-verse">욥기 42:7-8</div>
+    <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
+  </div>
+</div>
+
+<script>
+const SCENES = [
+  {
+    type:'normal', img:1,
+    icon:'✨', name:"NARRATOR",
+    chapter:'욥 — 온전하고 정직한 자', verse:'욥 1:1-3',
+    text:'우스 땅에 욥이라는 사람이 있었다. 그는 온전하고 정직하여 하나님을 경외하며 악에서 떠난 자였다. 양 칠천, 낙타 삼천, 소 오백 겨리, 암나귀 오백 마리와 자녀 열을 두었다. 그는 동방 사람 중 가장 큰 자였다.',
+    btn:'시험이 시작되다 →',
+    grief:false, smoke:false, divine:true, restore:false, rays:true, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'😔', name:"JOB",
+    chapter:'첫 번째 고난 — 재산과 자녀를 잃다', verse:'욥 1:13-19',
+    text:'어느 날 전령들이 잇달아 달려왔다. "소와 나귀를 빼앗겼습니다!" "불이 양 떼를 불살랐습니다!" "낙타를 빼앗겼습니다!" "큰 바람이 불어 집이 무너져 자제들이 죽었습니다!" 한 날에 모든 것이 사라졌다.',
+    btn:'욥의 반응 →',
+    grief:true, smoke:true, divine:false, restore:false, rays:false, flash:true
+  },
+  {
+    type:'normal', img:1,
+    icon:'😔', name:"JOB",
+    chapter:'욥의 첫 번째 고백', verse:'욥 1:20-21',
+    text:'욥이 일어나 겉옷을 찢고 땅에 엎드려 말했다. "주신 이도 여호와시요 거두신 이도 여호와시오니 여호와의 이름이 찬송을 받으실지니이다." 욥이 이 모든 일에 범죄하지 아니하였다. 그러나 고통은 여기서 끝나지 않았다.',
+    btn:'두 번째 시험 →',
+    grief:true, smoke:false, divine:true, restore:false, rays:false, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'😔', name:"JOB",
+    chapter:'두 번째 고난 — 피부병', verse:'욥 2:7-8',
+    text:'사탄이 욥을 쳐서 그의 발바닥에서 정수리까지 종기가 나게 했다. 욥이 재 가운데 앉아 기와 조각으로 몸을 긁었다. 자녀도, 재산도, 건강도 잃었다. 이제 남은 것은 생명뿐이었다.',
+    btn:'아내의 말 →',
+    grief:true, smoke:true, divine:false, restore:false, rays:false, flash:false
+  },
+  {
+    type:'choice', img:1,
+    icon:'👩', name:"JOB'S WIFE",
+    chapter:"아내의 시험 — 하나님을 욕하라", verse:'욥 2:9-10',
+    text:'욥의 아내가 말했다. "당신이 그래도 자기의 온전함을 굳게 지키나이까? 하나님을 욕하고 죽으라." 땅에 앉아 온몸에 종기가 난 욥 앞에, 가장 가까운 아내가 포기를 권했다. 욥의 마음은 어디로 향할 것인가?',
+    btn:'선택하기',
+    grief:true, smoke:false, divine:false, restore:false, rays:false, flash:false
+  },
+  {
+    type:'normal', img:1,
+    icon:'😔', name:"JOB",
+    chapter:'욥의 항변 — 끝내 터져나온 불평', verse:'욥 3:1, 10:2',
+    text:'욥은 자기 생일을 저주했다. 고통이 너무 오래됐다. 하나님께 직접 물었다. "어찌하여 나를 고난의 과녁으로 삼으셨나이까?" 욥의 친구들은 그를 설득하려 했다. "죄를 지었으니 벌을 받은 것"이라고. 그러나 욥은 그 말을 거부하고 하나님께 직접 나아갔다.',
+    btn:'하나님이 나타나시다 →',
+    grief:true, smoke:false, divine:false, restore:false, rays:false, flash:false
+  },
+  {
+    type:'normal', img:3,
+    icon:'✨', name:"GOD",
+    chapter:'폭풍 가운데 — 하나님이 나타나시다', verse:'욥 38:1-4',
+    text:'여호와께서 폭풍 가운데서 욥에게 말씀하셨다. "내가 땅의 기초를 놓을 때에 네가 어디 있었느냐?" 하나님은 이유를 설명하지 않으셨다. 그러나 욥 앞에 직접 나타나셨다. 욥이 하나님께 정직하게 부르짖었기 때문이다. 그 자리에서 하나님은 오히려 친구들을 책망하셨다. "너희가 나를 가리켜 욥처럼 옳게 말하지 못하였도다."',
+    btn:'욥의 회개 →',
+    grief:false, smoke:false, divine:true, restore:false, rays:true, flash:false
+  },
+  {
+    type:'normal', img:3,
+    icon:'😔', name:"JOB",
+    chapter:'욥의 회개 — 이제는 눈으로 뵈옵나이다', verse:'욥 42:5-6',
+    text:'욥이 말했다. "내가 주께 대하여 귀로 듣기만 하였사오나 이제는 눈으로 주를 뵈옵나이다." 욥은 답을 얻지 못했다. 그러나 하나님을 만났다. 회피하지 않고 정직하게 하나님 앞에 선 것— 그것이 욥을 살린 것이었다. 거짓 위로보다 진실한 울부짖음이 하나님께 더 가까이 닿았다.',
+    btn:'갑절의 회복 →',
+    grief:true, smoke:false, divine:true, restore:false, rays:true, flash:false
+  },
+  {
+    type:'normal', img:2,
+    icon:'✨', name:"GOD",
+    chapter:'회복 — 갑절의 축복', verse:'욥 42:10,12',
+    text:'하나님은 친구들에게 말씀하셨다. "너희가 욥처럼 옳게 말하지 못하였으니 욥이 너희를 위해 기도하게 하라." 그를 정죄한 친구들이 아니라, 정직하게 하나님과 씨름한 욥이 옳았다. 욥이 친구들을 위해 기도하자 여호와께서 욥의 곤경을 돌이키시고 이전보다 갑절을 주셨다.',
+    btn:'✨ 마치다',
+    grief:false, smoke:false, divine:true, restore:true, rays:true, flash:false
+  }
+];
+
+const MOODS = ['divine','grief','trust','grief','grief','grief','divine','trust','holy'];
+
+let cur=-1, muted=false, typeTimer=null;
+
+function setIllus(w){
+  document.getElementById('illus1').style.opacity = w===1?'1':'0';
+  document.getElementById('illus2').style.opacity = w===2?'1':'0';
+  document.getElementById('illus3').style.opacity = w===3?'1':'0';
+}
+function setOverlays(s){
+  document.getElementById('ov-grief').style.opacity   = s.grief  ?'1':'0';
+  document.getElementById('ov-smoke').style.opacity   = s.smoke  ?'1':'0';
+  document.getElementById('ov-divine').style.opacity  = s.divine ?'1':'0';
+  document.getElementById('ov-restore').style.opacity = s.restore?'1':'0';
+  document.getElementById('light-rays').style.opacity = s.rays   ?'1':'0';
+}
+function flashEffect(){
+  const el=document.getElementById('ov-flash');
+  el.style.transition='opacity 0s'; el.style.opacity='1';
+  setTimeout(()=>{el.style.transition='opacity 1.4s'; el.style.opacity='0';},90);
+}
+function spawnSparks(n=20,colors){
+  const cols=colors||['#F5C842','#ffe480','#ffffff','#ffd080'];
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const sp=document.createElement('div'); sp.className='spark';
+    const a=Math.random()*Math.PI*2, d=50+Math.random()*130;
+    sp.style.setProperty('--dx',Math.cos(a)*d+'px');
+    sp.style.setProperty('--dy',Math.sin(a)*d+'px');
+    sp.style.width=sp.style.height=(3+Math.random()*5)+'px';
+    sp.style.background=cols[Math.floor(Math.random()*cols.length)];
+    sp.style.left=(10+Math.random()*80)+'vw';
+    sp.style.top=(8+Math.random()*58)+'vh';
+    sp.style.animationDuration=(0.9+Math.random()*1.0)+'s';
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(),2000);
+  },i*40);
+}
+function typeText(text){
+  clearInterval(typeTimer);
+  const el=document.getElementById('dialog-content');
+  el.textContent=''; let i=0;
+  typeTimer=setInterval(()=>{
+    if(i<text.length) el.textContent+=text[i++];
+    else clearInterval(typeTimer);
+  },26);
+}
+function buildDots(){
+  const wrap=document.getElementById('dots'); wrap.innerHTML='';
+  SCENES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i<=cur?' on':'');
+    wrap.appendChild(d);
+  });
+}
+function setChapter(ch,vs){
+  const ct=document.getElementById('chapter-title');
+  ct.classList.remove('show');
+  setTimeout(()=>{ct.textContent=ch; ct.classList.add('show');},300);
+  const vb=document.getElementById('verse-badge');
+  vb.classList.remove('show');
+  if(vs) setTimeout(()=>{vb.textContent=vs; vb.classList.add('show');},600);
+  else vb.classList.remove('show');
+}
+function showChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.add('show');
+  document.getElementById('next-btn').style.visibility='hidden';
+}
+function hideChoiceOverlay(){
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+}
+
+function choose(isTrust){
+  hideChoiceOverlay();
+  const resultEl=document.getElementById('choice-result');
+  const card=document.getElementById('result-card');
+  if(isTrust){
+    card.className='result-card res-trust';
+    document.getElementById('result-icon').textContent='🙏';
+    document.getElementById('result-title').textContent='그래도 받지 않겠느냐';
+    document.getElementById('result-text').textContent='"우리가 하나님께 복을 받았은즉 화도 받지 아니하겠느냐?" 욥은 처음 이렇게 고백했다. 그러나 고통이 깊어지자 하나님께 직접 물었다. 침묵으로 참는 것이 아니라 정직하게 나아간 것이다. 하나님은 그 진실한 대면을 기뻐하셨고, 거짓 위로를 건넨 친구들을 오히려 책망하셨다.';
+    if(!muted) Music.play('trust');
+    spawnSparks(18,['#F5C842','#ffe480','#ffffff','#ffd060']);
+  } else {
+    card.className='result-card res-demand';
+    document.getElementById('result-icon').textContent='😤';
+    document.getElementById('result-title').textContent='억울함이 터져나왔다';
+    document.getElementById('result-text').textContent='"내가 무엇을 잘못했습니까?" 욥의 입에서 말이 쏟아졌다. 억울했고, 이유를 알고 싶었다. 그러나 욥은 하나님을 떠나지 않았다. 등을 돌린 것이 아니라 정면으로 부르짖었다. 하나님은 그 정직한 울부짖음을 외면하지 않으셨고, 폭풍 가운데 직접 나타나셨다.';
+    if(!muted) Music.play('grief');
+    spawnSparks(14,['#c08030','#e0a040','#ffe080','#ffffff']);
+    setTimeout(flashEffect,200);
+  }
+  const oldBtn=document.getElementById('result-continue-btn');
+  const newBtn=oldBtn.cloneNode(true);
+  oldBtn.parentNode.replaceChild(newBtn,oldBtn);
+  newBtn.addEventListener('click',()=>{
+    resultEl.classList.remove('show');
+    cur++; applyScene(cur);
+  });
+  resultEl.classList.add('show');
+}
+
+function applyScene(idx){
+  const s=SCENES[idx];
+  setIllus(s.img);
+  setOverlays(s);
+  setChapter(s.chapter,s.verse);
+  if(s.flash) setTimeout(flashEffect,400);
+  document.getElementById('portrait-icon').textContent=s.icon;
+  document.getElementById('portrait-name').textContent=s.name;
+  document.getElementById('next-btn').textContent=s.btn;
+  typeText(s.text);
+  buildDots();
+  document.getElementById('progress-fill').style.width=((idx+1)/SCENES.length*100)+'%';
+  const mood=MOODS[idx]; if(!muted&&mood) Music.play(mood);
+  if(s.type==='choice') setTimeout(showChoiceOverlay,1900);
+}
+function nextScene(){
+  cur++;
+  if(cur>=SCENES.length){ showEnd(); return; }
+  applyScene(cur);
+}
+function showEnd(){
+  document.getElementById('end-screen').classList.add('show');
+  if(!muted) Music.play('holy');
+  spawnSparks(40,['#F5C842','#ffe480','#ffffff','#ffd060']);
+  setTimeout(()=>spawnSparks(24,['#fff','#ffe4a0','#F5C842']),900);
+}
+function replayGame(){
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('choice-overlay').classList.remove('show');
+  document.getElementById('choice-result').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+  Music.stop();
+  setTimeout(()=>{ cur=0; applyScene(0); },1400);
+}
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  Music.init(); cur=0; applyScene(0);
+}
+function toggleMute(){
+  muted=!muted;
+  document.getElementById('mute-btn').textContent=muted?'🔇':'🔊';
+  if(muted) Music.stop();
+  else{ Music.init(); const m=MOODS[cur]; if(m) Music.play(m); }
+}
+
+/* ════════════════════════════════════
+   MUSIC ENGINE
+   moods: divine / grief / trust / holy
+════════════════════════════════════ */
+const Music=(()=>{
+  let ctx,masterGain,currentMood=null;
+  let oscList=[],lfoList=[],intervalList=[];
+  function init(){
+    if(ctx) return;
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=ctx.createGain();
+    masterGain.gain.setValueAtTime(0,ctx.currentTime);
+    masterGain.connect(ctx.destination);
+  }
+  function stopAll(fade=1.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value,now);
+    masterGain.gain.linearRampToValueAtTime(0,now+fade);
+    intervalList.forEach(id=>clearInterval(id)); intervalList=[];
+    setTimeout(()=>{
+      oscList.forEach(o=>{try{o.stop();}catch(e){}}); oscList=[];
+      lfoList.forEach(o=>{try{o.stop();}catch(e){}}); lfoList=[];
+    },(fade+0.1)*1000);
+  }
+  function fadeIn(vol=0.32,dur=2.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(0,now);
+    masterGain.gain.linearRampToValueAtTime(vol,now+dur);
+  }
+  function makeOsc(type,freq,gainVal){
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type; o.frequency.value=freq; g.gain.value=gainVal;
+    o.connect(g); g.connect(masterGain); o.start();
+    oscList.push(o); return {osc:o,gain:g};
+  }
+  function makeLFO(target,rate,depth,base){
+    const lfo=ctx.createOscillator(),lg=ctx.createGain();
+    lfo.frequency.value=rate; lg.gain.value=depth;
+    lfo.connect(lg); lg.connect(target); target.value=base;
+    lfo.start(); lfoList.push(lfo);
+  }
+  function makeReverb(sec=2,decay=2){
+    const conv=ctx.createConvolver(),rate=ctx.sampleRate,len=rate*sec;
+    const buf=ctx.createBuffer(2,len,rate);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}
+    conv.buffer=buf; return conv;
+  }
+
+  /* DIVINE — 하나님의 임재 */
+  function playDivine(){
+    const rev=makeReverb(3.5,1.6); rev.connect(masterGain);
+    const chords=[[174.61,261.63,349.23,523.25],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let ci=0;
+    function pc(){
+      chords[ci%chords.length].forEach((f,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=i<2?'sine':'triangle'; o.frequency.value=f;
+        o.detune.value=(Math.random()-0.5)*6;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.10,ctx.currentTime+0.9);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.2);
+        o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+3.3);
+        oscList.push(o);
+      }); ci++;
+    }
+    pc(); intervalList.push(setInterval(pc,3200));
+    makeOsc('sine',87.31,0.11); fadeIn(0.40,3);
+  }
+
+  /* GRIEF — 고통과 슬픔, 무거운 장조→단조 */
+  function playGrief(){
+    const rev=makeReverb(4.5,2.0); rev.connect(masterGain);
+    const low=makeOsc('sine',49,0.15); makeLFO(low.gain.gain,0.07,0.05,0.15);
+    const mid=makeOsc('sine',73.42,0.09); makeLFO(mid.osc.frequency,0.10,1.2,73.42);
+    const lament=[220,207.65,196,207.65,220,196,174.61,185,196,174.61,164.81,174.61];
+    let li=0;
+    function pl(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=lament[li%lament.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.09,ctx.currentTime+0.30);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.10);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); li++;
+    }
+    pl(); intervalList.push(setInterval(pl,1200));
+    fadeIn(0.28,4.0);
+  }
+
+  /* TRUST — 고통 속 신뢰, 조용하고 따뜻한 선율 */
+  function playTrust(){
+    const rev=makeReverb(4.2,1.5); rev.connect(masterGain);
+    const mel=[261.63,293.66,329.63,349.23,392,349.23,329.63,293.66,
+               261.63,293.66,329.63,392,440,392,349.23,329.63];
+    let mi=0;
+    function pm(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=mel[mi%mel.length];
+      o.detune.value=(Math.random()-0.5)*4;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.12,ctx.currentTime+0.32);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.05);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.1);
+      oscList.push(o); mi++;
+    }
+    pm(); intervalList.push(setInterval(pm,1000));
+    [[130.81,0.09],[164.81,0.07],[196,0.05]].forEach(([f,v])=>{
+      const p=makeOsc('sine',f,v); makeLFO(p.gain.gain,0.16,0.03,v);
+    });
+    fadeIn(0.36,3.2);
+  }
+
+  /* HOLY — 엔딩 합창 */
+  function playHoly(){
+    const rev=makeReverb(5,1.4); rev.connect(masterGain);
+    const rev2=makeReverb(3,2.0); rev2.connect(masterGain);
+    const sop=[329.63,369.99,415.30,493.88,523.25,493.88,554.37,523.25,493.88,415.30,369.99,440,493.88,523.25,587.33,523.25];
+    const alt=[261.63,293.66,329.63,392,415.30,392,440,415.30,392,329.63,293.66,349.23,392,415.30,493.88,415.30];
+    let si=0,ai=0;
+    function pS(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=sop[si%sop.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.15,ctx.currentTime+0.3);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); si++;
+    }
+    function pA(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=alt[ai%alt.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.10,ctx.currentTime+0.4);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); ai++;
+    }
+    const org=[[164.81,246.94,329.63,493.88],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let oi=0;
+    function pO(){
+      org[oi%org.length].forEach((f,hi)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=hi<2?'sine':'triangle'; o.frequency.value=f;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.055,ctx.currentTime+1.0);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.9);
+        o.connect(g); g.connect(rev2); o.start(); o.stop(ctx.currentTime+4.0);
+        oscList.push(o);
+      }); oi++;
+    }
+    [[164.81,0.10],[196,0.08],[246.94,0.06]].forEach(([f,v])=>{
+      const p=makeOsc('sine',f,v); makeLFO(p.gain.gain,0.18,0.03,v);
+    });
+    pS();pA();pO();
+    intervalList.push(setInterval(()=>{pS();pA();},1100));
+    intervalList.push(setInterval(pO,4000));
+    fadeIn(0.44,4);
+  }
+
+  const MAP={divine:playDivine,grief:playGrief,trust:playTrust,holy:playHoly};
+  function play(mood){
+    if(!ctx) return;
+    if(mood===currentMood) return;
+    currentMood=mood;
+    stopAll(1.2);
+    setTimeout(()=>{if(currentMood!==mood)return; MAP[mood]?.();},1300);
+  }
+  function stop(){stopAll(2);currentMood=null;}
+  return {init,play,stop};
+})();
+</script>
+</body>
+</html>

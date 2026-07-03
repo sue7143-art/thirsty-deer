@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>요나와 니느웨 — 요나서</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#F5C842;--gold-dark:#c89010;}
+html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+#game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
+
+#scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
+.illus{position:absolute;inset:0;background-size:cover;background-position:center top;transition:opacity 1.8s ease;will-change:transform,opacity;}
+#illus1{background-image:url('../images/ep09_img1.jpg');opacity:1;animation:kb1 18s ease-in-out infinite alternate;}
+#illus2{background-image:url('../images/ep09_img2.jpg');opacity:0;animation:kb2 18s ease-in-out infinite alternate;}
+#illus3{background-image:url('../images/ep09_img3.jpg');opacity:0;animation:kb1 18s ease-in-out infinite alternate;}
+@keyframes kb1{from{transform:scale(1.05) translate(0,0);}to{transform:scale(1.10) translate(-7px,-5px);}}
+@keyframes kb2{from{transform:scale(1.07) translate(3px,0);}to{transform:scale(1.04) translate(-5px,-7px);}}
+
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center 45%,transparent 28%,rgba(0,0,0,0.70) 100%);z-index:5;pointer-events:none;}
+
+.ov{position:absolute;inset:0;z-index:6;pointer-events:none;transition:opacity 1.5s;}
+#ov-call{background:radial-gradient(ellipse at 70% 10%,rgba(255,230,120,0.40) 0%,transparent 60%);opacity:0;}
+#ov-flee{background:rgba(15,5,20,0.50);opacity:0;}
+#ov-deep{background:radial-gradient(ellipse at 50% 50%,rgba(10,30,80,0.65) 0%,rgba(0,5,20,0.80) 100%);opacity:0;}
+#ov-mercy{background:radial-gradient(ellipse at 50% 5%,rgba(255,240,120,0.42) 0%,transparent 65%);opacity:0;}
+#ov-anger{background:rgba(40,10,0,0.45);opacity:0;}
+#ov-flash{background:rgba(200,230,255,0.70);opacity:0;}
+
+#light-rays{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,220,100,0.22) 8deg,transparent 16deg,transparent 24deg,rgba(255,200,80,0.16) 32deg,transparent 40deg,transparent 48deg,rgba(255,230,120,0.24) 56deg,transparent 64deg);animation:rayRot 10s linear infinite;}
+@keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
+
+#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
+#chapter-title.show{opacity:1;}
+#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
+#verse-badge.show{opacity:1;}
+
+/* ── CHOICE (공통) ── */
+#choice-overlay{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.7s;}
+#choice-overlay.show{opacity:1;pointer-events:all;}
+.choice-title{font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
+.choice-title em{color:var(--gold);font-style:normal;}
+.choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
+.choice-btn{position:relative;overflow:hidden;border:none;cursor:pointer;padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;}
+.choice-btn:hover{transform:translateY(-3px) scale(1.01);}
+.choice-btn:active{transform:translateY(0) scale(0.99);}
+
+.opt-flee{background:linear-gradient(135deg,#0e0818 0%,#06030e 100%);box-shadow:0 4px 20px rgba(80,40,160,0.40);border:1px solid rgba(100,60,180,0.38);}
+.opt-flee:hover{box-shadow:0 6px 28px rgba(120,70,220,0.60);border-color:rgba(150,90,240,0.70);}
+.opt-obey{background:linear-gradient(135deg,#0a0800 0%,#050400 100%);box-shadow:0 4px 20px rgba(200,160,20,0.38);border:1px solid rgba(200,160,30,0.36);}
+.opt-obey:hover{box-shadow:0 6px 28px rgba(245,200,66,0.58);border-color:rgba(245,200,66,0.70);}
+
+.opt-anger2{background:linear-gradient(135deg,#180600 0%,#0c0300 100%);box-shadow:0 4px 20px rgba(200,60,20,0.38);border:1px solid rgba(200,70,30,0.36);}
+.opt-anger2:hover{box-shadow:0 6px 28px rgba(240,80,30,0.58);border-color:rgba(255,100,50,0.70);}
+.opt-grace{background:linear-gradient(135deg,#000a10 0%,#000508 100%);box-shadow:0 4px 20px rgba(60,180,120,0.35);border:1px solid rgba(60,180,120,0.32);}
+.opt-grace:hover{box-shadow:0 6px 28px rgba(80,220,150,0.55);border-color:rgba(100,230,160,0.68);}
+
+.choice-inner{display:flex;align-items:center;gap:14px;padding:clamp(12px,2.5vw,16px) clamp(14px,3vw,20px);}
+.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.opt-flee .choice-label{color:#a070ff;text-shadow:0 0 12px rgba(150,90,255,0.9);}
+.opt-obey .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(245,200,66,0.8);}
+.opt-anger2 .choice-label{color:#ff6030;text-shadow:0 0 12px rgba(255,70,30,0.9);}
+.opt-grace .choice-label{color:#60e0a0;text-shadow:0 0 12px rgba(80,220,140,0.9);}
+.choice-text-wrap{flex:1;}
+.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.opt-flee .choice-main{color:#e0d0ff;}
+.opt-obey .choice-main{color:#fff8d0;}
+.opt-anger2 .choice-main{color:#ffe4d8;}
+.opt-grace .choice-main{color:#d0fff0;}
+.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.opt-flee .choice-sub{color:#a070ff;}
+.opt-obey .choice-sub{color:var(--gold);}
+.opt-anger2 .choice-sub{color:#ff7040;}
+.opt-grace .choice-sub{color:#60e0a0;}
+.choice-icon{font-size:1.8rem;flex-shrink:0;}
+.choice-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.07) 50%,transparent 60%);transform:translateX(-100%);transition:transform 0.4s;}
+.choice-btn:hover::after{transform:translateX(100%);}
+
+/* ── RESULT ── */
+#choice-result{position:absolute;inset:0;z-index:35;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s;background:rgba(0,0,0,0.68);}
+#choice-result.show{opacity:1;pointer-events:all;}
+.result-card{background:rgba(4,3,1,0.95);border-radius:12px;padding:clamp(20px,4vw,28px) clamp(20px,5vw,34px);max-width:min(430px,90vw);text-align:center;border:1px solid rgba(255,255,255,0.10);}
+.result-icon{font-size:clamp(2.2rem,5vw,3rem);margin-bottom:10px;display:block;}
+.result-title{font-family:'Cinzel',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
+.result-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
+.res-flee .result-title{color:#a070ff;}
+.res-obey .result-title{color:var(--gold);}
+.res-anger2 .result-title{color:#ff7040;}
+.res-grace .result-title{color:#60e0a0;}
+.result-continue{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
+
+.spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
+@keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
+
+#progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#mute-btn{position:absolute;top:12px;right:14px;z-index:25;background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);}
+#mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
+
+/* ── DIALOG ── */
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#060401 0%,#0a0702 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
+#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;}
+.pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
+@keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
+#portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
+@keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
+#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
+.dots{display:flex;gap:5px;flex-wrap:wrap;max-width:140px;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
+#next-btn{font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+#next-btn:active{transform:translateY(0);}
+
+/* ── TITLE ── */
+#title-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at 50% 40%,#00080e 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:hidden;}
+.title-bg{position:absolute;inset:0;background-image:url('../images/ep09_img4.jpg');background-size:cover;background-position:center;opacity:0.20;filter:blur(2px);animation:kb1 15s ease-in-out infinite alternate;}
+.title-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,8,18,0.72) 0%,rgba(0,0,0,0.94) 100%);}
+#title-screen>*{position:relative;z-index:1;}
+.title-emblem{font-size:3.5rem;animation:tFloat 3.5s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(60,180,255,0.85));}
+@keyframes tFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,190,40,0.9),0 0 70px rgba(60,160,255,0.4);}
+.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+
+/* ── END ── */
+#end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#020806 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
+.end-bg{position:absolute;inset:0;background-image:url('../images/ep09_img5.jpg');background-size:cover;background-position:center;opacity:0.18;filter:blur(3px);}
+.end-overlay{position:absolute;inset:0;background:rgba(2,5,3,0.84);}
+#end-screen>*{position:relative;z-index:1;}
+#end-screen.show{opacity:1;pointer-events:all;}
+#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,180,30,0.5);}
+#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
+.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(20,40,20,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#replay-btn:hover{background:rgba(30,60,30,0.6);}
+
+@media (max-width:480px){
+  #portrait-name{font-size:0.48rem;letter-spacing:0.06em;}
+  .choice-icon{font-size:1.3rem;}
+  .choice-main{font-size:0.78rem;}
+  .choice-title{font-size:0.78rem;margin-bottom:14px;}
+  .result-card{padding:18px 16px;}
+  .result-icon{font-size:2.2rem;}
+  .result-title{font-size:0.95rem;}
+  .result-text{font-size:0.78rem;line-height:1.7;}
+  .result-continue{padding:7px 14px;font-size:0.68rem;}
+  #start-btn{padding:11px 30px;font-size:0.88rem;}
+  #end-screen p{font-size:0.78rem;}
+}
+@media (max-width:360px){
+  #dialog-inner{min-height:100px;}
+  .choice-label{font-size:1.2rem;width:28px;}
+  .dots .dot{width:5px;height:5px;}
+}
+@media (max-height:500px) and (orientation:landscape){
+  #dialog-inner{min-height:80px;max-height:110px;}
+  #portrait-icon{font-size:1.5rem;}
+  #dialog-text{font-size:0.75rem;}
+  .choice-title{font-size:0.72rem;margin-bottom:10px;}
+  .choice-inner{padding:9px 12px;}
+  .result-card{padding:14px 16px;}
+  .title-emblem{font-size:2.4rem;}
+}
+
+/* ── iOS Safe Area ── */
+#game{
+  padding-bottom:env(safe-area-inset-bottom);
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #dialog{
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+<div id="game">
+
+  <!-- TITLE -->
+  <div id="title-screen">
+    <div class="title-bg"></div>
+    <div class="title-overlay"></div>
+    <div class="title-emblem">🐟</div>
+    <div class="title-ep">EPISODE 9</div>
+    <h1>요나와 니느웨</h1>
+    <div class="title-sub">요나서</div>
+    <div class="title-verse">"하나님이 그들의 회개하는 것을 보시고<br>마음을 돌이키셨더라"<br>— 요나서 3:10</div>
+    <button id="start-btn" onclick="startGame()">▶ &nbsp;시작하기</button>
+  </div>
+
+  <!-- SCENE -->
+  <div id="scene">
+    <div class="illus" id="illus1"></div>
+    <div class="illus" id="illus2"></div>
+    <div class="illus" id="illus3"></div>
+    <div class="vignette"></div>
+    <div class="ov" id="ov-call"></div>
+    <div class="ov" id="ov-flee"></div>
+    <div class="ov" id="ov-deep"></div>
+    <div class="ov" id="ov-mercy"></div>
+    <div class="ov" id="ov-anger"></div>
+    <div class="ov" id="ov-flash"></div>
+    <div id="light-rays"></div>
+    <div id="chapter-title"></div>
+    <div id="verse-badge"></div>
+
+    <div id="choice-overlay"></div>
+
+    <div id="choice-result">
+      <div class="result-card" id="result-card">
+        <span class="result-icon" id="result-icon"></span>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-text" id="result-text"></div>
+        <button class="result-continue" id="result-continue-btn">계속 →</button>
+      </div>
+    </div>
+
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+    <button id="mute-btn" onclick="toggleMute()">🔊</button>
+  </div>
+
+  <!-- DIALOG -->
+  <div id="dialog">
+    <div id="dialog-inner">
+      <div id="portrait-wrap">
+        <div class="pglow"></div>
+        <div id="portrait-icon">😤</div>
+        <div id="portrait-name">JONAH</div>
+      </div>
+      <div id="dialog-text-wrap">
+        <div id="dialog-text"><span id="dialog-content"></span></div>
+        <div id="dialog-actions">
+          <div class="dots" id="dots"></div>
+          <button id="next-btn" onclick="nextScene()">계속 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div id="end-screen">
+    <div class="end-bg"></div>
+    <div class="end-overlay"></div>
+    <div style="font-size:2.8rem;">🐟🙏✨</div>
+    <h2>하나님의 긍휼</h2>
+    <p>요나는 도망쳤고, 물고기 뱃속에 갇혔고,<br>마지못해 선포했고, 결과에 분노했습니다.<br>그러나 하나님은 그 모든 과정 속에서<br>니느웨를 살리셨습니다.<br><br>"하나님이 그들의 회개를 보시고<br>뜻을 돌이키셨더라."</p>
+    <div class="end-verse">요나서 3:10</div>
+    <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
+  </div>
+</div>
+
+<script>
+// 선택 1: flee=true(도망), obey=false(순종)
+// 선택 2: anger=true(분노), grace=false(감사)
+let choice1=null, choice2=null;
+
+const SCENES = [
+  {
+    id:'s1', type:'normal', img:1,
+    icon:'✨', name:"GOD",
+    chapter:'소명 — 니느웨로 가라', verse:'욘 1:1-2',
+    text:'여호와의 말씀이 아밋대의 아들 요나에게 임하였다. "일어나 저 큰 성읍 니느웨로 가서 그것을 향하여 외치라. 그 악독이 내 앞에 상달하였느니라." 니느웨는 이스라엘의 적국 앗수르의 수도였다.',
+    btn:'요나의 반응 →',
+    call:true, flee:false, deep:false, mercy:false, anger:false, rays:true, flash:false
+  },
+  {
+    id:'c1', type:'choice1', img:1,
+    icon:'😤', name:"JONAH",
+    chapter:'요나의 결단', verse:'욘 1:3',
+    text:'니느웨는 적국의 도시다. 하나님이 용서하시면 이스라엘의 원수가 살아남는다. 요나의 심장이 타올랐다. 하나님의 명령이 분명했지만— 요나는 어떤 선택을 할 것인가?',
+    btn:'선택하기',
+    call:true, flee:false, deep:false, mercy:false, anger:false, rays:false, flash:false
+  },
+  {
+    id:'s2', type:'normal', img:2,
+    icon:'🐟', name:"NARRATOR",
+    chapter:'물고기 뱃속 — 사흘 낮 사흘 밤', verse:'욘 1:17',
+    text:'요나가 다시스로 도망가려 배를 탔다. 여호와께서 큰 바람을 바다 위에 내리시니 풍랑이 일었다. 선원들이 요나를 바다에 던지자 풍랑이 그쳤다. 여호와께서 큰 물고기를 예비하셨고, 요나는 사흘 낮 사흘 밤을 물고기 뱃속에 있었다.',
+    btn:'기도하다 →',
+    call:false, flee:false, deep:true, mercy:false, anger:false, rays:false, flash:true
+  },
+  {
+    id:'s3', type:'normal', img:2,
+    icon:'🙏', name:"JONAH",
+    chapter:'물고기 뱃속의 기도', verse:'욘 2:2,9',
+    text:'요나가 물고기 뱃속에서 기도했다. "내가 고통 중에 여호와께 불렀더니 주께서 내게 응답하셨나이다. 나는 주께 서원한 것을 내가 갚겠나이다. 구원은 여호와께 속하였나이다." 여호와께서 물고기에게 명하시니 요나를 육지에 토하니라.',
+    btn:'두 번째 소명 →',
+    call:false, flee:false, deep:true, mercy:true, anger:false, rays:true, flash:false
+  },
+  {
+    id:'s4', type:'normal', img:3,
+    icon:'✨', name:"GOD",
+    chapter:'두 번째 소명 — 다시 니느웨로', verse:'욘 3:1-4',
+    text:'여호와의 말씀이 두 번째로 요나에게 임하였다. "일어나 니느웨로 가서 내가 네게 명한 바를 그들에게 선포하라." 요나가 일어나 니느웨로 갔다. 요나가 하루 길을 걸어가며 외쳤다. "사십 일이 지나면 니느웨가 무너지리라!"',
+    btn:'니느웨의 반응 →',
+    call:false, flee:false, deep:false, mercy:true, anger:false, rays:true, flash:false
+  },
+  {
+    id:'s5', type:'normal', img:3,
+    icon:'👑', name:"NINEVEH",
+    chapter:'니느웨의 회개', verse:'욘 3:5-9',
+    text:'니느웨 백성이 하나님을 믿고 금식을 선포하며 굵은 베를 입었다. 왕이 보좌에서 내려와 베옷을 입고 재 위에 앉으며 선포했다. "사람이나 짐승이나 금식하고 하나님께 힘써 부르짖으라. 혹시 하나님이 뜻을 돌이키시리라!" 온 성이 회개했다.',
+    btn:'요나의 반응 →',
+    call:false, flee:false, deep:false, mercy:true, anger:false, rays:true, flash:false
+  },
+  {
+    id:'c2', type:'choice2', img:3,
+    icon:'😤', name:"JONAH",
+    chapter:'요나의 두 번째 반응', verse:'욘 4:1-2',
+    text:'하나님이 니느웨에 내리려던 재앙을 거두셨다. 요나는 이것이 몹시 싫었다. 성 안에 온통 감사와 기쁨이 가득한데, 요나의 마음은 달랐다. 지금 이 순간, 요나는 어떻게 반응할 것인가?',
+    btn:'선택하기',
+    call:false, flee:false, deep:false, mercy:false, anger:true, rays:false, flash:false
+  },
+  {
+    id:'s6', type:'normal', img:3,
+    icon:'✨', name:"GOD",
+    chapter:'하나님의 긍휼 — 네가 옳으냐?', verse:'욘 4:10-11',
+    text:'하나님이 요나에게 말씀하셨다. "네가 수고하지 않은 이 박 나무를 아꼈거든 하물며 이 큰 성읍 니느웨에는 좌우를 분변하지 못하는 자가 십이만여 명이 있지 아니하냐?" 하나님은 적국도 품으셨다. 요나보다 크신 긍휼이 거기 있었다.',
+    btn:'✨ 마치다',
+    call:false, flee:false, deep:false, mercy:true, anger:false, rays:true, flash:false
+  }
+];
+
+const MOODS = ['call','flee','deep','deep','call','mercy','anger','holy'];
+
+let cur=-1, muted=false, typeTimer=null;
+
+function setIllus(w){
+  document.getElementById('illus1').style.opacity = w===1?'1':'0';
+  document.getElementById('illus2').style.opacity = w===2?'1':'0';
+  document.getElementById('illus3').style.opacity = w===3?'1':'0';
+}
+function setOverlays(s){
+  document.getElementById('ov-call').style.opacity  = s.call  ?'1':'0';
+  document.getElementById('ov-flee').style.opacity  = s.flee  ?'1':'0';
+  document.getElementById('ov-deep').style.opacity  = s.deep  ?'1':'0';
+  document.getElementById('ov-mercy').style.opacity = s.mercy ?'1':'0';
+  document.getElementById('ov-anger').style.opacity = s.anger ?'1':'0';
+  document.getElementById('light-rays').style.opacity = s.rays?'1':'0';
+}
+function flashEffect(){
+  const el=document.getElementById('ov-flash');
+  el.style.transition='opacity 0s'; el.style.opacity='1';
+  setTimeout(()=>{el.style.transition='opacity 1.5s'; el.style.opacity='0';},90);
+}
+function spawnSparks(n=20,colors){
+  const cols=colors||['#F5C842','#ffe480','#80d8ff','#ffffff'];
+  for(let i=0;i<n;i++) setTimeout(()=>{
+    const sp=document.createElement('div'); sp.className='spark';
+    const a=Math.random()*Math.PI*2, d=50+Math.random()*130;
+    sp.style.setProperty('--dx',Math.cos(a)*d+'px');
+    sp.style.setProperty('--dy',Math.sin(a)*d+'px');
+    sp.style.width=sp.style.height=(3+Math.random()*5)+'px';
+    sp.style.background=cols[Math.floor(Math.random()*cols.length)];
+    sp.style.left=(10+Math.random()*80)+'vw';
+    sp.style.top=(8+Math.random()*58)+'vh';
+    sp.style.animationDuration=(0.9+Math.random()*1.0)+'s';
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(),2000);
+  },i*40);
+}
+function typeText(text){
+  clearInterval(typeTimer);
+  const el=document.getElementById('dialog-content');
+  el.textContent=''; let i=0;
+  typeTimer=setInterval(()=>{
+    if(i<text.length) el.textContent+=text[i++];
+    else clearInterval(typeTimer);
+  },26);
+}
+function buildDots(){
+  const wrap=document.getElementById('dots'); wrap.innerHTML='';
+  SCENES.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i<=cur?' on':'');
+    wrap.appendChild(d);
+  });
+}
+function setChapter(ch,vs){
+  const ct=document.getElementById('chapter-title');
+  ct.classList.remove('show');
+  setTimeout(()=>{ct.textContent=ch; ct.classList.add('show');},300);
+  const vb=document.getElementById('verse-badge');
+  vb.classList.remove('show');
+  if(vs) setTimeout(()=>{vb.textContent=vs; vb.classList.add('show');},600);
+}
+
+function renderChoiceOverlay(html){
+  const el=document.getElementById('choice-overlay');
+  el.innerHTML=html;
+  el.classList.add('show');
+  document.getElementById('next-btn').style.visibility='hidden';
+}
+function hideChoiceOverlay(){
+  const el=document.getElementById('choice-overlay');
+  el.classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+}
+
+function showChoice1(){
+  renderChoiceOverlay(`
+    <div class="choice-title"><em>요나의 결단</em><br>니느웨는 원수의 도시. 하나님이 그들을 용서하면<br>이스라엘의 적이 살아남는다. 어떻게 할 것인가?</div>
+    <div class="choices">
+      <button class="choice-btn opt-flee" onclick="choose1(true)">
+        <div class="choice-inner">
+          <span class="choice-label">A</span>
+          <div class="choice-text-wrap">
+            <span class="choice-main">"이걸 왜 나에게 시키시지? 싫어요!"</span>
+            <span class="choice-sub">다시스로 도망친다 — 하나님의 반대 방향으로</span>
+          </div>
+          <span class="choice-icon">🚢</span>
+        </div>
+      </button>
+      <button class="choice-btn opt-obey" onclick="choose1(false)">
+        <div class="choice-inner">
+          <span class="choice-label">B</span>
+          <div class="choice-text-wrap">
+            <span class="choice-main">"얼른 니느웨로 가서 하나님의 말씀을 전해야 해!"</span>
+            <span class="choice-sub">순종으로 나아간다 — 부르심을 따른다</span>
+          </div>
+          <span class="choice-icon">🏃</span>
+        </div>
+      </button>
+    </div>
+  `);
+}
+function showChoice2(){
+  renderChoiceOverlay(`
+    <div class="choice-title"><em>요나의 두 번째 반응</em><br>니느웨 백성이 회개했다. 하나님이 재앙을 거두셨다.<br>이 결과 앞에 요나는 어떤 마음인가?</div>
+    <div class="choices">
+      <button class="choice-btn opt-anger2" onclick="choose2(true)">
+        <div class="choice-inner">
+          <span class="choice-label">A</span>
+          <div class="choice-text-wrap">
+            <span class="choice-main">"어차피 용서하실 거 왜 시키셨나요!"</span>
+            <span class="choice-sub">분노와 억울함 — "차라리 죽는 것이 낫겠나이다"</span>
+          </div>
+          <span class="choice-icon">😠</span>
+        </div>
+      </button>
+      <button class="choice-btn opt-grace" onclick="choose2(false)">
+        <div class="choice-inner">
+          <span class="choice-label">B</span>
+          <div class="choice-text-wrap">
+            <span class="choice-main">"백성들이 회개했다니 다행이야"</span>
+            <span class="choice-sub">하나님의 긍휼을 받아들인다</span>
+          </div>
+          <span class="choice-icon">🌿</span>
+        </div>
+      </button>
+    </div>
+  `);
+}
+
+function showResult(iconText, titleText, bodyText, cls, colors, afterFn){
+  const card=document.getElementById('result-card');
+  card.className='result-card '+cls;
+  document.getElementById('result-icon').textContent=iconText;
+  document.getElementById('result-title').textContent=titleText;
+  document.getElementById('result-text').textContent=bodyText;
+  spawnSparks(16, colors);
+  const oldBtn=document.getElementById('result-continue-btn');
+  const newBtn=oldBtn.cloneNode(true);
+  oldBtn.parentNode.replaceChild(newBtn,oldBtn);
+  newBtn.addEventListener('click',()=>{
+    document.getElementById('choice-result').classList.remove('show');
+    afterFn();
+  });
+  document.getElementById('choice-result').classList.add('show');
+}
+
+function choose1(isFlee){
+  choice1=isFlee;
+  hideChoiceOverlay();
+  if(isFlee){
+    if(!muted) Music.play('flee');
+    showResult('🚢','도망치는 요나',
+      '"나는 가지 않겠다!" 요나는 욥바 항구로 달려가 다시스행 배를 탔다. 반대 방향으로. 하나님의 낯을 피하려 했다. 그러나 도망의 끝은 물고기 뱃속이었다.',
+      'res-flee', ['#a070ff','#c0a0ff','#ffffff'],
+      ()=>{ cur++; applyScene(cur); }
+    );
+  } else {
+    if(!muted) Music.play('call');
+    showResult('🏃','순종하려 했지만…',
+      '요나가 일어섰다. "가겠습니다." 그러나 발을 내딛을수록 마음이 흔들렸다. 니느웨— 이스라엘을 짓밟은 원수의 도시. "하나님이 그들을 용서하시면 어떡하지?" 욥바 항구에 이르렀을 때, 요나의 발은 다시스행 배 앞에 멈춰 서 있었다.',
+      'res-obey', ['#F5C842','#ffe480','#ffffff'],
+      ()=>{ cur++; applyScene(cur); }
+    );
+  }
+}
+function choose2(isAnger){
+  choice2=isAnger;
+  hideChoiceOverlay();
+  if(isAnger){
+    if(!muted) Music.play('anger');
+    showResult('😠','요나의 분노',
+      '"이럴 줄 알았습니다! 주께서 긍휼히 여기시리라 알았기에 도망쳤던 것입니다. 차라리 죽는 것이 낫겠나이다!" 그러나 하나님은 요나에게 되물으셨다. "네가 성내는 것이 옳으냐?"',
+      'res-anger2', ['#ff6030','#ffaa40','#F5C842'],
+      ()=>{ cur++; applyScene(cur); }
+    );
+  } else {
+    if(!muted) Music.play('mercy');
+    showResult('🌿','감사한 요나',
+      '"그래도 살았으니… 다행이다." 처음엔 그랬다. 그런데 베옷을 입고 엎드린 니느웨 백성들을 한참 바라보다가— 억울함이 올라왔다. 내가 이 먼 길을 온 것도, 물고기 뱃속에 갇혔던 것도, 다 이 사람들 때문인데. 하나님은 너무 쉽게 용서하시는 게 아닐까?',
+      'res-grace', ['#60e0a0','#a0f0c0','#ffffff','#F5C842'],
+      ()=>{ cur++; applyScene(cur); }
+    );
+  }
+}
+
+function applyScene(idx){
+  const s=SCENES[idx];
+  setIllus(s.img);
+  setOverlays(s);
+  setChapter(s.chapter,s.verse);
+  if(s.flash) setTimeout(flashEffect,400);
+  document.getElementById('portrait-icon').textContent=s.icon;
+  document.getElementById('portrait-name').textContent=s.name;
+  document.getElementById('next-btn').textContent=s.btn;
+  typeText(s.text);
+  buildDots();
+  document.getElementById('progress-fill').style.width=((idx+1)/SCENES.length*100)+'%';
+  const mood=MOODS[idx]; if(!muted&&mood) Music.play(mood);
+  if(s.type==='choice1') setTimeout(showChoice1,1900);
+  else if(s.type==='choice2') setTimeout(showChoice2,1900);
+}
+function nextScene(){
+  cur++;
+  if(cur>=SCENES.length){ showEnd(); return; }
+  applyScene(cur);
+}
+function showEnd(){
+  document.getElementById('end-screen').classList.add('show');
+  if(!muted) Music.play('holy');
+  spawnSparks(40,['#F5C842','#ffe480','#60e0a0','#ffffff']);
+  setTimeout(()=>spawnSparks(22,['#fff','#ffe4a0','#80d8ff']),1000);
+}
+function replayGame(){
+  choice1=null; choice2=null;
+  document.getElementById('end-screen').classList.remove('show');
+  const co=document.getElementById('choice-overlay');
+  co.innerHTML=''; co.classList.remove('show');
+  document.getElementById('choice-result').classList.remove('show');
+  document.getElementById('next-btn').style.visibility='visible';
+  Music.stop();
+  setTimeout(()=>{ cur=0; applyScene(0); },1400);
+}
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  Music.init(); cur=0; applyScene(0);
+}
+function toggleMute(){
+  muted=!muted;
+  document.getElementById('mute-btn').textContent=muted?'🔇':'🔊';
+  if(muted) Music.stop();
+  else{ Music.init(); const m=MOODS[cur]; if(m) Music.play(m); }
+}
+
+/* ════════════════════════
+   MUSIC ENGINE
+   moods: call / flee / deep / mercy / anger / holy
+════════════════════════ */
+const Music=(()=>{
+  let ctx,masterGain,currentMood=null;
+  let oscList=[],lfoList=[],intervalList=[];
+
+  function init(){
+    if(ctx) return;
+    ctx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=ctx.createGain();
+    masterGain.gain.setValueAtTime(0,ctx.currentTime);
+    masterGain.connect(ctx.destination);
+  }
+  function stopAll(fade=1.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value,now);
+    masterGain.gain.linearRampToValueAtTime(0,now+fade);
+    intervalList.forEach(id=>clearInterval(id)); intervalList=[];
+    setTimeout(()=>{
+      oscList.forEach(o=>{try{o.stop();}catch(e){}}); oscList=[];
+      lfoList.forEach(o=>{try{o.stop();}catch(e){}}); lfoList=[];
+    },(fade+0.1)*1000);
+  }
+  function fadeIn(vol=0.32,dur=2.5){
+    const now=ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(0,now);
+    masterGain.gain.linearRampToValueAtTime(vol,now+dur);
+  }
+  function makeOsc(type,freq,gainVal){
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type; o.frequency.value=freq; g.gain.value=gainVal;
+    o.connect(g); g.connect(masterGain); o.start();
+    oscList.push(o); return {osc:o,gain:g};
+  }
+  function makeLFO(target,rate,depth,base){
+    const lfo=ctx.createOscillator(),lg=ctx.createGain();
+    lfo.frequency.value=rate; lg.gain.value=depth;
+    lfo.connect(lg); lg.connect(target); target.value=base;
+    lfo.start(); lfoList.push(lfo);
+  }
+  function makeReverb(sec=2,decay=2){
+    const conv=ctx.createConvolver(),rate=ctx.sampleRate,len=rate*sec;
+    const buf=ctx.createBuffer(2,len,rate);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}
+    conv.buffer=buf; return conv;
+  }
+
+  /* CALL — 하나님의 소명, 장엄한 화음 */
+  function playCall(){
+    const rev=makeReverb(3.5,1.6); rev.connect(masterGain);
+    const chords=[[174.61,261.63,349.23,523.25],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let ci=0;
+    function pc(){
+      chords[ci%chords.length].forEach((f,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=i<2?'sine':'triangle'; o.frequency.value=f;
+        o.detune.value=(Math.random()-0.5)*6;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.09,ctx.currentTime+0.9);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.1);
+        o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+3.2);
+        oscList.push(o);
+      }); ci++;
+    }
+    pc(); intervalList.push(setInterval(pc,3200));
+    makeOsc('sine',87.31,0.11); fadeIn(0.38,3);
+  }
+
+  /* FLEE — 도망, 불안하고 빠른 리듬 */
+  function playFlee(){
+    const rev=makeReverb(1.4,3.2); rev.connect(masterGain);
+    const run=[220,246.94,220,196,220,233.08,220,207.65,220,246.94,261.63,246.94];
+    let ri=0;
+    function pr(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='triangle'; o.frequency.value=run[ri%run.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.12,ctx.currentTime+0.05);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.38);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.4);
+      oscList.push(o); ri++;
+    }
+    pr(); intervalList.push(setInterval(pr,350));
+    const bass=makeOsc('sine',110,0.09); makeLFO(bass.gain.gain,5,0.06,0.09);
+    fadeIn(0.34,1.8);
+  }
+
+  /* DEEP — 물고기 뱃속, 깊은 바다 압박감 */
+  function playDeep(){
+    const rev=makeReverb(5.5,1.8); rev.connect(masterGain);
+    makeOsc('sine',36.71,0.18); // 깊은 저음
+    const mid=makeOsc('sine',55,0.10); makeLFO(mid.osc.frequency,0.07,1.5,55);
+    // 물방울/압력 느낌
+    const bub=[146.83,130.81,138.59,110,123.47];
+    let bi=0;
+    function pb(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=bub[bi%bub.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.07,ctx.currentTime+0.12);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1.5);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.6);
+      oscList.push(o); bi++;
+    }
+    pb(); intervalList.push(setInterval(pb,2200));
+    fadeIn(0.30,4.0);
+  }
+
+  /* MERCY — 니느웨 회개, 따뜻한 감동 */
+  function playMercy(){
+    const rev=makeReverb(4.0,1.5); rev.connect(masterGain);
+    const mel=[261.63,293.66,329.63,392,349.23,329.63,293.66,261.63,
+               293.66,329.63,392,440,415.30,369.99,329.63,293.66];
+    let mi=0;
+    function pm(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=mel[mi%mel.length];
+      o.detune.value=(Math.random()-0.5)*4;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.13,ctx.currentTime+0.28);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+0.95);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.0);
+      oscList.push(o); mi++;
+    }
+    pm(); intervalList.push(setInterval(pm,900));
+    [[130.81,0.09],[164.81,0.07]].forEach(([f,v])=>{
+      const p=makeOsc('sine',f,v); makeLFO(p.gain.gain,0.18,0.04,v);
+    });
+    fadeIn(0.38,3);
+  }
+
+  /* ANGER — 요나의 분노, 불협화 긴장 */
+  function playAnger(){
+    const rev=makeReverb(1.2,3.8); rev.connect(masterGain);
+    const tense=[220,233.08,220,207.65,220,246.94,233.08,220];
+    let ti=0;
+    function pt(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sawtooth'; o.frequency.value=tense[ti%tense.length];
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.13,ctx.currentTime+0.04);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.36);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+0.4);
+      oscList.push(o); ti++;
+    }
+    pt(); intervalList.push(setInterval(pt,400));
+    makeOsc('sine',82,0.10); fadeIn(0.40,1.5);
+  }
+
+  /* HOLY — 엔딩 합창 */
+  function playHoly(){
+    const rev=makeReverb(5,1.4); rev.connect(masterGain);
+    const rev2=makeReverb(3,2.0); rev2.connect(masterGain);
+    const sop=[329.63,369.99,415.30,493.88,523.25,493.88,554.37,523.25,493.88,415.30,369.99,440,493.88,523.25,587.33,523.25];
+    const alt=[261.63,293.66,329.63,392,415.30,392,440,415.30,392,329.63,293.66,349.23,392,415.30,493.88,415.30];
+    let si=0,ai=0;
+    function pS(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=sop[si%sop.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.15,ctx.currentTime+0.3);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); si++;
+    }
+    function pA(){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine'; o.frequency.value=alt[ai%alt.length];
+      o.detune.value=(Math.random()-0.5)*5;
+      g.gain.setValueAtTime(0,ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.10,ctx.currentTime+0.4);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1);
+      o.connect(g); g.connect(rev); o.start(); o.stop(ctx.currentTime+1.2);
+      oscList.push(o); ai++;
+    }
+    const org=[[164.81,246.94,329.63,493.88],[196,293.66,392,587.33],[220,329.63,440,659.25],[196,293.66,392,523.25]];
+    let oi=0;
+    function pO(){
+      org[oi%org.length].forEach((f,hi)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=hi<2?'sine':'triangle'; o.frequency.value=f;
+        g.gain.setValueAtTime(0,ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.055,ctx.currentTime+1.0);
+        g.gain.linearRampToValueAtTime(0,ctx.currentTime+3.9);
+        o.connect(g); g.connect(rev2); o.start(); o.stop(ctx.currentTime+4.0);
+        oscList.push(o);
+      }); oi++;
+    }
+    [[164.81,0.10],[196,0.08],[246.94,0.06]].forEach(([f,v])=>{
+      const p=makeOsc('sine',f,v); makeLFO(p.gain.gain,0.18,0.03,v);
+    });
+    pS();pA();pO();
+    intervalList.push(setInterval(()=>{pS();pA();},1100));
+    intervalList.push(setInterval(pO,4000));
+    fadeIn(0.44,4);
+  }
+
+  const MAP={call:playCall,flee:playFlee,deep:playDeep,mercy:playMercy,anger:playAnger,holy:playHoly};
+
+  function play(mood){
+    if(!ctx) return;
+    if(mood===currentMood) return;
+    currentMood=mood;
+    stopAll(1.2);
+    setTimeout(()=>{if(currentMood!==mood)return; MAP[mood]?.();},1300);
+  }
+  function stop(){stopAll(2);currentMood=null;}
+  return {init,play,stop};
+})();
+</script>
+</body>
+</html>
