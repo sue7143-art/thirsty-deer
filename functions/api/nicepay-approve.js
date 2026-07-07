@@ -3,6 +3,16 @@
 // 나이스페이 결제창에서 인증이 끝나면 이 URL로 결제 결과를 POST로
 // 전달합니다(returnUrl). 여기서 tid를 승인 API로 전달해야 실제 결제가
 // 최종 확정됩니다. 처리 후 사용자를 다시 우리 사이트로 리다이렉트합니다.
+//
+// ⚠️ 디버깅을 위해 실패 사유를 ?reason= 파라미터에 실어서 보냅니다.
+// 문제 해결 후에는 이 reason 노출 부분을 제거하는 게 좋아요.
+
+function fail(origin, reason) {
+  return Response.redirect(
+    `${origin}/?payment=fail&reason=${encodeURIComponent(reason)}`,
+    302
+  );
+}
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -17,8 +27,8 @@ export async function onRequestPost(context) {
       const form = await request.formData();
       for (const [key, value] of form.entries()) data[key] = value;
     }
-  } catch {
-    return Response.redirect(`${origin}/?payment=fail`, 302);
+  } catch (err) {
+    return fail(origin, "parse_error:" + err.message);
   }
 
   const tid = data.tid;
@@ -26,7 +36,7 @@ export async function onRequestPost(context) {
   const amount = data.amount;
 
   if (!tid || !orderId) {
-    return Response.redirect(`${origin}/?payment=fail`, 302);
+    return fail(origin, "missing_tid_or_orderId");
   }
 
   try {
@@ -40,11 +50,18 @@ export async function onRequestPost(context) {
         },
       }
     );
+    if (!orderRes.ok) {
+      const t = await orderRes.text();
+      return fail(origin, "order_fetch_failed:" + orderRes.status + ":" + t.slice(0, 150));
+    }
     const orderData = await orderRes.json();
     const order = orderData?.[0];
 
-    if (!order || (amount && String(order.amount) !== String(amount))) {
-      return Response.redirect(`${origin}/?payment=fail`, 302);
+    if (!order) {
+      return fail(origin, "order_not_found:" + orderId);
+    }
+    if (amount && String(order.amount) !== String(amount)) {
+      return fail(origin, "amount_mismatch:" + order.amount + "_vs_" + amount);
     }
 
     // 2. 나이스페이 승인 API 호출
@@ -58,9 +75,19 @@ export async function onRequestPost(context) {
       body: JSON.stringify({ amount: order.amount }),
     });
 
-    const approveData = await approveRes.json();
+    const approveText = await approveRes.text();
+    let approveData;
+    try {
+      approveData = JSON.parse(approveText);
+    } catch {
+      return fail(origin, "approve_not_json:" + approveRes.status + ":" + approveText.slice(0, 150));
+    }
+
     if (!approveRes.ok || approveData.resultCode !== "0000") {
-      return Response.redirect(`${origin}/?payment=fail`, 302);
+      return fail(
+        origin,
+        "approve_failed:" + approveData.resultCode + ":" + (approveData.resultMsg || "")
+      );
     }
 
     // 3. 클릭했던 에피소드 즉시 언락
@@ -119,6 +146,6 @@ export async function onRequestPost(context) {
 
     return Response.redirect(`${origin}/?payment=success`, 302);
   } catch (err) {
-    return Response.redirect(`${origin}/?payment=fail`, 302);
+    return fail(origin, "exception:" + err.message);
   }
 }
