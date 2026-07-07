@@ -1188,13 +1188,14 @@ async function payWith(method){
 (async function handlePaymentResult(){
   const params = new URLSearchParams(window.location.search);
   const result = params.get('payment');
+  const reason = params.get('reason');
   if(!result){ return; }
 
   // URL을 먼저 깨끗하게 정리
   window.history.replaceState({}, '', window.location.pathname);
 
   if(result === 'fail'){
-    showToast('결제가 완료되지 않았어요. 다시 시도해주세요.');
+    showToast('결제 실패: ' + (reason || '알 수 없음'), 8000);
     return;
   }
 
