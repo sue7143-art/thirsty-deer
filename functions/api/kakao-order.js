@@ -51,7 +51,8 @@ export async function onRequestPost(context) {
 
   if (!readyRes.ok) {
     const detail = await readyRes.text();
-    return json({ error: "kakao_ready_failed", detail: detail.slice(0, 300) }, 500);
+    const keyLen = (env.KAKAO_PAY_SECRET_KEY || '').length;
+    return json({ error: "kakao_ready_failed", detail: detail.slice(0, 300), secretKeyLength: keyLen }, 500);
   }
 
   const readyData = await readyRes.json();
