@@ -508,7 +508,6 @@ footer{
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://pay.nicepay.co.kr/v1/js/"></script>
 </head>
 <body>
 
@@ -851,7 +850,7 @@ footer{
     <div class="purchase-modal-title">💧 샘물 충전할까요?</div>
     <div class="purchase-modal-name">에피소드 2개를 열 수 있습니다</div>
     <div class="purchase-modal-price">샘물 하나 · 990원</div>
-    <button class="pay-btn pay-btn-kakao" onclick="payWith('kakaopay')">카카오페이로 결제</button>
+    <button class="pay-btn pay-btn-kakao" onclick="payWith()">카카오페이로 결제</button>
     <button class="purchase-modal-cancel" onclick="hidePurchaseModal()">닫기</button>
   </div>
 </div>
@@ -1068,10 +1067,8 @@ document.getElementById('water-modal')?.addEventListener('click', function(e){
 });
 
 // ══════════════════════════════════════
-// 나이스페이먼츠 (카카오페이 / 네이버페이 직접 연동)
+// 카카오페이 온라인 결제 (단건결제 API) 직접 연동
 // ══════════════════════════════════════
-// 나이스페이 클라이언트 키 (공개용 값, 브라우저 노출 안전)
-const NICEPAY_CLIENT_ID = 'R2_a274a41c0bd3495aa733a9a4be6a7da1';
 
 let currentEpisodeId = null;
 let pendingCreditEpisodeId = null;
@@ -1141,8 +1138,8 @@ document.getElementById('purchase-modal')?.addEventListener('click', function(e)
   if(e.target === this) hidePurchaseModal();
 });
 
-// method: 'kakaopay' 또는 'naverpayCard'
-async function payWith(method){
+// 카카오페이로 결제 시작 (준비 API 호출 → 결제창으로 이동)
+async function payWith(){
   if(!currentEpisodeId) return;
 
   const { data: { session } } = await supabaseClient.auth.getSession();
@@ -1152,7 +1149,7 @@ async function payWith(method){
   }
 
   try{
-    const res = await fetch('/api/nicepay-order', {
+    const res = await fetch('/api/kakao-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ episodeId: currentEpisodeId, userId: session.user.id })
@@ -1164,19 +1161,7 @@ async function payWith(method){
     }
 
     hidePurchaseModal();
-
-    AUTHNICE.requestPay({
-      clientId: NICEPAY_CLIENT_ID,
-      method: method,
-      orderId: order.orderId,
-      amount: order.amount,
-      goodsName: order.goodsName,
-      returnUrl: window.location.origin + '/api/nicepay-approve',
-      fnError: function(result){
-        console.error(result);
-        alert('결제 중 문제가 발생했어요.\n' + (result.errorMsg || result.msg || ''));
-      }
-    });
+    window.location.href = order.redirectUrl;
   }catch(err){
     console.error(err);
     alert('결제 요청 중 오류가 발생했어요.');
