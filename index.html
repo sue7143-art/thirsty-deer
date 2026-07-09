@@ -1156,7 +1156,7 @@ async function payWith(){
     });
     const order = await res.json();
     if(!res.ok || order.error){
-      alert('주문 생성 중 오류가 발생했어요.\n' + (order.detail || order.error || ''));
+      alert('주문 생성 중 오류가 발생했어요.\n' + (order.detail || order.error || '') + (order.secretKeyLength !== undefined ? ('\n[디버그] 저장된 키 길이: ' + order.secretKeyLength) : ''));
       return;
     }
 
