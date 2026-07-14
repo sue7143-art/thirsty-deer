@@ -441,6 +441,60 @@ footer{
   .toast{top:14px;right:14px;font-size:0.72rem;max-width:200px;}
 }
 
+/* 선물하기 모달 */
+#gift-modal, #gift-share-modal, #gift-welcome-modal{
+  position:fixed;inset:0;z-index:1000;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(4,6,12,0.75);backdrop-filter:blur(4px);padding:20px;
+}
+#gift-modal.show, #gift-share-modal.show, #gift-welcome-modal.show{display:flex;}
+.gift-modal-card{
+  background:linear-gradient(160deg,#12101e 0%,#0a0816 100%);
+  border:1px solid rgba(160,220,240,0.25);
+  border-radius:16px;padding:28px 24px;
+  max-width:360px;width:100%;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+.gift-modal-title{
+  font-family:'Cinzel',serif;font-size:1.0rem;color:#fff;margin-bottom:6px;
+}
+.gift-modal-desc{
+  font-family:'Noto Serif KR',serif;font-size:0.8rem;
+  color:rgba(250,235,208,0.75);margin-bottom:16px;
+}
+.gift-message-input{
+  width:100%;min-height:64px;resize:vertical;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  border-radius:8px;padding:10px;color:#fff;
+  font-family:'Noto Serif KR',serif;font-size:0.82rem;
+  margin-bottom:10px;
+}
+.gift-suggestions{
+  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;
+  justify-content:center;
+}
+.gift-chip{
+  background:rgba(160,220,240,0.1);border:1px solid rgba(160,220,240,0.3);
+  color:rgba(160,220,240,0.9);border-radius:16px;
+  padding:5px 10px;font-size:0.68rem;cursor:pointer;
+  font-family:'Noto Serif KR',serif;
+}
+.gift-pay-btn{
+  width:100%;padding:12px 0;margin-bottom:8px;border:none;border-radius:8px;
+  cursor:pointer;font-family:'Noto Serif KR',serif;font-size:0.88rem;font-weight:600;
+  background:#FEE500;color:#191919;
+}
+.gift-link-box{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  border-radius:8px;padding:10px;font-size:0.72rem;color:rgba(250,235,208,0.8);
+  word-break:break-all;margin-bottom:14px;
+}
+.gift-share-btn{
+  width:100%;padding:12px 0;margin-bottom:8px;border:none;border-radius:8px;
+  cursor:pointer;font-family:'Noto Serif KR',serif;font-size:0.88rem;font-weight:600;
+  background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;
+}
+
 /* ── HEADER ── */
 #top-header{
   position:fixed;top:0;left:0;right:0;z-index:100;
@@ -479,6 +533,14 @@ footer{
   background:rgba(160,220,240,0.12);
   border:1px solid rgba(160,220,240,0.3);
   border-radius:20px;padding:2px 9px;
+}
+.gift-btn{
+  font-family:'Noto Serif KR',serif;font-size:0.72rem;
+  color:#052028;background:linear-gradient(135deg,#9fe0ee,#5cb0cc);
+  border:none;border-radius:20px;padding:5px 12px;cursor:pointer;
+}
+@media (max-width:480px){
+  .gift-btn{padding:4px 9px;font-size:0.66rem;}
 }
 .user-avatar{
   width:28px;height:28px;border-radius:50%;
@@ -522,6 +584,7 @@ footer{
       <span class="user-avatar">🦌</span>
       <span id="user-name">사용자</span>
       <span id="water-badge" class="water-badge" style="display:none;"></span>
+      <button class="gift-btn" onclick="openGiftModal()">💧 선물하기</button>
       <button class="logout-btn" onclick="signOut()">로그아웃</button>
     </div>
   </div>
@@ -865,6 +928,38 @@ footer{
   </div>
 </div>
 
+<!-- 선물하기: 메시지 작성 모달 -->
+<div id="gift-modal">
+  <div class="gift-modal-card">
+    <div class="gift-modal-title">💧 샘물 선물하기</div>
+    <div class="gift-modal-desc">받는 분이 원하는 이야기 2편을 골라볼 수 있어요</div>
+    <textarea id="gift-message-input" class="gift-message-input" maxlength="80" placeholder="함께 보낼 메시지 (선택)"></textarea>
+    <div class="gift-suggestions" id="gift-suggestions"></div>
+    <button class="gift-pay-btn" onclick="payWithGift()">카카오페이로 선물하기 · 990원</button>
+    <button class="purchase-modal-cancel" onclick="hideGiftModal()">닫기</button>
+  </div>
+</div>
+
+<!-- 선물하기: 결제 완료 후 공유 화면 -->
+<div id="gift-share-modal">
+  <div class="gift-modal-card">
+    <div class="gift-modal-title">💧 선물이 준비됐어요</div>
+    <div class="gift-modal-desc">아래 링크를 원하는 분께 보내보세요</div>
+    <div class="gift-link-box" id="gift-link-box"></div>
+    <button class="gift-share-btn" onclick="shareGiftLink()">공유하기</button>
+    <button class="purchase-modal-cancel" onclick="hideGiftShareModal()">닫기</button>
+  </div>
+</div>
+
+<!-- 선물 받은 사람 환영 모달 -->
+<div id="gift-welcome-modal">
+  <div class="gift-modal-card">
+    <div class="gift-modal-title">🦌 선물이 도착했어요</div>
+    <div class="gift-modal-desc" id="gift-welcome-text"></div>
+    <button class="gift-pay-btn" onclick="hideGiftWelcomeModal()" style="background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;">이야기 보러 가기</button>
+  </div>
+</div>
+
 <!-- 우측 상단 안내 토스트 -->
 <div id="toast" class="toast"></div>
 
@@ -883,7 +978,7 @@ footer{
     상호: 오프닝글로우 · 대표: 김민석 · 사업자등록번호: 467-30-01927<br>
     사업장 주소: 경기도 김포시 고촌읍 전호로56번길 21-1<br>
     통신판매업신고번호: 제2026-경기김포-3151호<br>
-    문의: <a href="mailto:glow.opening@gmail.com">glow.opening@gmail.com</a>
+    전화: 0507-1352-3858 · 문의: <a href="mailto:glow.opening@gmail.com">glow.opening@gmail.com</a>
   </p>
   <p class="footer-biz">본 서비스에 사용된 삽화는 생성형 AI로 제작되었습니다.</p>
   <p class="footer-copy">© 목마른 사슴 · Bible Story Simulation</p>
@@ -1041,6 +1136,7 @@ async function testPurchase(episodeId){
   if(session?.user){
     unlockPurchasedEpisodes(session.user.id);
     updateWaterBadge(session.user.id);
+    if(typeof handleIncomingGift === 'function') handleIncomingGift(session.user.id);
   }
 
   supabaseClient.auth.onAuthStateChange((event, session) => {
@@ -1048,6 +1144,7 @@ async function testPurchase(episodeId){
     if(session?.user){
       unlockPurchasedEpisodes(session.user.id);
       updateWaterBadge(session.user.id);
+      if(typeof handleIncomingGift === 'function') handleIncomingGift(session.user.id);
     }
   });
 })();
@@ -1169,11 +1266,151 @@ async function payWith(){
   }
 }
 
+// ══════════════════════════════════════
+// 선물하기
+// ══════════════════════════════════════
+const GIFT_SUGGESTIONS = [
+  '힘든 시기에 위로가 되면 좋겠어',
+  '너 생각나서 보내',
+  '심심할 때 한 번 열어봐',
+  '우리 같이 봤으면 해서'
+];
+
+function renderGiftSuggestions(){
+  const wrap = document.getElementById('gift-suggestions');
+  if(!wrap || wrap.childElementCount) return;
+  GIFT_SUGGESTIONS.forEach(text => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'gift-chip';
+    chip.textContent = text;
+    chip.onclick = () => { document.getElementById('gift-message-input').value = text; };
+    wrap.appendChild(chip);
+  });
+}
+
+async function openGiftModal(){
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session){
+    alert('먼저 카카오로 로그인해주세요!');
+    return;
+  }
+  renderGiftSuggestions();
+  document.getElementById('gift-message-input').value = '';
+  document.getElementById('gift-modal').classList.add('show');
+}
+function hideGiftModal(){
+  document.getElementById('gift-modal').classList.remove('show');
+}
+document.getElementById('gift-modal')?.addEventListener('click', function(e){
+  if(e.target === this) hideGiftModal();
+});
+
+async function payWithGift(){
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session){
+    alert('먼저 로그인해주세요!');
+    return;
+  }
+  const message = document.getElementById('gift-message-input').value.trim();
+
+  try{
+    const res = await fetch('/api/kakao-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: session.user.id, isGift: true, message })
+    });
+    const order = await res.json();
+    if(!res.ok || order.error){
+      alert('주문 생성 중 오류가 발생했어요.\n' + (order.detail || order.error || ''));
+      return;
+    }
+    hideGiftModal();
+    window.location.href = order.redirectUrl;
+  }catch(err){
+    console.error(err);
+    alert('결제 요청 중 오류가 발생했어요.');
+  }
+}
+
+let currentGiftLink = null;
+
+function showGiftShareModal(code){
+  currentGiftLink = window.location.origin + '/?gift=' + code;
+  document.getElementById('gift-link-box').textContent = currentGiftLink;
+  document.getElementById('gift-share-modal').classList.add('show');
+}
+function hideGiftShareModal(){
+  document.getElementById('gift-share-modal').classList.remove('show');
+}
+
+async function shareGiftLink(){
+  if(!currentGiftLink) return;
+  const shareData = {
+    title: '목마른 사슴',
+    text: '성경 이야기를 선물로 보내드려요 🦌💧',
+    url: currentGiftLink
+  };
+  if(navigator.share){
+    try{ await navigator.share(shareData); }catch(e){ /* 사용자가 취소한 경우 등은 무시 */ }
+    return;
+  }
+  try{
+    await navigator.clipboard.writeText(currentGiftLink);
+    showToast('링크가 복사됐어요. 원하는 곳에 붙여넣어 보내주세요.');
+  }catch(e){
+    alert('링크 복사에 실패했어요.\n직접 복사해주세요:\n' + currentGiftLink);
+  }
+}
+
+function hideGiftWelcomeModal(){
+  document.getElementById('gift-welcome-modal').classList.remove('show');
+}
+
+// 선물 링크(?gift=CODE)로 들어온 경우 처리
+// 비로그인 상태로 들어와도 로그인 후까지 코드를 기억해두기 위해 localStorage에 잠시 보관
+(function captureIncomingGiftCode(){
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('gift');
+  if(code){
+    try{ localStorage.setItem('thirstyDeerPendingGift', code); }catch(e){}
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+})();
+
+async function handleIncomingGift(userId){
+  let code = null;
+  try{ code = localStorage.getItem('thirstyDeerPendingGift'); }catch(e){}
+  if(!code) return;
+
+  const { data, error } = await supabaseClient.rpc('redeem_gift', { p_code: code });
+  try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
+
+  if(error || !data?.success){
+    if(data?.reason === 'already_redeemed'){
+      showToast('이미 사용된 선물 링크예요.');
+    } else if(data?.reason === 'self_redeem'){
+      showToast('본인이 보낸 선물은 받을 수 없어요.');
+    } else {
+      showToast('선물을 여는 중 문제가 발생했어요.');
+    }
+    return;
+  }
+
+  updateWaterBadge(userId);
+  const text = data.message
+    ? `"${data.message}"\n\n샘물이 도착했어요! 원하는 이야기 2편을 골라보세요.`
+    : '샘물이 도착했어요! 원하는 이야기 2편을 골라보세요.';
+  document.getElementById('gift-welcome-text').textContent = text;
+  document.getElementById('gift-welcome-modal').classList.add('show');
+}
+
 // 결제 완료 후 돌아왔을 때 결과 안내
 (async function handlePaymentResult(){
   const params = new URLSearchParams(window.location.search);
   const result = params.get('payment');
   const reason = params.get('reason');
+  const giftCode = params.get('giftCode');
   if(!result){ return; }
 
   // URL을 먼저 깨끗하게 정리
@@ -1181,6 +1418,11 @@ async function payWith(){
 
   if(result === 'fail'){
     showToast('결제 실패: ' + (reason || '알 수 없음'), 8000);
+    return;
+  }
+
+  if(result === 'success' && giftCode){
+    showGiftShareModal(giftCode);
     return;
   }
 
