@@ -4,6 +4,8 @@
 // (2024년부터 open-api.kakaopay.com + SECRET_KEY 인증 방식으로 변경됨)
 // 결제창 주소(redirectUrl)를 받아서 클라이언트에 돌려주고,
 // 승인 단계에서 필요한 tid를 주문 정보와 함께 저장해둡니다.
+//
+// isGift가 true면 특정 에피소드가 아니라 "선물 코드" 발급용 주문이에요.
 
 const WATER_PRICE = 990;
 
@@ -17,8 +19,8 @@ export async function onRequestPost(context) {
     return json({ error: "invalid_json" }, 400);
   }
 
-  const { episodeId, userId } = body || {};
-  if (!episodeId || !userId) {
+  const { episodeId, userId, isGift, message } = body || {};
+  if (!userId || (!isGift && !episodeId)) {
     return json({ error: "invalid_request" }, 400);
   }
 
@@ -39,7 +41,7 @@ export async function onRequestPost(context) {
       cid,
       partner_order_id: orderId,
       partner_user_id: String(userId),
-      item_name: "샘물 한 병 (에피소드 2편)",
+      item_name: isGift ? "샘물 선물하기" : "샘물 한 병 (에피소드 2편)",
       quantity: 1,
       total_amount: WATER_PRICE,
       tax_free_amount: 0,
@@ -51,8 +53,7 @@ export async function onRequestPost(context) {
 
   if (!readyRes.ok) {
     const detail = await readyRes.text();
-    const keyLen = (env.KAKAO_PAY_SECRET_KEY || '').length;
-    return json({ error: "kakao_ready_failed", detail: detail.slice(0, 300), secretKeyLength: keyLen }, 500);
+    return json({ error: "kakao_ready_failed", detail: detail.slice(0, 300) }, 500);
   }
 
   const readyData = await readyRes.json();
@@ -70,9 +71,11 @@ export async function onRequestPost(context) {
     body: JSON.stringify({
       order_id: orderId,
       user_id: userId,
-      episode_id: episodeId,
+      episode_id: isGift ? null : episodeId,
       amount: WATER_PRICE,
       tid,
+      is_gift: !!isGift,
+      message: isGift ? (message || null) : null,
     }),
   });
 
