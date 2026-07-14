@@ -105,6 +105,7 @@ export async function onRequestGet(context) {
           code,
           sender_user_id: order.user_id,
           message: order.message || null,
+          sender_name: order.sender_name || null,
         }),
       });
 
