@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>목마른 사슴 — 성경 이야기 시뮬레이션</title>
+
+<!-- Open Graph: 카카오톡/메신저 등에서 링크 공유 시 미리보기 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="목마른 사슴 — 성경 이야기 시뮬레이션">
+<meta property="og:description" content="누군가 당신에게 성경 이야기를 선물했어요 🦌💧">
+<meta property="og:image" content="https://thirsty-deer.pages.dev/images/og_deer.jpg">
+<meta property="og:url" content="https://thirsty-deer.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -441,13 +449,45 @@ footer{
   .toast{top:14px;right:14px;font-size:0.72rem;max-width:200px;}
 }
 
-/* 선물하기 모달 */
-#gift-modal, #gift-share-modal, #gift-welcome-modal{
+.gift-share-btn:disabled{opacity:0.5;cursor:default;}
+
+/* 선물 편지 */
+#gift-letter-modal{
+  position:fixed;inset:0;z-index:1000;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(4,6,12,0.82);backdrop-filter:blur(5px);padding:20px;
+}
+#gift-letter-modal.show{display:flex;}
+.letter-card{
+  background:linear-gradient(160deg,#1a1530 0%,#0a0816 100%);
+  border:1px solid rgba(245,200,66,0.3);
+  border-radius:16px;padding:36px 26px;
+  max-width:360px;width:100%;text-align:center;
+  box-shadow:0 25px 70px rgba(0,0,0,0.7);
+}
+.letter-icon{font-size:2.2rem;margin-bottom:14px;}
+.letter-sealed-text{
+  font-family:'Cinzel',serif;font-size:1.0rem;color:#fff;
+  margin-bottom:22px;line-height:1.5;
+}
+.letter-from{
+  font-family:'Cinzel',serif;font-size:0.86rem;
+  color:rgba(245,200,66,0.9);margin-bottom:14px;
+}
+.letter-message{
+  font-family:'Noto Serif KR',serif;font-size:0.88rem;font-style:italic;
+  color:rgba(250,235,208,0.9);line-height:1.7;
+  padding:16px;margin-bottom:22px;
+  border-top:1px solid rgba(255,255,255,0.12);
+  border-bottom:1px solid rgba(255,255,255,0.12);
+}
+
+#gift-modal, #gift-share-modal{
   position:fixed;inset:0;z-index:1000;
   display:none;align-items:center;justify-content:center;
   background:rgba(4,6,12,0.75);backdrop-filter:blur(4px);padding:20px;
 }
-#gift-modal.show, #gift-share-modal.show, #gift-welcome-modal.show{display:flex;}
+#gift-modal.show, #gift-share-modal.show{display:flex;}
 .gift-modal-card{
   background:linear-gradient(160deg,#12101e 0%,#0a0816 100%);
   border:1px solid rgba(160,220,240,0.25);
@@ -944,19 +984,26 @@ footer{
 <div id="gift-share-modal">
   <div class="gift-modal-card">
     <div class="gift-modal-title">💧 선물이 준비됐어요</div>
-    <div class="gift-modal-desc">아래 링크를 원하는 분께 보내보세요</div>
+    <div class="gift-modal-desc">아래 링크를 원하는 분께 보내보세요 (공유는 한 번만 가능해요)</div>
     <div class="gift-link-box" id="gift-link-box"></div>
-    <button class="gift-share-btn" onclick="shareGiftLink()">공유하기</button>
+    <button class="gift-share-btn" id="gift-share-btn" onclick="shareGiftLink()">공유하기</button>
     <button class="purchase-modal-cancel" onclick="hideGiftShareModal()">닫기</button>
   </div>
 </div>
 
-<!-- 선물 받은 사람 환영 모달 -->
-<div id="gift-welcome-modal">
-  <div class="gift-modal-card">
-    <div class="gift-modal-title">🦌 선물이 도착했어요</div>
-    <div class="gift-modal-desc" id="gift-welcome-text"></div>
-    <button class="gift-pay-btn" onclick="hideGiftWelcomeModal()" style="background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;">이야기 보러 가기</button>
+<!-- 선물 편지 (봉투 → 열람) -->
+<div id="gift-letter-modal">
+  <div class="letter-card">
+    <div id="letter-seal">
+      <div class="letter-icon">🦌💧</div>
+      <div class="letter-sealed-text" id="letter-sealed-text">선물 편지가 도착했어요</div>
+      <button class="gift-pay-btn" id="letter-open-btn" onclick="openLetter()" style="background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;">열어보기</button>
+    </div>
+    <div id="letter-opened-content" style="display:none;">
+      <div class="letter-from" id="letter-from"></div>
+      <div class="letter-message" id="letter-message"></div>
+      <button class="gift-pay-btn" onclick="closeLetterModal()" style="background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;">이야기 보러 가기</button>
+    </div>
   </div>
 </div>
 
@@ -1136,15 +1183,15 @@ async function testPurchase(episodeId){
   if(session?.user){
     unlockPurchasedEpisodes(session.user.id);
     updateWaterBadge(session.user.id);
-    if(typeof handleIncomingGift === 'function') handleIncomingGift(session.user.id);
   }
+  // 선물 봉투 미리보기는 로그인 여부와 상관없이 확인 (열어보기 누를 때만 로그인 요구)
+  if(typeof checkPendingGiftLetter === 'function') checkPendingGiftLetter();
 
   supabaseClient.auth.onAuthStateChange((event, session) => {
     updateAuthUI(session?.user || null);
     if(session?.user){
       unlockPurchasedEpisodes(session.user.id);
       updateWaterBadge(session.user.id);
-      if(typeof handleIncomingGift === 'function') handleIncomingGift(session.user.id);
     }
   });
 })();
@@ -1313,12 +1360,16 @@ async function payWithGift(){
     return;
   }
   const message = document.getElementById('gift-message-input').value.trim();
+  const senderName = session.user.user_metadata?.name
+    || session.user.user_metadata?.full_name
+    || session.user.user_metadata?.nickname
+    || '누군가';
 
   try{
     const res = await fetch('/api/kakao-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: session.user.id, isGift: true, message })
+      body: JSON.stringify({ userId: session.user.id, isGift: true, message, senderName })
     });
     const order = await res.json();
     if(!res.ok || order.error){
@@ -1334,40 +1385,64 @@ async function payWithGift(){
 }
 
 let currentGiftLink = null;
+let giftShareUsed = false;
 
 function showGiftShareModal(code){
   currentGiftLink = window.location.origin + '/?gift=' + code;
   document.getElementById('gift-link-box').textContent = currentGiftLink;
+  giftShareUsed = false;
+  const btn = document.getElementById('gift-share-btn');
+  btn.disabled = false;
+  btn.textContent = '공유하기';
   document.getElementById('gift-share-modal').classList.add('show');
 }
 function hideGiftShareModal(){
   document.getElementById('gift-share-modal').classList.remove('show');
 }
 
+// 공유는 한 번만 가능 — 공유(또는 링크 복사) 성공 시 버튼을 잠급니다
 async function shareGiftLink(){
-  if(!currentGiftLink) return;
+  if(!currentGiftLink || giftShareUsed) return;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const senderName = session?.user?.user_metadata?.name
+    || session?.user?.user_metadata?.full_name
+    || session?.user?.user_metadata?.nickname
+    || '누군가';
+
   const shareData = {
     title: '목마른 사슴',
-    text: '성경 이야기를 선물로 보내드려요 🦌💧',
+    text: `${senderName}님이 보내신 선물이 도착했습니다 🦌💧`,
     url: currentGiftLink
   };
+
+  let shared = false;
   if(navigator.share){
-    try{ await navigator.share(shareData); }catch(e){ /* 사용자가 취소한 경우 등은 무시 */ }
-    return;
+    try{ await navigator.share(shareData); shared = true; }catch(e){ /* 사용자가 공유를 취소한 경우는 잠그지 않음 */ }
+  } else {
+    try{
+      await navigator.clipboard.writeText(currentGiftLink);
+      showToast('링크가 복사됐어요. 원하는 곳에 붙여넣어 보내주세요.');
+      shared = true;
+    }catch(e){
+      alert('링크 복사에 실패했어요.\n직접 복사해주세요:\n' + currentGiftLink);
+    }
   }
-  try{
-    await navigator.clipboard.writeText(currentGiftLink);
-    showToast('링크가 복사됐어요. 원하는 곳에 붙여넣어 보내주세요.');
-  }catch(e){
-    alert('링크 복사에 실패했어요.\n직접 복사해주세요:\n' + currentGiftLink);
+
+  if(shared){
+    giftShareUsed = true;
+    const btn = document.getElementById('gift-share-btn');
+    btn.disabled = true;
+    btn.textContent = '공유 완료 ✓';
   }
 }
 
-function hideGiftWelcomeModal(){
-  document.getElementById('gift-welcome-modal').classList.remove('show');
-}
+// ── 선물 편지: 봉투 미리보기 → 열어보기 → 크레딧 수령 ──
+let pendingLetterCode = null;
+let pendingLetterSender = null;
+let pendingLetterMessage = null;
+let letterCreditsArrived = null;
 
-// 선물 링크(?gift=CODE)로 들어온 경우 처리
 // 비로그인 상태로 들어와도 로그인 후까지 코드를 기억해두기 위해 localStorage에 잠시 보관
 (function captureIncomingGiftCode(){
   const params = new URLSearchParams(window.location.search);
@@ -1378,15 +1453,52 @@ function hideGiftWelcomeModal(){
   }
 })();
 
-async function handleIncomingGift(userId){
+// 페이지 로드 시(로그인 여부 상관없이) 대기 중인 선물이 있으면 봉투를 보여줍니다
+async function checkPendingGiftLetter(){
   let code = null;
   try{ code = localStorage.getItem('thirstyDeerPendingGift'); }catch(e){}
   if(!code) return;
 
-  const { data, error } = await supabaseClient.rpc('redeem_gift', { p_code: code });
-  try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
+  const { data, error } = await supabaseClient.rpc('peek_gift', { p_code: code });
+  if(error || !data?.found){
+    try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
+    return;
+  }
+
+  pendingLetterCode = code;
+  pendingLetterSender = data.sender_name;
+  pendingLetterMessage = data.message;
+
+  const sealedText = document.getElementById('letter-sealed-text');
+  const openBtn = document.getElementById('letter-open-btn');
+
+  if(data.status === 'redeemed'){
+    sealedText.textContent = '이미 열어본 선물이에요';
+    openBtn.style.display = 'none';
+    try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
+  } else {
+    const senderLabel = data.sender_name ? `${data.sender_name}님이` : '누군가';
+    sealedText.textContent = `${senderLabel} 보내신 선물이 도착했어요`;
+    openBtn.style.display = 'block';
+  }
+
+  document.getElementById('gift-letter-modal').classList.add('show');
+}
+
+async function openLetter(){
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session){
+    // 코드는 localStorage에 남아있어 로그인 후 이어서 처리돼요
+    signInWithKakao();
+    return;
+  }
+  if(!pendingLetterCode) return;
+
+  const { data, error } = await supabaseClient.rpc('redeem_gift', { p_code: pendingLetterCode });
 
   if(error || !data?.success){
+    document.getElementById('gift-letter-modal').classList.remove('show');
+    try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
     if(data?.reason === 'already_redeemed'){
       showToast('이미 사용된 선물 링크예요.');
     } else if(data?.reason === 'self_redeem'){
@@ -1397,12 +1509,30 @@ async function handleIncomingGift(userId){
     return;
   }
 
-  updateWaterBadge(userId);
-  const text = data.message
-    ? `"${data.message}"\n\n샘물이 도착했어요! 원하는 이야기 2편을 골라보세요.`
-    : '샘물이 도착했어요! 원하는 이야기 2편을 골라보세요.';
-  document.getElementById('gift-welcome-text').textContent = text;
-  document.getElementById('gift-welcome-modal').classList.add('show');
+  try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
+
+  document.getElementById('letter-seal').style.display = 'none';
+  document.getElementById('letter-opened-content').style.display = 'block';
+  document.getElementById('letter-from').textContent =
+    (pendingLetterSender || '누군가') + '님이 보낸 선물';
+  document.getElementById('letter-message').textContent =
+    data.message || pendingLetterMessage || '성경 이야기를 선물로 보내드려요 🦌💧';
+
+  letterCreditsArrived = await updateWaterBadge(session.user.id);
+}
+
+function closeLetterModal(){
+  document.getElementById('gift-letter-modal').classList.remove('show');
+  // 다음에 다시 뜰 경우를 대비해 상태 초기화
+  document.getElementById('letter-seal').style.display = 'block';
+  document.getElementById('letter-opened-content').style.display = 'none';
+  document.getElementById('letter-open-btn').style.display = 'block';
+
+  if(letterCreditsArrived){
+    showToast(`💧 샘물 ${waterBottleLabel(letterCreditsArrived)} 도착! 잠긴 카드를 누르면 바로 쓸 수 있어요.`, 5000);
+  }
+  letterCreditsArrived = null;
+  pendingLetterCode = null;
 }
 
 // 결제 완료 후 돌아왔을 때 결과 안내
