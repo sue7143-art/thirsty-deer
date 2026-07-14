@@ -19,7 +19,7 @@ export async function onRequestPost(context) {
     return json({ error: "invalid_json" }, 400);
   }
 
-  const { episodeId, userId, isGift, message } = body || {};
+  const { episodeId, userId, isGift, message, senderName } = body || {};
   if (!userId || (!isGift && !episodeId)) {
     return json({ error: "invalid_request" }, 400);
   }
@@ -76,6 +76,7 @@ export async function onRequestPost(context) {
       tid,
       is_gift: !!isGift,
       message: isGift ? (message || null) : null,
+      sender_name: isGift ? (senderName || null) : null,
     }),
   });
 
