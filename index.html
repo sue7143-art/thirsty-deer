@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="목마른 사슴 — 성경 이야기 시뮬레이션">
 <meta property="og:description" content="누군가 당신에게 성경 이야기를 선물했어요 🦌">
-<meta property="og:image" content="https://thirsty-deer.pages.dev/images/og_deer.jpg">
+<meta property="og:image" content="https://thirsty-deer.pages.dev/images/gift_envelope.jpg">
 <meta property="og:url" content="https://thirsty-deer.pages.dev/">
 <meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
@@ -465,7 +465,15 @@ footer{
   max-width:360px;width:100%;text-align:center;
   box-shadow:0 25px 70px rgba(0,0,0,0.7);
 }
-.letter-icon{font-size:2.2rem;margin-bottom:14px;}
+.letter-envelope-img{
+  width:100%;max-width:220px;border-radius:10px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.5);
+  margin-bottom:18px;
+  transition:opacity 0.4s ease, transform 0.4s ease;
+}
+.letter-envelope-img.opening{
+  opacity:0;transform:scale(0.9) translateY(-6px);
+}
 .letter-sealed-text{
   font-family:'Cinzel',serif;font-size:1.0rem;color:#fff;
   margin-bottom:22px;line-height:1.5;
@@ -995,7 +1003,7 @@ footer{
 <div id="gift-letter-modal">
   <div class="letter-card">
     <div id="letter-seal">
-      <div class="letter-icon">🦌💧</div>
+      <img src="images/gift_envelope.jpg" alt="선물 편지" class="letter-envelope-img" id="letter-envelope-img">
       <div class="letter-sealed-text" id="letter-sealed-text">선물 편지가 도착했어요</div>
       <button class="gift-pay-btn" id="letter-open-btn" onclick="openLetter()" style="background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;">열어보기</button>
     </div>
@@ -1511,12 +1519,17 @@ async function openLetter(){
 
   try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
 
+  // 봉투가 부드럽게 사라지는 전환 효과
+  const envelopeImg = document.getElementById('letter-envelope-img');
+  envelopeImg?.classList.add('opening');
+  await new Promise(resolve => setTimeout(resolve, 350));
+
   document.getElementById('letter-seal').style.display = 'none';
   document.getElementById('letter-opened-content').style.display = 'block';
   document.getElementById('letter-from').textContent =
     (pendingLetterSender || '누군가') + '님이 보낸 선물';
   document.getElementById('letter-message').textContent =
-    data.message || pendingLetterMessage || '성경 이야기를 선물로 보내드려요 🦌💧';
+    data.message || pendingLetterMessage || '성경 이야기를 선물로 보내드려요 🦌';
 
   letterCreditsArrived = await updateWaterBadge(session.user.id);
 }
@@ -1527,6 +1540,7 @@ function closeLetterModal(){
   document.getElementById('letter-seal').style.display = 'block';
   document.getElementById('letter-opened-content').style.display = 'none';
   document.getElementById('letter-open-btn').style.display = 'block';
+  document.getElementById('letter-envelope-img')?.classList.remove('opening');
 
   if(letterCreditsArrived){
     showToast(`💧 샘물 ${waterBottleLabel(letterCreditsArrived)} 도착! 잠긴 카드를 누르면 바로 쓸 수 있어요.`, 5000);
