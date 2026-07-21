@@ -44,7 +44,11 @@ export async function onRequestPost(context) {
       },
     });
     if (!userRes.ok) {
-      return json({ success: false, reason: "not_authenticated" }, 401);
+      const t = await userRes.text();
+      return json(
+        { success: false, reason: "not_authenticated", detail: `auth_status:${userRes.status} body:${t.slice(0, 200)}` },
+        401
+      );
     }
     const user = await userRes.json();
     const userId = user?.id;
