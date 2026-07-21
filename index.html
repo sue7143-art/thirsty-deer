@@ -489,12 +489,12 @@ footer{
   border-bottom:1px solid rgba(255,255,255,0.12);
 }
 
-#gift-modal, #gift-share-modal{
+#gift-modal, #gift-share-modal, #gift-swap-modal{
   position:fixed;inset:0;z-index:1000;
   display:none;align-items:center;justify-content:center;
   background:rgba(4,6,12,0.75);backdrop-filter:blur(4px);padding:20px;
 }
-#gift-modal.show, #gift-share-modal.show{display:flex;}
+#gift-modal.show, #gift-share-modal.show, #gift-swap-modal.show{display:flex;}
 .gift-modal-card{
   background:linear-gradient(160deg,#12101e 0%,#0a0816 100%);
   border:1px solid rgba(160,220,240,0.25);
@@ -1033,6 +1033,18 @@ footer{
   </div>
 </div>
 
+<!-- 선물 받은 에피소드를 이미 갖고 있을 때: 다른 이야기로 교환 -->
+<div id="gift-swap-modal">
+  <div class="gift-modal-card">
+    <div class="gift-modal-title">💧 이미 가지고 있는 이야기예요</div>
+    <div class="gift-modal-desc">대신 아직 안 보신 다른 이야기를 골라보세요</div>
+    <select id="gift-swap-select" class="gift-episode-select">
+      <option value="" disabled selected>이야기 선택</option>
+    </select>
+    <button class="gift-pay-btn" onclick="confirmSwapGift()">이 이야기로 받기</button>
+  </div>
+</div>
+
 <!-- 우측 상단 안내 토스트 -->
 <div id="toast" class="toast"></div>
 
@@ -1539,12 +1551,16 @@ async function openLetter(){
   const { data, error } = await supabaseClient.rpc('redeem_gift', { p_code: pendingLetterCode });
 
   if(error || !data?.success){
+    if(data?.reason === 'already_owned'){
+      showSwapModal();
+      return;
+    }
     document.getElementById('gift-letter-modal').classList.remove('show');
     try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
     if(data?.reason === 'already_redeemed'){
       showToast('이미 사용된 선물 링크예요.');
     } else if(data?.reason === 'self_redeem'){
-      showToast('본인이 보낸 선물은 받을 수 없어요.');
+      cancelSelfGift(pendingLetterCode, session.access_token);
     } else {
       showToast('선물을 여는 중 문제가 발생했어요.');
     }
@@ -1567,6 +1583,98 @@ async function openLetter(){
 
   letterUnlockedEpisodeId = data.episode_id || pendingLetterEpisodeId;
   await unlockPurchasedEpisodes(session.user.id);
+}
+
+// 본인이 보낸 선물을 스스로 열었을 때 결제를 자동으로 취소 처리
+async function cancelSelfGift(code, accessToken){
+  showToast('본인에게 보낸 선물이라 결제를 취소하고 있어요...');
+  try{
+    const res = await fetch('/api/kakao-cancel-self-gift', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ code })
+    });
+    const result = await res.json();
+    if(result.success){
+      showToast('본인에게 보낸 선물이라 결제가 자동으로 취소됐어요.', 5000);
+    } else if(result.reason === 'redeemed' || result.reason === 'cancelled'){
+      showToast('이미 처리된 선물이에요.');
+    } else {
+      showToast('결제 취소 중 문제가 발생했어요. 고객센터로 문의해주세요.', 5000);
+    }
+  }catch(err){
+    console.error(err);
+    showToast('결제 취소 중 문제가 발생했어요. 고객센터로 문의해주세요.', 5000);
+  }
+}
+
+// 이미 가진 에피소드일 때: 안 가진 이야기 목록으로 교환 모달 표시
+async function showSwapModal(){
+  document.getElementById('gift-letter-modal').classList.remove('show');
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(!session) return;
+
+  const { data: owned } = await supabaseClient
+    .from('purchases')
+    .select('episode_id')
+    .eq('user_id', session.user.id);
+  const ownedIds = new Set((owned || []).map(r => r.episode_id));
+
+  const select = document.getElementById('gift-swap-select');
+  select.innerHTML = '<option value="" disabled selected>이야기 선택</option>';
+  Object.entries(GIFT_EPISODE_TITLES).forEach(([id, title]) => {
+    if(!ownedIds.has(id)){
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = title;
+      select.appendChild(opt);
+    }
+  });
+
+  // 극히 드문 경우: 이미 9편 전부 가지고 있어서 교환할 이야기가 없음 → 고객센터 안내
+  if(select.options.length <= 1){
+    showToast('이미 모든 이야기를 가지고 계세요! 고객센터로 문의해주시면 환불 도와드릴게요.', 6000);
+    try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
+    pendingLetterCode = null;
+    return;
+  }
+
+  document.getElementById('gift-swap-modal').classList.add('show');
+}
+
+async function confirmSwapGift(){
+  const newEpisodeId = document.getElementById('gift-swap-select').value;
+  if(!newEpisodeId){
+    alert('이야기를 먼저 골라주세요!');
+    return;
+  }
+  if(!pendingLetterCode) return;
+
+  const { data, error } = await supabaseClient.rpc('redeem_gift_swap', {
+    p_code: pendingLetterCode,
+    p_new_episode_id: newEpisodeId
+  });
+
+  if(error || !data?.success){
+    showToast('교환 처리 중 문제가 발생했어요.');
+    return;
+  }
+
+  document.getElementById('gift-swap-modal').classList.remove('show');
+  try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  await unlockPurchasedEpisodes(session.user.id);
+
+  const epTitle = GIFT_EPISODE_TITLES[newEpisodeId];
+  showToast(epTitle ? `🦌 '${epTitle}' 이야기가 열렸어요!` : '🦌 선물받은 이야기가 열렸어요!', 5000);
+
+  pendingLetterCode = null;
+  pendingLetterEpisodeId = null;
 }
 
 function closeLetterModal(){
