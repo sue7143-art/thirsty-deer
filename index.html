@@ -1223,7 +1223,16 @@ async function testPurchase(episodeId){
     updateWaterBadge(session.user.id);
   }
   // 선물 봉투 미리보기는 로그인 여부와 상관없이 확인 (열어보기 누를 때만 로그인 요구)
-  if(typeof checkPendingGiftLetter === 'function') checkPendingGiftLetter();
+  // ⚠️ checkPendingGiftLetter는 이 스크립트 블록보다 아래쪽 <script>에서 정의되기 때문에,
+  // await 직후 바로 호출하면 아직 정의되기 전이라 조용히 스킵되는 타이밍 문제가 있었음.
+  // 페이지 load가 이미 끝났으면 바로, 아직이면 load 이벤트를 기다렸다가 호출.
+  if(document.readyState === 'complete'){
+    if(typeof checkPendingGiftLetter === 'function') checkPendingGiftLetter();
+  } else {
+    window.addEventListener('load', () => {
+      if(typeof checkPendingGiftLetter === 'function') checkPendingGiftLetter();
+    });
+  }
 
   supabaseClient.auth.onAuthStateChange((event, session) => {
     updateAuthUI(session?.user || null);
