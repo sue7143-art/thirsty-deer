@@ -1597,12 +1597,21 @@ async function cancelSelfGift(code, accessToken){
       },
       body: JSON.stringify({ code })
     });
-    const result = await res.json();
+    console.log('[cancelSelfGift] status:', res.status);
+    const rawText = await res.text();
+    console.log('[cancelSelfGift] raw response:', rawText);
+    let result;
+    try{ result = JSON.parse(rawText); }catch(parseErr){
+      console.error('[cancelSelfGift] JSON 파싱 실패 — 엔드포인트가 배포 안 됐거나 서버 에러 페이지가 반환됐을 가능성이 높음', parseErr);
+      showToast('결제 취소 중 문제가 발생했어요. 고객센터로 문의해주세요.', 5000);
+      return;
+    }
     if(result.success){
       showToast('본인에게 보낸 선물이라 결제가 자동으로 취소됐어요.', 5000);
     } else if(result.reason === 'redeemed' || result.reason === 'cancelled'){
       showToast('이미 처리된 선물이에요.');
     } else {
+      console.error('[cancelSelfGift] 실패 사유:', result.reason, result.detail);
       showToast('결제 취소 중 문제가 발생했어요. 고객센터로 문의해주세요.', 5000);
     }
   }catch(err){
