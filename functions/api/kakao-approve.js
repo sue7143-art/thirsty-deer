@@ -107,6 +107,8 @@ export async function onRequestGet(context) {
           episode_id: order.episode_id,
           message: order.message || null,
           sender_name: order.sender_name || null,
+          tid: order.tid,
+          amount: order.amount,
         }),
       });
 
