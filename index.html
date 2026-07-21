@@ -509,6 +509,13 @@ footer{
   font-family:'Noto Serif KR',serif;font-size:0.8rem;
   color:rgba(250,235,208,0.75);margin-bottom:16px;
 }
+.gift-episode-select{
+  width:100%;padding:10px;margin-bottom:10px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  border-radius:8px;color:#fff;
+  font-family:'Noto Serif KR',serif;font-size:0.82rem;
+}
+.gift-episode-select option{color:#191919;}
 .gift-message-input{
   width:100%;min-height:64px;resize:vertical;
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
@@ -978,8 +985,20 @@ footer{
 <!-- 선물하기: 메시지 작성 모달 -->
 <div id="gift-modal">
   <div class="gift-modal-card">
-    <div class="gift-modal-title">💧 샘물 선물하기</div>
-    <div class="gift-modal-desc">받는 분이 원하는 이야기 2편을 골라볼 수 있어요</div>
+    <div class="gift-modal-title">💧 이야기 선물하기</div>
+    <div class="gift-modal-desc">보내고 싶은 이야기 한 편을 골라주세요</div>
+    <select id="gift-episode-select" class="gift-episode-select">
+      <option value="" disabled selected>이야기 선택</option>
+      <option value="ep02">EP.02 · 아브라함의 믿음</option>
+      <option value="ep03">EP.03 · 야곱의 씨름</option>
+      <option value="ep04">EP.04 · 요셉의 용서</option>
+      <option value="ep05">EP.05 · 기드온의 300용사</option>
+      <option value="ep06">EP.06 · 모세와 금송아지</option>
+      <option value="ep07">EP.07 · 다윗과 사울</option>
+      <option value="ep08">EP.08 · 엘리야와 로뎀나무</option>
+      <option value="ep09">EP.09 · 요나와 니느웨</option>
+      <option value="ep10">EP.10 · 욥의 고난</option>
+    </select>
     <textarea id="gift-message-input" class="gift-message-input" maxlength="80" placeholder="함께 보낼 메시지 (선택)"></textarea>
     <div class="gift-suggestions" id="gift-suggestions"></div>
     <button class="gift-pay-btn" onclick="payWithGift()">카카오페이로 선물하기 · 990원</button>
@@ -1351,6 +1370,7 @@ async function openGiftModal(){
   }
   renderGiftSuggestions();
   document.getElementById('gift-message-input').value = '';
+  document.getElementById('gift-episode-select').selectedIndex = 0;
   document.getElementById('gift-modal').classList.add('show');
 }
 function hideGiftModal(){
@@ -1366,6 +1386,11 @@ async function payWithGift(){
     alert('먼저 로그인해주세요!');
     return;
   }
+  const episodeId = document.getElementById('gift-episode-select').value;
+  if(!episodeId){
+    alert('선물할 이야기를 먼저 골라주세요!');
+    return;
+  }
   const message = document.getElementById('gift-message-input').value.trim();
   const senderName = session.user.user_metadata?.name
     || session.user.user_metadata?.full_name
@@ -1376,7 +1401,7 @@ async function payWithGift(){
     const res = await fetch('/api/kakao-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: session.user.id, isGift: true, message, senderName })
+      body: JSON.stringify({ userId: session.user.id, episodeId, isGift: true, message, senderName })
     });
     const order = await res.json();
     if(!res.ok || order.error){
@@ -1444,11 +1469,17 @@ async function shareGiftLink(){
   }
 }
 
-// ── 선물 편지: 봉투 미리보기 → 열어보기 → 크레딧 수령 ──
+// ── 선물 편지: 봉투 미리보기 → 열어보기 → 선물한 에피소드 언락 ──
+const GIFT_EPISODE_TITLES = {
+  ep02: '아브라함의 믿음', ep03: '야곱의 씨름', ep04: '요셉의 용서',
+  ep05: '기드온의 300용사', ep06: '모세와 금송아지', ep07: '다윗과 사울',
+  ep08: '엘리야와 로뎀나무', ep09: '요나와 니느웨', ep10: '욥의 고난'
+};
 let pendingLetterCode = null;
 let pendingLetterSender = null;
 let pendingLetterMessage = null;
-let letterCreditsArrived = null;
+let pendingLetterEpisodeId = null;
+let letterUnlockedEpisodeId = null;
 
 // 비로그인 상태로 들어와도 로그인 후까지 코드를 기억해두기 위해 localStorage에 잠시 보관
 (function captureIncomingGiftCode(){
@@ -1475,6 +1506,7 @@ async function checkPendingGiftLetter(){
   pendingLetterCode = code;
   pendingLetterSender = data.sender_name;
   pendingLetterMessage = data.message;
+  pendingLetterEpisodeId = data.episode_id;
 
   const sealedText = document.getElementById('letter-sealed-text');
   const openBtn = document.getElementById('letter-open-btn');
@@ -1485,7 +1517,10 @@ async function checkPendingGiftLetter(){
     try{ localStorage.removeItem('thirstyDeerPendingGift'); }catch(e){}
   } else {
     const senderLabel = data.sender_name ? `${data.sender_name}님이` : '누군가';
-    sealedText.textContent = `${senderLabel} 보내신 선물이 도착했어요`;
+    const epTitle = GIFT_EPISODE_TITLES[data.episode_id];
+    sealedText.textContent = epTitle
+      ? `${senderLabel} '${epTitle}' 이야기를 보내셨어요`
+      : `${senderLabel} 보내신 선물이 도착했어요`;
     openBtn.style.display = 'block';
   }
 
@@ -1530,7 +1565,8 @@ async function openLetter(){
   document.getElementById('letter-message').textContent =
     data.message || pendingLetterMessage || '성경 이야기를 선물로 보내드려요 🦌';
 
-  letterCreditsArrived = await updateWaterBadge(session.user.id);
+  letterUnlockedEpisodeId = data.episode_id || pendingLetterEpisodeId;
+  await unlockPurchasedEpisodes(session.user.id);
 }
 
 function closeLetterModal(){
@@ -1541,11 +1577,13 @@ function closeLetterModal(){
   document.getElementById('letter-open-btn').style.display = 'block';
   document.getElementById('letter-envelope-img')?.classList.remove('opening');
 
-  if(letterCreditsArrived){
-    showToast(`💧 샘물 ${waterBottleLabel(letterCreditsArrived)} 도착! 잠긴 카드를 누르면 바로 쓸 수 있어요.`, 5000);
+  if(letterUnlockedEpisodeId){
+    const epTitle = GIFT_EPISODE_TITLES[letterUnlockedEpisodeId];
+    showToast(epTitle ? `🦌 '${epTitle}' 이야기가 열렸어요!` : '🦌 선물받은 이야기가 열렸어요!', 5000);
   }
-  letterCreditsArrived = null;
+  letterUnlockedEpisodeId = null;
   pendingLetterCode = null;
+  pendingLetterEpisodeId = null;
 }
 
 // 결제 완료 후 돌아왔을 때 결과 안내
