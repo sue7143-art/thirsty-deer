@@ -1569,7 +1569,7 @@ async function openLetter(){
     if(data?.reason === 'already_redeemed'){
       showToast('이미 사용된 선물 링크예요.');
     } else if(data?.reason === 'self_redeem'){
-      cancelSelfGift(pendingLetterCode, session.access_token);
+      cancelSelfGift(pendingLetterCode);
     } else {
       showToast('선물을 여는 중 문제가 발생했어요.');
     }
@@ -1595,15 +1595,26 @@ async function openLetter(){
 }
 
 // 본인이 보낸 선물을 스스로 열었을 때 결제를 자동으로 취소 처리
-async function cancelSelfGift(code, accessToken){
+async function cancelSelfGift(code){
   showToast('본인에게 보낸 선물이라 결제를 취소하고 있어요...');
   try{
+    // 1단계: redeem_gift와 동일한 방식(auth.uid())으로 본인 확인 + 선물 코드 cancelled 처리
+    const { data: markData, error: markError } = await supabaseClient.rpc('mark_gift_cancelled_by_sender', { p_code: code });
+
+    if(markError || !markData?.success){
+      if(markData?.reason === 'already_redeemed'){
+        showToast('이미 사용된 선물 링크예요.');
+      } else {
+        alert('[디버그] 1단계(본인 확인) 실패\n\nreason: ' + (markData?.reason || markError?.message || '알 수 없음'));
+        showToast('결제 취소 중 문제가 발생했어요. 고객센터로 문의해주세요.', 5000);
+      }
+      return;
+    }
+
+    // 2단계: 실제 카카오페이 결제 취소 (서비스 롤로 처리, 신원 재확인 불필요)
     const res = await fetch('/api/kakao-cancel-self-gift', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code })
     });
     const rawText = await res.text();
@@ -1615,14 +1626,12 @@ async function cancelSelfGift(code, accessToken){
     }
     if(result.success){
       showToast('본인에게 보낸 선물이라 결제가 자동으로 취소됐어요.', 5000);
-    } else if(result.reason === 'redeemed' || result.reason === 'cancelled'){
-      showToast('이미 처리된 선물이에요.');
     } else {
-      alert('[디버그] 취소 실패\n\nHTTP 상태: ' + res.status + '\nreason: ' + result.reason + '\ndetail: ' + (result.detail || '없음'));
+      alert('[디버그] 2단계(카카오 취소) 실패\n\nHTTP 상태: ' + res.status + '\nreason: ' + result.reason + '\ndetail: ' + (result.detail || '없음'));
       showToast('결제 취소 중 문제가 발생했어요. 고객센터로 문의해주세요.', 5000);
     }
   }catch(err){
-    alert('[디버그] fetch 자체가 실패함\n\n' + err.message);
+    alert('[디버그] 예외 발생\n\n' + err.message);
     showToast('결제 취소 중 문제가 발생했어요. 고객센터로 문의해주세요.', 5000);
   }
 }
