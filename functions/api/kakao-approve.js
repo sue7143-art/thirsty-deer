@@ -104,6 +104,7 @@ export async function onRequestGet(context) {
         body: JSON.stringify({
           code,
           sender_user_id: order.user_id,
+          episode_id: order.episode_id,
           message: order.message || null,
           sender_name: order.sender_name || null,
         }),
