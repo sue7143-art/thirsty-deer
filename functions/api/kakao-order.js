@@ -9,6 +9,20 @@
 
 const WATER_PRICE = 990;
 
+// 카카오페이 결제창에 표시할 에피소드 제목
+// (선물 상품명에 사용 — "크레딧 선물"이 아니라 "콘텐츠 선물"임을 명확히 하기 위함)
+const EPISODE_TITLES = {
+  ep02: "아브라함의 믿음",
+  ep03: "야곱의 씨름",
+  ep04: "요셉의 용서",
+  ep05: "기드온의 300용사",
+  ep06: "모세와 금송아지",
+  ep07: "다윗과 사울",
+  ep08: "엘리야와 로뎀나무",
+  ep09: "요나와 니느웨",
+  ep10: "욥의 고난",
+};
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -20,7 +34,10 @@ export async function onRequestPost(context) {
   }
 
   const { episodeId, userId, isGift, message, senderName } = body || {};
-  if (!userId || (!isGift && !episodeId)) {
+
+  // 선물이어도 이제는 특정 에피소드를 반드시 지정해야 해요.
+  // (카카오페이: 크레딧처럼 범용으로 쓸 수 있는 선물은 불가, 특정 콘텐츠 선물만 허용)
+  if (!userId || !episodeId) {
     return json({ error: "invalid_request" }, 400);
   }
 
@@ -41,7 +58,9 @@ export async function onRequestPost(context) {
       cid,
       partner_order_id: orderId,
       partner_user_id: String(userId),
-      item_name: isGift ? "샘물 선물하기" : "샘물 한 병 (에피소드 2편)",
+      item_name: isGift
+        ? `${EPISODE_TITLES[episodeId] || "성경 이야기"} 선물하기`
+        : "샘물 한 병 (에피소드 2편)",
       quantity: 1,
       total_amount: WATER_PRICE,
       tax_free_amount: 0,
@@ -71,7 +90,7 @@ export async function onRequestPost(context) {
     body: JSON.stringify({
       order_id: orderId,
       user_id: userId,
-      episode_id: isGift ? null : episodeId,
+      episode_id: episodeId,
       amount: WATER_PRICE,
       tid,
       is_gift: !!isGift,
