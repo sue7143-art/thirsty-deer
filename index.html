@@ -1028,7 +1028,7 @@ footer{
     <div id="letter-opened-content" style="display:none;">
       <div class="letter-from" id="letter-from"></div>
       <div class="letter-message" id="letter-message"></div>
-      <button class="gift-pay-btn" onclick="closeLetterModal()" style="background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;">이야기 보러 가기</button>
+      <button class="gift-pay-btn" onclick="goToUnlockedEpisode()" style="background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;">이야기 보러 가기</button>
     </div>
   </div>
 </div>
@@ -1401,6 +1401,12 @@ document.getElementById('gift-modal')?.addEventListener('click', function(e){
   if(e.target === this) hideGiftModal();
 });
 
+// 봉투 모달: 빈 곳(오버레이) 터치 시 닫기 — "이미 열어본 선물이에요" 상태처럼
+// 별도 닫기 버튼이 없는 경우에도 메인 화면으로 돌아갈 수 있게
+document.getElementById('gift-letter-modal')?.addEventListener('click', function(e){
+  if(e.target === this) closeLetterModal();
+});
+
 async function payWithGift(){
   const { data: { session } } = await supabaseClient.auth.getSession();
   if(!session){
@@ -1546,12 +1552,25 @@ async function checkPendingGiftLetter(){
   }
 
   document.getElementById('gift-letter-modal').classList.add('show');
+
+  // 로그인 화면으로 갔다가 막 돌아온 경우, "열어보기"를 다시 누르게 하지 않고 자동으로 이어서 열어줌
+  let autoOpen = false;
+  try{ autoOpen = localStorage.getItem('thirstyDeerAutoOpenGift') === '1'; }catch(e){}
+  if(autoOpen){
+    try{ localStorage.removeItem('thirstyDeerAutoOpenGift'); }catch(e){}
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if(session && data.status !== 'redeemed'){
+      openLetter();
+    }
+  }
 }
 
 async function openLetter(){
   const { data: { session } } = await supabaseClient.auth.getSession();
   if(!session){
     // 코드는 localStorage에 남아있어 로그인 후 이어서 처리돼요
+    // + 로그인 후 돌아왔을 때 "열어보기"를 두 번 누를 필요 없이 자동으로 이어서 열리도록 표시
+    try{ localStorage.setItem('thirstyDeerAutoOpenGift', '1'); }catch(e){}
     signInWithKakao();
     return;
   }
@@ -1700,6 +1719,21 @@ async function confirmSwapGift(){
 
   pendingLetterCode = null;
   pendingLetterEpisodeId = null;
+}
+
+// "이야기 보러 가기" 클릭 시 방금 언락된 에피소드로 바로 이동
+// (unlockPurchasedEpisodes가 이미 카드의 href를 실제 파일 경로로 바꿔놨으므로 그대로 재사용)
+function goToUnlockedEpisode(){
+  const epId = letterUnlockedEpisodeId;
+  if(epId){
+    const card = document.querySelector(`.card[data-episode-id="${epId}"]`);
+    if(card && card.href){
+      window.location.href = card.href;
+      return;
+    }
+  }
+  // 파일 경로를 못 찾은 경우에만 메인 화면에 머무름
+  closeLetterModal();
 }
 
 function closeLetterModal(){
