@@ -1,16 +1,14 @@
 // functions/api/kakao-cancel-self-gift.js
 //
 // 본인이 자신에게 보낸 선물을 열었을 때(self_redeem) 호출됩니다.
-// gifts 테이블에 저장해둔 tid로 카카오페이 결제를 즉시 취소하고,
-// 해당 선물 코드를 cancelled 상태로 막아 다시 못 열게 합니다.
 //
-// 클라이언트는 로그인한 사용자의 Supabase access_token을
-// Authorization: Bearer <token> 헤더로 함께 보내야 합니다.
-// (본인 확인 없이는 아무 선물이나 취소할 수 있게 되므로 필수)
-
-// index.html에 이미 공개돼있는 anon key와 동일 (RLS로 보호되는 값이라 노출돼도 안전)
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhibG1pcGV4eWxoYmdtc2t4bm5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NzYyNzIsImV4cCI6MjA5ODQ1MjI3Mn0.D3Ie869LyBSUSZaGBKowDTDfCj-pgyI9fpDjYOLxqMU";
+// ⚠️ 신원 확인은 여기서 하지 않습니다.
+// 프론트에서 먼저 Supabase RPC `mark_gift_cancelled_by_sender`를 호출해서
+// (redeem_gift와 동일한 auth.uid() 기반 검증으로) 본인 확인 + 코드를
+// 'cancelled' 상태로 표시해두고, 이 함수는 그 상태만 서비스 롤로 확인한 뒤
+// 카카오페이 결제를 실제로 취소합니다.
+// (GoTrue의 /auth/v1/user 세션 체크는 세션 테이블과 엄격히 대조하다보니
+//  "session_id claim in JWT does not exist" 같은 오탐이 발생해 제거함)
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -23,10 +21,7 @@ export async function onRequestPost(context) {
   }
 
   const { code } = body || {};
-  const authHeader = request.headers.get("Authorization") || "";
-  const accessToken = authHeader.replace(/^Bearer\s+/i, "");
-
-  if (!code || !accessToken) {
+  if (!code) {
     return json({ error: "invalid_request" }, 400);
   }
 
@@ -36,27 +31,7 @@ export async function onRequestPost(context) {
   };
 
   try {
-    // 1. 요청자 신원 확인 (전달받은 access_token이 진짜 로그인된 사용자인지)
-    const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    if (!userRes.ok) {
-      const t = await userRes.text();
-      return json(
-        { success: false, reason: "not_authenticated", detail: `auth_status:${userRes.status} body:${t.slice(0, 200)}` },
-        401
-      );
-    }
-    const user = await userRes.json();
-    const userId = user?.id;
-    if (!userId) {
-      return json({ success: false, reason: "not_authenticated" }, 401);
-    }
-
-    // 2. 선물 정보 조회
+    // 1. 선물 정보 조회 (서비스 롤 — 본인 확인은 이미 RPC에서 끝났다고 신뢰)
     const giftRes = await fetch(
       `${env.SUPABASE_URL}/rest/v1/gifts?code=eq.${encodeURIComponent(code)}&select=*`,
       { headers: sb }
@@ -68,13 +43,9 @@ export async function onRequestPost(context) {
       return json({ success: false, reason: "not_found" }, 404);
     }
 
-    // 3. 정말 본인이 보낸 선물이 맞는지 재확인 (프론트 검증은 신뢰하지 않음)
-    if (gift.sender_user_id !== userId) {
-      return json({ success: false, reason: "not_sender" }, 403);
-    }
-
-    if (gift.status === "redeemed" || gift.status === "cancelled") {
-      return json({ success: false, reason: gift.status });
+    // 2. 정말 cancelled 상태인지 확인 (RPC를 거치지 않고 이 API를 직접 호출하는 걸 방지)
+    if (gift.status !== "cancelled") {
+      return json({ success: false, reason: "not_marked_cancelled" }, 403);
     }
 
     if (!gift.tid || !gift.amount) {
@@ -83,7 +54,7 @@ export async function onRequestPost(context) {
 
     const cid = env.KAKAO_CID || "TC0ONETIME";
 
-    // 4. 카카오페이 결제 취소 API 호출
+    // 3. 카카오페이 결제 취소 API 호출
     const cancelRes = await fetch("https://open-api.kakaopay.com/online/v1/payment/cancel", {
       method: "POST",
       headers: {
@@ -102,17 +73,6 @@ export async function onRequestPost(context) {
       const t = await cancelRes.text();
       return json({ success: false, reason: "cancel_api_failed", detail: t.slice(0, 300) }, 500);
     }
-
-    // 5. 취소 확정된 선물 코드는 다시 못 열도록 상태 변경
-    await fetch(`${env.SUPABASE_URL}/rest/v1/gifts?code=eq.${encodeURIComponent(code)}`, {
-      method: "PATCH",
-      headers: {
-        ...sb,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal",
-      },
-      body: JSON.stringify({ status: "cancelled" }),
-    });
 
     return json({ success: true });
   } catch (err) {
