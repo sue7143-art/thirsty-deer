@@ -110,15 +110,19 @@ h1{
   font-size:0.68rem;letter-spacing:0.14em;color:rgba(245,200,66,0.7);
 }
 
-/* ── CTA ── */
+/* ── CTA: 화면 하단에 고정 — 스크롤 안 해도 항상 보이게 ── */
 .cta-wrap{
-  margin-top:clamp(28px,6vw,40px);
-  opacity:0;transform:translateY(10px);
-  transition:opacity 0.7s ease,transform 0.7s ease;
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:18px 20px calc(16px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  background:linear-gradient(180deg,transparent 0%,rgba(8,6,14,0.82) 40%,rgba(8,6,14,0.97) 100%);
+  transform:translateY(100%);
+  transition:transform 0.5s cubic-bezier(.22,.85,.32,1);
   pointer-events:none;
 }
-.cta-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.cta-wrap.show{transform:translateY(0);pointer-events:auto;}
 #cta-btn{
+  width:min(380px,100%);justify-content:center;
   font-family:'Cinzel',serif;font-size:clamp(0.85rem,2.4vw,0.98rem);font-weight:700;
   letter-spacing:0.16em;color:#120a02;
   background:linear-gradient(135deg,var(--gold),var(--gold-dark));
@@ -131,11 +135,15 @@ h1{
 #cta-btn.loading{opacity:0.6;pointer-events:none;animation:none;}
 
 .skip-link{
-  margin-top:18px;font-size:0.74rem;color:rgba(255,255,255,0.35);
+  position:fixed;top:calc(16px + env(safe-area-inset-top));right:18px;z-index:40;
+  font-size:0.7rem;color:rgba(255,255,255,0.4);
   text-decoration:none;font-family:'Noto Serif KR',serif;
   border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:1px;
 }
-.skip-link:hover{color:rgba(255,255,255,0.6);}
+.skip-link:hover{color:rgba(255,255,255,0.65);}
+
+/* 고정 바에 가려지지 않도록 본문 하단에 여백 확보 */
+.wrap{padding-bottom:110px;}
 
 @media (max-width:420px){
   .stage{aspect-ratio:3/4;}
@@ -170,9 +178,9 @@ h1{
   <div class="cta-wrap" id="cta-wrap">
     <button id="cta-btn" onclick="startJourney()">말씀 보러 가기</button>
   </div>
-
-  <a class="skip-link" href="index.html">전체 이야기 목록 바로 보기 →</a>
 </div>
+
+<a class="skip-link" href="index.html">전체 이야기 목록 →</a>
 
 <script>
 // ── 배경 별 ──
