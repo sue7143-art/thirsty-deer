@@ -128,12 +128,6 @@ h1{
   display:flex;align-items:center;gap:10px;
 }
 @keyframes ctaPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.4);}50%{box-shadow:0 0 40px rgba(245,200,66,0.75);}}
-#cta-btn .k{
-  width:18px;height:18px;border-radius:5px;background:#FEE500;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Noto Serif KR',sans-serif;font-size:0.62rem;font-weight:900;color:#191919;
-  flex-shrink:0;
-}
 #cta-btn.loading{opacity:0.6;pointer-events:none;animation:none;}
 
 .skip-link{
@@ -160,8 +154,8 @@ h1{
   <div class="stage" id="stage" onclick="playIntro()">
     <img src="images/landing_hero_still.jpg" alt="시냇물을 향해 걸어오는 사슴"
       onerror="alert('[디버그] 이미지 로드 실패\n경로: ' + this.src); this.style.background='#3a2a10';">
-    <video id="intro-video" playsinline muted preload="none"
-      poster="images/landing_hero_still.jpg"
+    <video id="intro-video" playsinline muted preload="auto"
+      poster="images/landing_video_poster.jpg"
       onerror="alert('[디버그] 영상 로드 실패\n경로: videos/deer_stream_intro.mp4');">
       <source src="videos/deer_stream_intro.mp4" type="video/mp4">
     </video>
@@ -177,9 +171,7 @@ h1{
   </div>
 
   <div class="cta-wrap" id="cta-wrap">
-    <button id="cta-btn" onclick="startJourney()">
-      <span class="k">K</span> 말씀 보러 가기
-    </button>
+    <button id="cta-btn" onclick="startJourney()">말씀 보러 가기</button>
   </div>
 
   <a class="skip-link" href="index.html">전체 이야기 목록 바로 보기 →</a>
@@ -216,12 +208,16 @@ function playIntro(){
   const video = document.getElementById('intro-video');
   stage.classList.add('playing');
 
-  // 먼저 음소거 상태로 확실히 재생을 시작시키고,
-  // 재생이 실제로 시작된 뒤에 소리를 켠다 (사파리는 반대 순서면 AbortError를 던짐)
-  video.muted = true;
-  video.play().then(()=>{
+  // 실제로 프레임이 그려지기 시작한 시점(playing 이벤트)에만 소리를 켠다.
+  // play() 프로미스가 resolve돼도 실제 재생이 아직 안 시작된 경우가 있어서
+  // (특히 preload 관련 사파리 이슈), playing 이벤트를 기준으로 삼는 게 더 안전함.
+  video.addEventListener('playing', function(){
     setTimeout(()=>{ video.muted = false; }, 60);
-  }).catch((err)=>{
+  }, { once:true });
+
+  video.muted = true;
+  video.load();
+  video.play().catch((err)=>{
     alert('[디버그] 재생 실패\n' + (err?.name || '') + ': ' + (err?.message || err)
       + '\n\nreadyState: ' + video.readyState
       + '\nnetworkState: ' + video.networkState
@@ -236,6 +232,13 @@ function playIntro(){
       + '\nsrc: videos/deer_stream_intro.mp4');
     showCta();
   }, { once:true });
+  setTimeout(function(){
+    if(video.currentTime === 0){
+      alert('[디버그] 3초가 지났는데 재생 위치가 0이에요 — 재생이 멈춰있는 상태\n'
+        + 'paused: ' + video.paused + ' / readyState: ' + video.readyState
+        + ' / networkState: ' + video.networkState);
+    }
+  }, 3000);
   setTimeout(showCta, 15000);
 }
 
