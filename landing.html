@@ -152,11 +152,9 @@ h1{
   <div class="subtitle">성경 속 인물들의 갈림길에 서보세요</div>
 
   <div class="stage" id="stage" onclick="playIntro()">
-    <img src="images/landing_hero_still.jpg" alt="시냇물을 향해 걸어오는 사슴"
-      onerror="alert('[디버그] 이미지 로드 실패\n경로: ' + this.src); this.style.background='#3a2a10';">
+    <img src="images/landing_hero_still.jpg" alt="시냇물을 향해 걸어오는 사슴">
     <video id="intro-video" playsinline muted preload="auto"
-      poster="images/landing_video_poster.jpg"
-      onerror="alert('[디버그] 영상 로드 실패\n경로: videos/deer_stream_intro.mp4');">
+      poster="images/landing_video_poster.jpg">
     </video>
     <div class="play-hint">
       <div class="play-circle"></div>
@@ -205,46 +203,36 @@ function playIntro(){
   played = true;
   const stage = document.getElementById('stage');
   const video = document.getElementById('intro-video');
-  stage.classList.add('playing');
-
-  // 실제로 프레임이 그려지기 시작한 시점(playing 이벤트)에만 소리를 켠다 + 진단 정보 표시
-  video.addEventListener('playing', function(){
-    setTimeout(()=>{ video.muted = false; }, 60);
-    alert('[디버그] 재생 시작 시점\ncurrentTime: ' + video.currentTime.toFixed(2)
-      + ' / duration: ' + (isNaN(video.duration) ? '알 수 없음' : video.duration.toFixed(2)));
-  }, { once:true });
-
-  // 사파리가 이전 재생 위치를 기억하고 이어서 트는 경우가 있어서,
-  // 여러 시점에 걸쳐 명시적으로 처음(0초)으로 되돌림
-  function forceStart(){ try{ video.currentTime = 0; }catch(e){} }
-  video.addEventListener('loadedmetadata', forceStart, { once:true });
-  video.addEventListener('canplay', forceStart, { once:true });
 
   video.muted = true;
-  video.src = 'videos/deer_stream_intro.mp4?v=2';
+  video.src = 'videos/deer_stream_intro.mp4';
   video.load();
-  video.play().catch((err)=>{
-    alert('[디버그] 재생 실패\n' + (err?.name || '') + ': ' + (err?.message || err)
-      + '\n\nreadyState: ' + video.readyState
-      + '\nnetworkState: ' + video.networkState
-      + '\nerror: ' + (video.error ? (video.error.code + ' / ' + video.error.message) : '없음'));
-    showCta();
-  });
+
+  function begin(){
+    try{ video.currentTime = 0; }catch(e){}
+    stage.classList.add('playing');
+    video.play().catch(()=>{ showCta(); });
+  }
+
+  // 끊김 없이 끝까지 재생할 수 있을 만큼 버퍼링된 뒤에 시작
+  // (일부 기기에서 canplaythrough가 늦게/안 오는 경우 대비 1.5초 타임아웃 fallback)
+  let started = false;
+  video.addEventListener('canplaythrough', function(){
+    if(started) return; started = true;
+    begin();
+  }, { once:true });
+  setTimeout(function(){
+    if(started) return; started = true;
+    begin();
+  }, 1500);
+
+  video.addEventListener('playing', function(){
+    setTimeout(()=>{ video.muted = false; }, 60);
+  }, { once:true });
 
   video.addEventListener('ended', showCta, { once:true });
   // 영상 로드 자체가 실패해도 사용자가 갇히지 않도록 안전장치
-  video.addEventListener('error', function(){
-    alert('[디버그] video error 이벤트 발생\nerror code: ' + (video.error ? video.error.code : '없음')
-      + '\nsrc: videos/deer_stream_intro.mp4');
-    showCta();
-  }, { once:true });
-  setTimeout(function(){
-    if(video.currentTime === 0){
-      alert('[디버그] 3초가 지났는데 재생 위치가 0이에요 — 재생이 멈춰있는 상태\n'
-        + 'paused: ' + video.paused + ' / readyState: ' + video.readyState
-        + ' / networkState: ' + video.networkState);
-    }
-  }, 3000);
+  video.addEventListener('error', showCta, { once:true });
   setTimeout(showCta, 15000);
 }
 
