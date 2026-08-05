@@ -207,21 +207,21 @@ function playIntro(){
   const video = document.getElementById('intro-video');
   stage.classList.add('playing');
 
-  // 실제로 프레임이 그려지기 시작한 시점(playing 이벤트)에만 소리를 켠다.
-  // play() 프로미스가 resolve돼도 실제 재생이 아직 안 시작된 경우가 있어서
-  // (특히 preload 관련 사파리 이슈), playing 이벤트를 기준으로 삼는 게 더 안전함.
+  // 실제로 프레임이 그려지기 시작한 시점(playing 이벤트)에만 소리를 켠다 + 진단 정보 표시
   video.addEventListener('playing', function(){
     setTimeout(()=>{ video.muted = false; }, 60);
+    alert('[디버그] 재생 시작 시점\ncurrentTime: ' + video.currentTime.toFixed(2)
+      + ' / duration: ' + (isNaN(video.duration) ? '알 수 없음' : video.duration.toFixed(2)));
   }, { once:true });
 
   // 사파리가 이전 재생 위치를 기억하고 이어서 트는 경우가 있어서,
-  // 메타데이터가 로드되는 시점에 명시적으로 처음(0초)으로 되돌림
-  video.addEventListener('loadedmetadata', function(){
-    try{ video.currentTime = 0; }catch(e){}
-  }, { once:true });
+  // 여러 시점에 걸쳐 명시적으로 처음(0초)으로 되돌림
+  function forceStart(){ try{ video.currentTime = 0; }catch(e){} }
+  video.addEventListener('loadedmetadata', forceStart, { once:true });
+  video.addEventListener('canplay', forceStart, { once:true });
 
   video.muted = true;
-  video.src = 'videos/deer_stream_intro.mp4';
+  video.src = 'videos/deer_stream_intro.mp4?v=2';
   video.load();
   video.play().catch((err)=>{
     alert('[디버그] 재생 실패\n' + (err?.name || '') + ': ' + (err?.message || err)
