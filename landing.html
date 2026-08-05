@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>목마른 사슴 — 성경 이야기 시뮬레이션</title>
+<meta name="description" content="성경 속 인물들의 갈림길에 서보세요. 시편 42편의 목마른 사슴처럼, 이야기 속에서 하나님을 만나는 인터랙티브 성경 이야기.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#F5C842;
+  --gold-dark:#c89010;
+  --bg:#08060e;
+  --text:#faebd0;
+  --muted:rgba(250,235,208,0.65);
+}
+html,body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Serif KR',serif;
+  min-height:100vh;min-height:100dvh;
+  overflow-x:hidden;
+}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle 3s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:0.15;}50%{opacity:0.9;}}
+
+.wrap{
+  position:relative;z-index:1;
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:clamp(28px,6vw,56px) clamp(18px,4vw,24px) clamp(36px,7vw,64px);
+}
+
+/* ── 제목 ── */
+.eyebrow{
+  font-family:'Cinzel',serif;font-size:clamp(0.56rem,1.6vw,0.68rem);
+  letter-spacing:0.42em;color:var(--gold);opacity:0.8;
+  margin-top:6px;
+}
+h1{
+  font-family:'Cinzel',serif;font-weight:700;
+  font-size:clamp(1.9rem,7vw,2.8rem);
+  color:#fff;letter-spacing:0.02em;
+  margin:12px 0 6px;
+  text-shadow:0 0 30px rgba(245,200,66,0.25);
+}
+.subtitle{
+  font-family:'Gowun Batang',serif;font-size:clamp(0.78rem,2.2vw,0.9rem);
+  color:var(--muted);letter-spacing:0.1em;margin-bottom:clamp(24px,5vw,36px);
+}
+
+/* ── 히어로: 이미지 → 영상 ── */
+.stage{
+  position:relative;
+  width:min(560px,92vw);
+  aspect-ratio:4/3;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 0 0 1px rgba(245,200,66,0.28),0 20px 60px rgba(0,0,0,0.6);
+  background:#000;
+  cursor:pointer;
+}
+.stage img,.stage video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:opacity 0.6s ease;
+}
+.stage video{opacity:0;pointer-events:none;}
+.stage.playing img{opacity:0;}
+.stage.playing video{opacity:1;pointer-events:auto;}
+
+.play-hint{
+  position:absolute;inset:0;z-index:3;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.45) 100%);
+  transition:opacity 0.4s ease;
+}
+.stage.playing .play-hint{opacity:0;pointer-events:none;}
+.play-circle{
+  width:clamp(58px,14vw,74px);height:clamp(58px,14vw,74px);border-radius:50%;
+  background:rgba(8,6,14,0.55);backdrop-filter:blur(3px);
+  border:1.5px solid rgba(245,200,66,0.75);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 24px rgba(245,200,66,0.35);
+  animation:playPulse 2.4s ease-in-out infinite;
+}
+@keyframes playPulse{0%,100%{box-shadow:0 0 18px rgba(245,200,66,0.3);}50%{box-shadow:0 0 34px rgba(245,200,66,0.6);}}
+.play-circle::after{
+  content:'';width:0;height:0;margin-left:5px;
+  border-top:11px solid transparent;border-bottom:11px solid transparent;
+  border-left:18px solid var(--gold);
+}
+.hint-label{
+  position:absolute;bottom:16px;left:0;right:0;text-align:center;
+  font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.28em;
+  color:rgba(255,255,255,0.85);text-shadow:0 2px 8px rgba(0,0,0,0.7);
+}
+
+.verse{
+  margin-top:clamp(22px,5vw,32px);max-width:420px;text-align:center;
+  font-family:'Gowun Batang',serif;font-style:italic;
+  font-size:clamp(0.82rem,2.4vw,0.94rem);line-height:1.95;color:var(--muted);
+  border-left:2px solid rgba(245,200,66,0.35);padding-left:16px;text-align:left;
+}
+.verse .cite{
+  display:block;margin-top:8px;font-style:normal;font-family:'Cinzel',serif;
+  font-size:0.68rem;letter-spacing:0.14em;color:rgba(245,200,66,0.7);
+}
+
+/* ── CTA ── */
+.cta-wrap{
+  margin-top:clamp(28px,6vw,40px);
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+  pointer-events:none;
+}
+.cta-wrap.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+#cta-btn{
+  font-family:'Cinzel',serif;font-size:clamp(0.85rem,2.4vw,0.98rem);font-weight:700;
+  letter-spacing:0.16em;color:#120a02;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  border:none;padding:clamp(13px,3vw,16px) clamp(34px,7vw,46px);border-radius:4px;
+  cursor:pointer;box-shadow:0 0 30px rgba(245,200,66,0.45);
+  animation:ctaPulse 2.4s ease-in-out infinite;
+  display:flex;align-items:center;gap:10px;
+}
+@keyframes ctaPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.4);}50%{box-shadow:0 0 40px rgba(245,200,66,0.75);}}
+#cta-btn .k{
+  width:18px;height:18px;border-radius:5px;background:#FEE500;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif KR',sans-serif;font-size:0.62rem;font-weight:900;color:#191919;
+  flex-shrink:0;
+}
+#cta-btn.loading{opacity:0.6;pointer-events:none;animation:none;}
+
+.skip-link{
+  margin-top:18px;font-size:0.74rem;color:rgba(255,255,255,0.35);
+  text-decoration:none;font-family:'Noto Serif KR',serif;
+  border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:1px;
+}
+.skip-link:hover{color:rgba(255,255,255,0.6);}
+
+@media (max-width:420px){
+  .stage{aspect-ratio:3/4;}
+}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="wrap">
+  <div class="eyebrow">BIBLE STORY SIMULATION</div>
+  <h1>목마른 사슴</h1>
+  <div class="subtitle">성경 속 인물들의 갈림길에 서보세요</div>
+
+  <div class="stage" id="stage" onclick="playIntro()">
+    <img src="images/landing_hero_still.jpg" alt="시냇물을 향해 걸어오는 사슴">
+    <video id="intro-video" playsinline muted preload="none"
+      poster="images/landing_hero_still.jpg">
+      <source src="videos/deer_stream_intro.mp4" type="video/mp4">
+    </video>
+    <div class="play-hint">
+      <div class="play-circle"></div>
+      <div class="hint-label">눌러서 이야기 시작하기</div>
+    </div>
+  </div>
+
+  <div class="verse">
+    "하나님이여 사슴이 시냇물을 찾기에 갈급함 같이<br>내 영혼이 주를 찾기에 갈급하니이다"
+    <span class="cite">— 시편 42:1</span>
+  </div>
+
+  <div class="cta-wrap" id="cta-wrap">
+    <button id="cta-btn" onclick="startJourney()">
+      <span class="k">K</span> 말씀 보러 가기
+    </button>
+  </div>
+
+  <a class="skip-link" href="index.html">전체 이야기 목록 바로 보기 →</a>
+</div>
+
+<script>
+// ── 배경 별 ──
+(function(){
+  const stars = document.getElementById('stars');
+  for(let i=0;i<40;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*100+'%';
+    s.style.animationDelay = (Math.random()*3)+'s';
+    stars.appendChild(s);
+  }
+})();
+
+// ── Supabase (메인 앱과 동일 프로젝트) ──
+const SUPABASE_URL = 'https://hblmipexylhbgmskxnnj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhibG1pcGV4eWxoYmdtc2t4bm5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NzYyNzIsImV4cCI6MjA5ODQ1MjI3Mn0.D3Ie869LyBSUSZaGBKowDTDfCj-pgyI9fpDjYOLxqMU';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const EPISODE_URL = 'episodes/red_sea_miracle_v3.html';
+const AUTO_CONTINUE_KEY = 'thirstyDeerLandingAutoContinue';
+
+// ── 이미지 클릭 → 영상 재생 ──
+let played = false;
+function playIntro(){
+  if(played) return;
+  played = true;
+  const stage = document.getElementById('stage');
+  const video = document.getElementById('intro-video');
+  stage.classList.add('playing');
+  video.muted = false;
+  video.play().catch(()=>{
+    // 자동재생 정책으로 소리 재생이 막히면 음소거로 재시도
+    video.muted = true;
+    video.play().catch(()=>{ showCta(); });
+  });
+  video.addEventListener('ended', showCta, { once:true });
+  // 영상 로드 자체가 실패해도 사용자가 갇히지 않도록 안전장치
+  video.addEventListener('error', showCta, { once:true });
+  setTimeout(showCta, 15000);
+}
+
+function showCta(){
+  document.getElementById('cta-wrap').classList.add('show');
+}
+
+// ── "말씀 보러 가기": 로그인 확인 후 에피소드로 이동 ──
+async function startJourney(){
+  const btn = document.getElementById('cta-btn');
+  btn.classList.add('loading');
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(session){
+    window.location.href = EPISODE_URL;
+    return;
+  }
+
+  try{ localStorage.setItem(AUTO_CONTINUE_KEY, '1'); }catch(e){}
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: 'kakao',
+    options: { redirectTo: window.location.origin + window.location.pathname }
+  });
+  if(error){
+    btn.classList.remove('loading');
+    alert('로그인 중 문제가 발생했어요. 잠시 후 다시 시도해주세요.');
+  }
+}
+
+// ── 로그인 후 돌아왔을 때 자동으로 이어서 이동 ──
+(async function checkAutoContinue(){
+  let autoContinue = false;
+  try{ autoContinue = localStorage.getItem(AUTO_CONTINUE_KEY) === '1'; }catch(e){}
+  if(!autoContinue) return;
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if(session){
+    try{ localStorage.removeItem(AUTO_CONTINUE_KEY); }catch(e){}
+    window.location.href = EPISODE_URL;
+  }
+})();
+</script>
+
+</body>
+</html>
