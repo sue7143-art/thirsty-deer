@@ -215,15 +215,32 @@ function playIntro(){
   const stage = document.getElementById('stage');
   const video = document.getElementById('intro-video');
   stage.classList.add('playing');
+
   video.muted = false;
-  video.play().catch(()=>{
+  video.play().then(()=>{
+    console.log('[디버그] 영상 재생 성공 (소리 켜짐)');
+  }).catch((err1)=>{
     // 자동재생 정책으로 소리 재생이 막히면 음소거로 재시도
+    alert('[디버그] 1차 재생 실패\n' + (err1?.name || '') + ': ' + (err1?.message || err1));
     video.muted = true;
-    video.play().catch(()=>{ showCta(); });
+    video.play().then(()=>{
+      console.log('[디버그] 음소거로 재생 성공');
+    }).catch((err2)=>{
+      alert('[디버그] 2차(음소거) 재생도 실패\n' + (err2?.name || '') + ': ' + (err2?.message || err2)
+        + '\n\nreadyState: ' + video.readyState
+        + '\nnetworkState: ' + video.networkState
+        + '\nerror: ' + (video.error ? (video.error.code + ' / ' + video.error.message) : '없음'));
+      showCta();
+    });
   });
+
   video.addEventListener('ended', showCta, { once:true });
   // 영상 로드 자체가 실패해도 사용자가 갇히지 않도록 안전장치
-  video.addEventListener('error', showCta, { once:true });
+  video.addEventListener('error', function(){
+    alert('[디버그] video error 이벤트 발생\nerror code: ' + (video.error ? video.error.code : '없음')
+      + '\nsrc: videos/deer_stream_intro.mp4');
+    showCta();
+  }, { once:true });
   setTimeout(showCta, 15000);
 }
 
