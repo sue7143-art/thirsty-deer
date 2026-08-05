@@ -158,9 +158,11 @@ h1{
   <div class="subtitle">성경 속 인물들의 갈림길에 서보세요</div>
 
   <div class="stage" id="stage" onclick="playIntro()">
-    <img src="images/landing_hero_still.jpg" alt="시냇물을 향해 걸어오는 사슴">
+    <img src="images/landing_hero_still.jpg" alt="시냇물을 향해 걸어오는 사슴"
+      onerror="alert('[디버그] 이미지 로드 실패\n경로: ' + this.src); this.style.background='#3a2a10';">
     <video id="intro-video" playsinline muted preload="none"
-      poster="images/landing_hero_still.jpg">
+      poster="images/landing_hero_still.jpg"
+      onerror="alert('[디버그] 영상 로드 실패\n경로: videos/deer_stream_intro.mp4');">
       <source src="videos/deer_stream_intro.mp4" type="video/mp4">
     </video>
     <div class="play-hint">
