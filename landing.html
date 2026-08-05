@@ -216,22 +216,17 @@ function playIntro(){
   const video = document.getElementById('intro-video');
   stage.classList.add('playing');
 
-  video.muted = false;
+  // 먼저 음소거 상태로 확실히 재생을 시작시키고,
+  // 재생이 실제로 시작된 뒤에 소리를 켠다 (사파리는 반대 순서면 AbortError를 던짐)
+  video.muted = true;
   video.play().then(()=>{
-    console.log('[디버그] 영상 재생 성공 (소리 켜짐)');
-  }).catch((err1)=>{
-    // 자동재생 정책으로 소리 재생이 막히면 음소거로 재시도
-    alert('[디버그] 1차 재생 실패\n' + (err1?.name || '') + ': ' + (err1?.message || err1));
-    video.muted = true;
-    video.play().then(()=>{
-      console.log('[디버그] 음소거로 재생 성공');
-    }).catch((err2)=>{
-      alert('[디버그] 2차(음소거) 재생도 실패\n' + (err2?.name || '') + ': ' + (err2?.message || err2)
-        + '\n\nreadyState: ' + video.readyState
-        + '\nnetworkState: ' + video.networkState
-        + '\nerror: ' + (video.error ? (video.error.code + ' / ' + video.error.message) : '없음'));
-      showCta();
-    });
+    setTimeout(()=>{ video.muted = false; }, 60);
+  }).catch((err)=>{
+    alert('[디버그] 재생 실패\n' + (err?.name || '') + ': ' + (err?.message || err)
+      + '\n\nreadyState: ' + video.readyState
+      + '\nnetworkState: ' + video.networkState
+      + '\nerror: ' + (video.error ? (video.error.code + ' / ' + video.error.message) : '없음'));
+    showCta();
   });
 
   video.addEventListener('ended', showCta, { once:true });
