@@ -157,7 +157,6 @@ h1{
     <video id="intro-video" playsinline muted preload="auto"
       poster="images/landing_video_poster.jpg"
       onerror="alert('[디버그] 영상 로드 실패\n경로: videos/deer_stream_intro.mp4');">
-      <source src="videos/deer_stream_intro.mp4" type="video/mp4">
     </video>
     <div class="play-hint">
       <div class="play-circle"></div>
@@ -215,7 +214,14 @@ function playIntro(){
     setTimeout(()=>{ video.muted = false; }, 60);
   }, { once:true });
 
+  // 사파리가 이전 재생 위치를 기억하고 이어서 트는 경우가 있어서,
+  // 메타데이터가 로드되는 시점에 명시적으로 처음(0초)으로 되돌림
+  video.addEventListener('loadedmetadata', function(){
+    try{ video.currentTime = 0; }catch(e){}
+  }, { once:true });
+
   video.muted = true;
+  video.src = 'videos/deer_stream_intro.mp4';
   video.load();
   video.play().catch((err)=>{
     alert('[디버그] 재생 실패\n' + (err?.name || '') + ': ' + (err?.message || err)
