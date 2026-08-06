@@ -1101,5 +1101,30 @@ const SCENE_MOODS = [
   'triumph',   // 8: 미리암의 노래
 ];
 </script>
+<script>
+// ── 임시 진단: 마루부리 폰트 로딩 상태 확인 ──
+(async function(){
+  try{
+    const beforeCheck = document.fonts.check("16px MaruBuri");
+    await document.fonts.ready;
+    const afterCheck = document.fonts.check("16px MaruBuri");
+    let loadedList = [];
+    document.fonts.forEach(f => {
+      if(f.family.replace(/['"]/g,'') === 'MaruBuri') loadedList.push(f.status + ' (weight:' + f.weight + ')');
+    });
+
+    const res = await fetch('../fonts/MaruBuri-Regular.woff2');
+    const fetchInfo = 'status:' + res.status + ' content-type:' + res.headers.get('content-type') + ' size:' + res.headers.get('content-length');
+
+    alert('[폰트 진단]\n'
+      + 'ready 전 체크: ' + beforeCheck + '\n'
+      + 'ready 후 체크: ' + afterCheck + '\n'
+      + 'MaruBuri 상태들: ' + (loadedList.length ? loadedList.join(', ') : '목록에 없음') + '\n\n'
+      + '직접 fetch 결과: ' + fetchInfo);
+  }catch(err){
+    alert('[폰트 진단] 에러 발생: ' + err.message);
+  }
+})();
+</script>
 </body>
 </html>
