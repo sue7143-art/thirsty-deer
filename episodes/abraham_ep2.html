@@ -6,9 +6,10 @@
 <title>아브라함의 믿음 — 창세기 22장</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
-@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2) format('woff2');font-weight:400;font-display:swap;}
-@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2) format('woff2');font-weight:600;font-display:swap;}
-@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2) format('woff2');font-weight:700;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(../fonts/MaruBuri-Light.woff2) format('woff2');font-weight:300;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(../fonts/MaruBuri-Regular.woff2) format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(../fonts/MaruBuri-SemiBold.woff2) format('woff2');font-weight:600;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(../fonts/MaruBuri-Bold.woff2) format('woff2');font-weight:700;font-display:swap;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--gold:#63C6B4;--gold-dark:#2C7A72;}
 html{height:100%;background:#0B1714;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#0B1714;font-family:'MaruBuri',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
@@ -190,9 +191,9 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
 .title-bg{position:absolute;inset:0;background-image:url('../images/ep02_img3.jpg');background-size:cover;background-position:center;opacity:0.2;filter:blur(2px);animation:kb1 15s ease-in-out infinite alternate;}
 .title-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(10,5,0,0.7) 0%,rgba(0,0,0,0.92) 100%);}
 #title-screen>*{position:relative;z-index:1;}
-.title-emblem{font-size:3.5rem;animation:tFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,200,50,0.8));}
+.title-emblem{font-size:3.5rem;animation:tFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(99,198,180,0.85));}
 @keyframes tFloat{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-12px) rotate(4deg);}}
-#title-screen h1{font-family:'Cardo',serif;font-size:clamp(1.8rem,5.5vw,3.4rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,200,50,0.9),0 0 70px rgba(255,200,50,0.4);}
+#title-screen h1{font-family:'Cardo',serif;font-size:clamp(1.8rem,5.5vw,3.4rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(99,198,180,0.9),0 0 70px rgba(99,198,180,0.4);}
 .title-ep{font-family:'MaruBuri',serif;color:rgba(255,200,80,0.6);font-size:0.75rem;letter-spacing:0.3em;}
 .title-sub{font-family:'MaruBuri',serif;color:rgba(200,240,230,0.8);font-size:0.95rem;letter-spacing:0.18em;}
 .title-verse{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.62);font-size:0.78rem;font-style:italic;text-align:center;max-width:380px;line-height:1.85;}
@@ -205,7 +206,7 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
 .end-overlay{position:absolute;inset:0;background:rgba(5,4,0,0.84);}
 #end-screen>*{position:relative;z-index:1;}
 #end-screen.show{opacity:1;pointer-events:all;}
-#end-screen h2{font-family:'Cardo',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,200,50,0.5);}
+#end-screen h2{font-family:'Cardo',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(99,198,180,0.5);}
 #end-screen p{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.9);font-size:0.9rem;text-align:center;max-width:360px;line-height:1.95;}
 .end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
 #replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(20,50,46,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
