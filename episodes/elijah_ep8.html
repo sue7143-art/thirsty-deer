@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>엘리야와 로뎀나무 — 열왕기상 19장</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2) format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2) format('woff2');font-weight:600;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2) format('woff2');font-weight:700;font-display:swap;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--gold:#F5C842;--gold-dark:#c89010;}
-html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+:root{--gold:#63C6B4;--gold-dark:#2C7A72;}
+html{height:100%;background:#0B1714;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#0B1714;font-family:'MaruBuri',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
 #game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
 
 /* ── SCENE ── */
@@ -32,15 +35,15 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #light-rays{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,220,120,0.22) 8deg,transparent 16deg,transparent 24deg,rgba(255,210,80,0.16) 32deg,transparent 40deg,transparent 48deg,rgba(255,230,100,0.24) 56deg,transparent 64deg);animation:rayRot 12s linear infinite;}
 @keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
 
-#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
+#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cardo',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
 #chapter-title.show{opacity:1;}
-#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
+#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'MaruBuri',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
 #verse-badge.show{opacity:1;}
 
 /* ── CHOICE ── */
 #choice-overlay{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.7s;}
 #choice-overlay.show{opacity:1;pointer-events:all;}
-.choice-title{font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
+.choice-title{font-family:'Cardo',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
 .choice-title em{color:var(--gold);font-style:normal;}
 .choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
 .choice-btn{position:relative;overflow:hidden;border:none;cursor:pointer;padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;}
@@ -51,14 +54,14 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 .opt-rest{background:linear-gradient(135deg,#000a14 0%,#00060e 100%);box-shadow:0 4px 20px rgba(80,160,220,0.35);border:1px solid rgba(100,170,220,0.32);}
 .opt-rest:hover{box-shadow:0 6px 28px rgba(100,180,255,0.55);border-color:rgba(130,200,255,0.65);}
 .choice-inner{display:flex;align-items:center;gap:14px;padding:clamp(12px,2.5vw,16px) clamp(14px,3vw,20px);}
-.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.choice-label{flex-shrink:0;font-family:'Cardo',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
 .opt-quit .choice-label{color:#c8a040;text-shadow:0 0 10px rgba(200,160,60,0.8);}
 .opt-rest .choice-label{color:#80c8ff;text-shadow:0 0 12px rgba(120,190,255,0.8);}
 .choice-text-wrap{flex:1;}
-.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.choice-main{font-family:'MaruBuri',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
 .opt-quit .choice-main{color:#fff0d0;}
 .opt-rest .choice-main{color:#d0eeff;}
-.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.choice-sub{font-size:0.67rem;font-family:'MaruBuri',serif;opacity:0.65;display:block;}
 .opt-quit .choice-sub{color:#c8a040;}
 .opt-rest .choice-sub{color:#80c8ff;}
 .choice-icon{font-size:1.8rem;flex-shrink:0;}
@@ -70,38 +73,38 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #choice-result.show{opacity:1;pointer-events:all;}
 .result-card{background:rgba(4,3,1,0.95);border-radius:12px;padding:clamp(20px,4vw,28px) clamp(20px,5vw,34px);max-width:min(430px,90vw);text-align:center;border:1px solid rgba(255,255,255,0.10);}
 .result-icon{font-size:clamp(2.2rem,5vw,3rem);margin-bottom:10px;display:block;}
-.result-title{font-family:'Cinzel',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
-.result-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
+.result-title{font-family:'Cardo',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
+.result-text{font-family:'MaruBuri',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
 .res-quit .result-title{color:#c8a040;}
 .res-rest .result-title{color:#80c8ff;}
-.result-continue{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
+.result-continue{display:inline-block;margin-top:16px;font-family:'Cardo',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
 
 /* ── SPARKS ── */
 .spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
 @keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
 
 #progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
-#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#2C7A72,#63C6B4,#a8e6d8);width:0%;transition:width 0.8s ease;}
 #mute-btn{position:absolute;top:12px;right:14px;z-index:25;background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);}
 #mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
 
 /* ── DIALOG ── */
-#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#060401 0%,#0a0702 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#060401 0%,#0a0702 100%);border-top:2px solid rgba(99,198,180,0.45);flex-shrink:0;}
 #dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
-#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;}
+#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(99,198,180,0.2);gap:5px;position:relative;}
 .pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
 @keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
 #portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
 @keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#portrait-name{font-family:'Cardo',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
 #dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
-#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-text{font-family:'MaruBuri',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;text-shadow:0 1px 3px rgba(0,0,0,0.6);flex:1;display:flex;align-items:center;}
 #dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
 .dots{display:flex;gap:5px;}
-.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
-.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
-#next-btn{font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);}
-#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(99,198,180,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(99,198,180,0.6);}
+#next-btn{font-family:'Cardo',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(99,198,180,0.35);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,198,180,0.6);}
 #next-btn:active{transform:translateY(0);}
 
 /* ── TITLE ── */
@@ -111,12 +114,12 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #title-screen>*{position:relative;z-index:1;}
 .title-emblem{font-size:3.5rem;animation:tFloat 3.5s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(255,200,80,0.85));}
 @keyframes tFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
-#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,190,40,0.9),0 0 70px rgba(255,150,20,0.4);}
-.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
-.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
-.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
-#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
-@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+#title-screen h1{font-family:'Cardo',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,190,40,0.9),0 0 70px rgba(99,198,180,0.4);}
+.title-ep{font-family:'MaruBuri',serif;color:rgba(160,230,214,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'MaruBuri',serif;color:rgba(200,240,230,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cardo',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(99,198,180,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(99,198,180,0.5);}50%{box-shadow:0 0 45px rgba(99,198,180,1);}}
 
 /* ── END ── */
 #end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#060400 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
@@ -124,10 +127,10 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 .end-overlay{position:absolute;inset:0;background:rgba(4,3,0,0.84);}
 #end-screen>*{position:relative;z-index:1;}
 #end-screen.show{opacity:1;pointer-events:all;}
-#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,180,30,0.5);}
-#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
-.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
-#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(55,40,8,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#end-screen h2{font-family:'Cardo',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(99,198,180,0.5);}
+#end-screen p{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
+.end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(55,40,8,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(90,65,12,0.6);}
 
 /* ── 미디어 쿼리 ── */
@@ -282,7 +285,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'⚔️', name:"NARRATOR",
     chapter:'갈멜산 이후 — 이세벨의 위협', verse:'왕상 19:1-3',
-    text:'갈멜산에서 바알 선지자 450명과 맞서 싸운 엘리야. 하나님의 불이 하늘에서 내려와 제단을 불살랐다. 그러나 이세벨 왕비가 전령을 보냈다. "내일 이맘때까지 네 목숨을 저 선지자들처럼 만들겠다." 엘리야는 광야로 도망쳤다.',
+    text:'갈멜산에서 바알 선지자 450명과 싸운 엘리야. 하나님의 불이 제단을 불살랐다. 이세벨이 전령을 보냈다. "내일까지 네 목숨을 저들처럼 만들겠다." 엘리야는 도망쳤다.',
     btn:'광야로 →',
     weary:false, warm:false, divine:false, rest:false, rays:false, flash:false
   },
@@ -290,7 +293,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'😔', name:"ELIJAH",
     chapter:'로뎀나무 아래 — 탈진한 엘리야', verse:'왕상 19:4',
-    text:'하루 길을 광야로 들어가 로뎀나무 아래 앉아 자기가 죽기를 원하여 말하되, "여호와여 이미 충분하오니 내 생명을 거두소서. 나는 내 조상들보다 낫지 못하니이다." 그리고 로뎀나무 아래 누워 잠이 들었다.',
+    text:'광야로 들어가 로뎀나무 아래 앉아 죽기를 원하며 말했다. "여호와여 이미 충분하오니 내 생명을 거두소서. 조상들보다 낫지 못하니이다." 그리고 누워 잠들었다.',
     btn:'천사가 오다 →',
     weary:true, warm:false, divine:false, rest:false, rays:false, flash:false
   },
@@ -298,7 +301,7 @@ const SCENES = [
     type:'choice', img:1,
     icon:'😔', name:"ELIJAH",
     chapter:'엘리야의 마음', verse:'왕상 19:4-5',
-    text:'로뎀나무 그늘 아래, 뜨거운 광야 바람이 불었다. 눈을 감으니 갈멜산의 불꽃도, 이세벨의 협박도, 3년의 가뭄도 한꺼번에 밀려왔다. 그 순간 천사가 가만히 다가왔다. 엘리야의 마음은 지금 어디에 있는가?',
+    text:'로뎀나무 그늘 아래, 뜨거운 광야 바람이 불었다. 갈멜산의 불꽃도, 이세벨의 협박도, 3년의 가뭄도 밀려왔다. 그 순간 천사가 다가왔다. 엘리야의 마음은 지금 어디에 있는가?',
     btn:'선택하기',
     weary:true, warm:false, divine:false, rest:false, rays:false, flash:false
   },
@@ -306,7 +309,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'✨', name:"ANGEL",
     chapter:'천사의 손길 — 일어나 먹으라', verse:'왕상 19:5-6',
-    text:'천사가 엘리야를 어루만지며 말했다. "일어나 먹으라." 보니 머리맡에 숯불에 구운 떡 한 개와 물 한 병이 있었다. 엘리야가 먹고 마시고 다시 누웠다. 하나님은 지친 종에게 먼저 음식을 주셨다. 질문도, 책망도 없이.',
+    text:'천사가 어루만지며 말했다. "일어나 먹으라." 머리맡에 구운 떡과 물이 있었다. 엘리야가 먹고 다시 누웠다. 하나님은 지친 종에게 먼저 음식을 주셨다. 질문도 책망도 없이.',
     btn:'두 번째 손길 →',
     weary:false, warm:true, divine:true, rest:true, rays:true, flash:false
   },
@@ -314,7 +317,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'✨', name:"ANGEL",
     chapter:'두 번째 — 네가 갈 길이 멀도다', verse:'왕상 19:7',
-    text:'천사가 다시 와서 어루만지며 말했다. "일어나 먹으라, 네가 갈 길이 멀도다." 엘리야가 일어나 먹고 마셨다. 그 음식의 힘을 힘입어 사십 일 사십 야를 걸어 하나님의 산 호렙에 이르렀다. 쉼은 포기가 아니었다. 다음 걸음을 위한 준비였다.',
+    text:'천사가 다시 어루만지며 말했다. "일어나 먹으라, 갈 길이 멀도다." 그 힘으로 사십 일을 걸어 호렙산에 이르렀다. 쉼은 포기가 아니었다. 다음 걸음을 위한 준비였다.',
     btn:'호렙산으로 →',
     weary:false, warm:true, divine:true, rest:true, rays:true, flash:false
   },
@@ -322,7 +325,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'✨', name:"GOD",
     chapter:'호렙산 — 하나님의 세미한 소리', verse:'왕상 19:11-12',
-    text:'호렙산 굴에서 하나님이 말씀하셨다. "너는 나와 함께 산에 서라." 크고 강한 바람이 산을 가르고, 지진이 일고, 불이 왔다. 그러나 하나님은 그 안에 계시지 않았다. 불 후에 — 세미한 소리. 고요하고 작은 그 소리 안에 하나님이 계셨다.',
+    text:'호렙산 굴에서 하나님이 말씀하셨다. "나와 함께 산에 서라." 강한 바람, 지진, 불이 지나갔다. 하나님은 그 안에 계시지 않았다. 불 후에 — 세미한 소리. 그 안에 하나님이 계셨다.',
     btn:'✨ 마치다',
     weary:false, warm:false, divine:true, rest:true, rays:true, flash:false
   }
@@ -349,7 +352,7 @@ function flashEffect(){
   setTimeout(()=>{el.style.transition='opacity 1.6s'; el.style.opacity='0';},80);
 }
 function spawnSparks(n=20, colors){
-  const cols=colors||['#F5C842','#ffe480','#ffffff','#80d8ff'];
+  const cols=colors||['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff'];
   for(let i=0;i<n;i++) setTimeout(()=>{
     const sp=document.createElement('div'); sp.className='spark';
     const a=Math.random()*Math.PI*2, d=50+Math.random()*120;
@@ -409,14 +412,14 @@ function choose(isRest){
     document.getElementById('result-title').textContent='쉼을 받아들이다';
     document.getElementById('result-text').textContent='엘리야는 눈을 감았다. "지금은 모르겠다. 그냥 이 자리에 있자." 거부하지 않았다. 도망치지도 않았다. 천사의 손길이 어깨에 닿았을 때— 따뜻했다. 광야의 냄새, 숯불 향, 갓 구운 떡 내음. 하나님은 설교 대신 밥을 주셨다.';
     if(!muted) Music.play('angel');
-    spawnSparks(20,['#ffe4a0','#ffffff','#80d8ff','#F5C842']);
+    spawnSparks(20,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
   } else {
     card.className='result-card res-quit';
     document.getElementById('result-icon').textContent='😞';
     document.getElementById('result-title').textContent='하나님은 그래도 오셨다';
     document.getElementById('result-text').textContent='"충분하오니 거두소서." 엘리야는 눈을 감았다. 그런데 하나님은 그 기도를 들으시고— 천사를 보내셨다. 내려놓겠다는 그 자리에, 하나님은 먼저 다가오셨다. 포기하는 종을 책망하지 않으시고, 먹이셨다.';
     if(!muted) Music.play('angel');
-    spawnSparks(16,['#c8a040','#ffe4a0','#ffffff','#F5C842']);
+    spawnSparks(16,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
   }
   const oldBtn=document.getElementById('result-continue-btn');
   const newBtn=oldBtn.cloneNode(true);
@@ -451,8 +454,8 @@ function nextScene(){
 function showEnd(){
   document.getElementById('end-screen').classList.add('show');
   if(!muted) Music.play('holy');
-  spawnSparks(38,['#F5C842','#ffe480','#ffffff','#80d8ff']);
-  setTimeout(()=>spawnSparks(22,['#fff','#ffe4a0','#F5C842']),1000);
+  spawnSparks(38,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
+  setTimeout(()=>spawnSparks(22,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']),1000);
 }
 function replayGame(){
   document.getElementById('end-screen').classList.remove('show');

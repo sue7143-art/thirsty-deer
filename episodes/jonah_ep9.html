@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>요나와 니느웨 — 요나서</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2) format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2) format('woff2');font-weight:600;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2) format('woff2');font-weight:700;font-display:swap;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--gold:#F5C842;--gold-dark:#c89010;}
-html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+:root{--gold:#63C6B4;--gold-dark:#2C7A72;}
+html{height:100%;background:#0B1714;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#0B1714;font-family:'MaruBuri',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
 #game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
 
 #scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
@@ -32,15 +35,15 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #light-rays{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,220,100,0.22) 8deg,transparent 16deg,transparent 24deg,rgba(255,200,80,0.16) 32deg,transparent 40deg,transparent 48deg,rgba(255,230,120,0.24) 56deg,transparent 64deg);animation:rayRot 10s linear infinite;}
 @keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
 
-#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
+#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cardo',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
 #chapter-title.show{opacity:1;}
-#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
+#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'MaruBuri',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
 #verse-badge.show{opacity:1;}
 
 /* ── CHOICE (공통) ── */
 #choice-overlay{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.7s;}
 #choice-overlay.show{opacity:1;pointer-events:all;}
-.choice-title{font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
+.choice-title{font-family:'Cardo',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
 .choice-title em{color:var(--gold);font-style:normal;}
 .choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
 .choice-btn{position:relative;overflow:hidden;border:none;cursor:pointer;padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;}
@@ -50,7 +53,7 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 .opt-flee{background:linear-gradient(135deg,#0e0818 0%,#06030e 100%);box-shadow:0 4px 20px rgba(80,40,160,0.40);border:1px solid rgba(100,60,180,0.38);}
 .opt-flee:hover{box-shadow:0 6px 28px rgba(120,70,220,0.60);border-color:rgba(150,90,240,0.70);}
 .opt-obey{background:linear-gradient(135deg,#0a0800 0%,#050400 100%);box-shadow:0 4px 20px rgba(200,160,20,0.38);border:1px solid rgba(200,160,30,0.36);}
-.opt-obey:hover{box-shadow:0 6px 28px rgba(245,200,66,0.58);border-color:rgba(245,200,66,0.70);}
+.opt-obey:hover{box-shadow:0 6px 28px rgba(99,198,180,0.58);border-color:rgba(99,198,180,0.70);}
 
 .opt-anger2{background:linear-gradient(135deg,#180600 0%,#0c0300 100%);box-shadow:0 4px 20px rgba(200,60,20,0.38);border:1px solid rgba(200,70,30,0.36);}
 .opt-anger2:hover{box-shadow:0 6px 28px rgba(240,80,30,0.58);border-color:rgba(255,100,50,0.70);}
@@ -58,18 +61,18 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 .opt-grace:hover{box-shadow:0 6px 28px rgba(80,220,150,0.55);border-color:rgba(100,230,160,0.68);}
 
 .choice-inner{display:flex;align-items:center;gap:14px;padding:clamp(12px,2.5vw,16px) clamp(14px,3vw,20px);}
-.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.choice-label{flex-shrink:0;font-family:'Cardo',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
 .opt-flee .choice-label{color:#a070ff;text-shadow:0 0 12px rgba(150,90,255,0.9);}
-.opt-obey .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(245,200,66,0.8);}
+.opt-obey .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(99,198,180,0.8);}
 .opt-anger2 .choice-label{color:#ff6030;text-shadow:0 0 12px rgba(255,70,30,0.9);}
 .opt-grace .choice-label{color:#60e0a0;text-shadow:0 0 12px rgba(80,220,140,0.9);}
 .choice-text-wrap{flex:1;}
-.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.choice-main{font-family:'MaruBuri',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
 .opt-flee .choice-main{color:#e0d0ff;}
 .opt-obey .choice-main{color:#fff8d0;}
 .opt-anger2 .choice-main{color:#ffe4d8;}
 .opt-grace .choice-main{color:#d0fff0;}
-.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.choice-sub{font-size:0.67rem;font-family:'MaruBuri',serif;opacity:0.65;display:block;}
 .opt-flee .choice-sub{color:#a070ff;}
 .opt-obey .choice-sub{color:var(--gold);}
 .opt-anger2 .choice-sub{color:#ff7040;}
@@ -83,39 +86,39 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #choice-result.show{opacity:1;pointer-events:all;}
 .result-card{background:rgba(4,3,1,0.95);border-radius:12px;padding:clamp(20px,4vw,28px) clamp(20px,5vw,34px);max-width:min(430px,90vw);text-align:center;border:1px solid rgba(255,255,255,0.10);}
 .result-icon{font-size:clamp(2.2rem,5vw,3rem);margin-bottom:10px;display:block;}
-.result-title{font-family:'Cinzel',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
-.result-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
+.result-title{font-family:'Cardo',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
+.result-text{font-family:'MaruBuri',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
 .res-flee .result-title{color:#a070ff;}
 .res-obey .result-title{color:var(--gold);}
 .res-anger2 .result-title{color:#ff7040;}
 .res-grace .result-title{color:#60e0a0;}
-.result-continue{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
+.result-continue{display:inline-block;margin-top:16px;font-family:'Cardo',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
 
 .spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
 @keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
 
 #progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
-#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#2C7A72,#63C6B4,#a8e6d8);width:0%;transition:width 0.8s ease;}
 #mute-btn{position:absolute;top:12px;right:14px;z-index:25;background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);}
 #mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
 
 /* ── DIALOG ── */
-#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#060401 0%,#0a0702 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#060401 0%,#0a0702 100%);border-top:2px solid rgba(99,198,180,0.45);flex-shrink:0;}
 #dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
-#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;}
+#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(99,198,180,0.2);gap:5px;position:relative;}
 .pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
 @keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
 #portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
 @keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#portrait-name{font-family:'Cardo',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
 #dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
-#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-text{font-family:'MaruBuri',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;text-shadow:0 1px 3px rgba(0,0,0,0.6);flex:1;display:flex;align-items:center;}
 #dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
 .dots{display:flex;gap:5px;flex-wrap:wrap;max-width:140px;}
-.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
-.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
-#next-btn{font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);}
-#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(99,198,180,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(99,198,180,0.6);}
+#next-btn{font-family:'Cardo',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(99,198,180,0.35);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,198,180,0.6);}
 #next-btn:active{transform:translateY(0);}
 
 /* ── TITLE ── */
@@ -125,12 +128,12 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #title-screen>*{position:relative;z-index:1;}
 .title-emblem{font-size:3.5rem;animation:tFloat 3.5s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(60,180,255,0.85));}
 @keyframes tFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
-#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,190,40,0.9),0 0 70px rgba(60,160,255,0.4);}
-.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
-.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
-.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
-#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
-@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+#title-screen h1{font-family:'Cardo',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,190,40,0.9),0 0 70px rgba(60,160,255,0.4);}
+.title-ep{font-family:'MaruBuri',serif;color:rgba(160,230,214,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'MaruBuri',serif;color:rgba(200,240,230,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cardo',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(99,198,180,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(99,198,180,0.5);}50%{box-shadow:0 0 45px rgba(99,198,180,1);}}
 
 /* ── END ── */
 #end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#020806 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
@@ -138,10 +141,10 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 .end-overlay{position:absolute;inset:0;background:rgba(2,5,3,0.84);}
 #end-screen>*{position:relative;z-index:1;}
 #end-screen.show{opacity:1;pointer-events:all;}
-#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,180,30,0.5);}
-#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
-.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
-#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(20,40,20,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#end-screen h2{font-family:'Cardo',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(99,198,180,0.5);}
+#end-screen p{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
+.end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(20,40,20,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(30,60,30,0.6);}
 
 @media (max-width:480px){
@@ -269,7 +272,7 @@ const SCENES = [
     id:'s1', type:'normal', img:1,
     icon:'✨', name:"GOD",
     chapter:'소명 — 니느웨로 가라', verse:'욘 1:1-2',
-    text:'여호와의 말씀이 아밋대의 아들 요나에게 임하였다. "일어나 저 큰 성읍 니느웨로 가서 그것을 향하여 외치라. 그 악독이 내 앞에 상달하였느니라." 니느웨는 이스라엘의 적국 앗수르의 수도였다.',
+    text:'여호와의 말씀이 요나에게 임하였다. "일어나 저 큰 성읍 니느웨를 향해 외치라. 악독이 내 앞에 상달하였느니라." 니느웨는 이스라엘의 적국 앗수르의 수도였다.',
     btn:'요나의 반응 →',
     call:true, flee:false, deep:false, mercy:false, anger:false, rays:true, flash:false
   },
@@ -277,7 +280,7 @@ const SCENES = [
     id:'c1', type:'choice1', img:1,
     icon:'😤', name:"JONAH",
     chapter:'요나의 결단', verse:'욘 1:3',
-    text:'니느웨는 적국의 도시다. 하나님이 용서하시면 이스라엘의 원수가 살아남는다. 요나의 심장이 타올랐다. 하나님의 명령이 분명했지만— 요나는 어떤 선택을 할 것인가?',
+    text:'니느웨는 적국의 도시다. 하나님이 용서하시면 이스라엘의 원수가 살아남는다. 요나의 심장이 타올랐다. 명령은 분명했지만— 요나는 어떤 선택을 할 것인가?',
     btn:'선택하기',
     call:true, flee:false, deep:false, mercy:false, anger:false, rays:false, flash:false
   },
@@ -285,7 +288,7 @@ const SCENES = [
     id:'s2', type:'normal', img:2,
     icon:'🐟', name:"NARRATOR",
     chapter:'물고기 뱃속 — 사흘 낮 사흘 밤', verse:'욘 1:17',
-    text:'요나가 다시스로 도망가려 배를 탔다. 여호와께서 큰 바람을 바다 위에 내리시니 풍랑이 일었다. 선원들이 요나를 바다에 던지자 풍랑이 그쳤다. 여호와께서 큰 물고기를 예비하셨고, 요나는 사흘 낮 사흘 밤을 물고기 뱃속에 있었다.',
+    text:'요나가 다시스로 도망가려 배를 탔다. 여호와께서 큰 바람을 내리시니 풍랑이 일었다. 선원들이 요나를 바다에 던지자 풍랑이 그쳤다. 큰 물고기가 요나를 삼켜 사흘을 뱃속에 있었다.',
     btn:'기도하다 →',
     call:false, flee:false, deep:true, mercy:false, anger:false, rays:false, flash:true
   },
@@ -293,7 +296,7 @@ const SCENES = [
     id:'s3', type:'normal', img:2,
     icon:'🙏', name:"JONAH",
     chapter:'물고기 뱃속의 기도', verse:'욘 2:2,9',
-    text:'요나가 물고기 뱃속에서 기도했다. "내가 고통 중에 여호와께 불렀더니 주께서 내게 응답하셨나이다. 나는 주께 서원한 것을 내가 갚겠나이다. 구원은 여호와께 속하였나이다." 여호와께서 물고기에게 명하시니 요나를 육지에 토하니라.',
+    text:'요나가 물고기 뱃속에서 기도했다. "고통 중에 여호와께 불렀더니 응답하셨나이다. 서원한 것을 갚겠나이다. 구원은 여호와께 속하였나이다." 물고기가 요나를 육지에 토해냈다.',
     btn:'두 번째 소명 →',
     call:false, flee:false, deep:true, mercy:true, anger:false, rays:true, flash:false
   },
@@ -301,7 +304,7 @@ const SCENES = [
     id:'s4', type:'normal', img:3,
     icon:'✨', name:"GOD",
     chapter:'두 번째 소명 — 다시 니느웨로', verse:'욘 3:1-4',
-    text:'여호와의 말씀이 두 번째로 요나에게 임하였다. "일어나 니느웨로 가서 내가 네게 명한 바를 그들에게 선포하라." 요나가 일어나 니느웨로 갔다. 요나가 하루 길을 걸어가며 외쳤다. "사십 일이 지나면 니느웨가 무너지리라!"',
+    text:'여호와의 말씀이 두 번째로 임하였다. "일어나 니느웨로 가서 내가 명한 바를 선포하라." 요나가 니느웨로 가서 외쳤다. "사십 일이 지나면 니느웨가 무너지리라!"',
     btn:'니느웨의 반응 →',
     call:false, flee:false, deep:false, mercy:true, anger:false, rays:true, flash:false
   },
@@ -309,7 +312,7 @@ const SCENES = [
     id:'s5', type:'normal', img:3,
     icon:'👑', name:"NINEVEH",
     chapter:'니느웨의 회개', verse:'욘 3:5-9',
-    text:'니느웨 백성이 하나님을 믿고 금식을 선포하며 굵은 베를 입었다. 왕이 보좌에서 내려와 베옷을 입고 재 위에 앉으며 선포했다. "사람이나 짐승이나 금식하고 하나님께 힘써 부르짖으라. 혹시 하나님이 뜻을 돌이키시리라!" 온 성이 회개했다.',
+    text:'니느웨 백성이 하나님을 믿고 금식하며 베옷을 입었다. 왕도 재 위에 앉아 선포했다. "사람이나 짐승이나 힘써 부르짖으라. 혹시 하나님이 뜻을 돌이키시리라!" 온 성이 회개했다.',
     btn:'요나의 반응 →',
     call:false, flee:false, deep:false, mercy:true, anger:false, rays:true, flash:false
   },
@@ -317,7 +320,7 @@ const SCENES = [
     id:'c2', type:'choice2', img:3,
     icon:'😤', name:"JONAH",
     chapter:'요나의 두 번째 반응', verse:'욘 4:1-2',
-    text:'하나님이 니느웨에 내리려던 재앙을 거두셨다. 요나는 이것이 몹시 싫었다. 성 안에 온통 감사와 기쁨이 가득한데, 요나의 마음은 달랐다. 지금 이 순간, 요나는 어떻게 반응할 것인가?',
+    text:'하나님이 니느웨에 내리려던 재앙을 거두셨다. 요나는 이것이 몹시 싫었다. 성 안에 감사와 기쁨이 가득한데, 요나의 마음은 달랐다. 요나는 지금 어떻게 반응할 것인가?',
     btn:'선택하기',
     call:false, flee:false, deep:false, mercy:false, anger:true, rays:false, flash:false
   },
@@ -325,7 +328,7 @@ const SCENES = [
     id:'s6', type:'normal', img:3,
     icon:'✨', name:"GOD",
     chapter:'하나님의 긍휼 — 네가 옳으냐?', verse:'욘 4:10-11',
-    text:'하나님이 요나에게 말씀하셨다. "네가 수고하지 않은 이 박 나무를 아꼈거든 하물며 이 큰 성읍 니느웨에는 좌우를 분변하지 못하는 자가 십이만여 명이 있지 아니하냐?" 하나님은 적국도 품으셨다. 요나보다 크신 긍휼이 거기 있었다.',
+    text:'하나님이 말씀하셨다. "수고하지 않은 박 나무도 아꼈거든, 하물며 니느웨에는 좌우를 분변 못하는 자가 십이만여 명이 있지 않으냐?" 하나님은 적국도 품으셨다.',
     btn:'✨ 마치다',
     call:false, flee:false, deep:false, mercy:true, anger:false, rays:true, flash:false
   }
@@ -354,7 +357,7 @@ function flashEffect(){
   setTimeout(()=>{el.style.transition='opacity 1.5s'; el.style.opacity='0';},90);
 }
 function spawnSparks(n=20,colors){
-  const cols=colors||['#F5C842','#ffe480','#80d8ff','#ffffff'];
+  const cols=colors||['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff'];
   for(let i=0;i<n;i++) setTimeout(()=>{
     const sp=document.createElement('div'); sp.className='spark';
     const a=Math.random()*Math.PI*2, d=50+Math.random()*130;
@@ -493,7 +496,7 @@ function choose1(isFlee){
     if(!muted) Music.play('call');
     showResult('🏃','순종하려 했지만…',
       '요나가 일어섰다. "가겠습니다." 그러나 발을 내딛을수록 마음이 흔들렸다. 니느웨— 이스라엘을 짓밟은 원수의 도시. "하나님이 그들을 용서하시면 어떡하지?" 욥바 항구에 이르렀을 때, 요나의 발은 다시스행 배 앞에 멈춰 서 있었다.',
-      'res-obey', ['#F5C842','#ffe480','#ffffff'],
+      'res-obey', ['#63C6B4','#2C7A72','#a8e6d8'],
       ()=>{ cur++; applyScene(cur); }
     );
   }
@@ -505,14 +508,14 @@ function choose2(isAnger){
     if(!muted) Music.play('anger');
     showResult('😠','요나의 분노',
       '"이럴 줄 알았습니다! 주께서 긍휼히 여기시리라 알았기에 도망쳤던 것입니다. 차라리 죽는 것이 낫겠나이다!" 그러나 하나님은 요나에게 되물으셨다. "네가 성내는 것이 옳으냐?"',
-      'res-anger2', ['#ff6030','#ffaa40','#F5C842'],
+      'res-anger2', ['#ff6030','#ffaa40','#63C6B4'],
       ()=>{ cur++; applyScene(cur); }
     );
   } else {
     if(!muted) Music.play('mercy');
     showResult('🌿','감사한 요나',
       '"그래도 살았으니… 다행이다." 처음엔 그랬다. 그런데 베옷을 입고 엎드린 니느웨 백성들을 한참 바라보다가— 억울함이 올라왔다. 내가 이 먼 길을 온 것도, 물고기 뱃속에 갇혔던 것도, 다 이 사람들 때문인데. 하나님은 너무 쉽게 용서하시는 게 아닐까?',
-      'res-grace', ['#60e0a0','#a0f0c0','#ffffff','#F5C842'],
+      'res-grace', ['#60e0a0','#a0f0c0','#ffffff','#63C6B4'],
       ()=>{ cur++; applyScene(cur); }
     );
   }
@@ -542,8 +545,8 @@ function nextScene(){
 function showEnd(){
   document.getElementById('end-screen').classList.add('show');
   if(!muted) Music.play('holy');
-  spawnSparks(40,['#F5C842','#ffe480','#60e0a0','#ffffff']);
-  setTimeout(()=>spawnSparks(22,['#fff','#ffe4a0','#80d8ff']),1000);
+  spawnSparks(40,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
+  setTimeout(()=>spawnSparks(22,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']),1000);
 }
 function replayGame(){
   choice1=null; choice2=null;

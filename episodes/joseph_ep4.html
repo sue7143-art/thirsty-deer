@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>요셉의 용서 — 창세기 45장</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2) format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2) format('woff2');font-weight:600;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2) format('woff2');font-weight:700;font-display:swap;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--gold:#F5C842;--gold-dark:#c89010;}
-html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+:root{--gold:#63C6B4;--gold-dark:#2C7A72;}
+html{height:100%;background:#0B1714;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#0B1714;font-family:'MaruBuri',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
 #game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
 #scene{flex:1;position:relative;overflow:hidden;min-height:0;min-height:clamp(180px,45vh,400px);background:#000;}
 
@@ -39,7 +42,7 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 
 #chapter-title{
   position:absolute;top:14px;left:50%;transform:translateX(-50%);
-  font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);
+  font-family:'Cardo',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);
   letter-spacing:0.22em;color:rgba(255,220,100,0.92);
   text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;
   transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;
@@ -47,7 +50,7 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #chapter-title.show{opacity:1;}
 #verse-badge{
   position:absolute;top:40px;left:50%;transform:translateX(-50%);
-  font-family:'Noto Serif KR',serif;font-size:0.68rem;
+  font-family:'MaruBuri',serif;font-size:0.68rem;
   color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);
   z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;
 }
@@ -61,7 +64,7 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 }
 #choice-overlay.show{opacity:1;pointer-events:all;}
 .choice-title{
-  font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);
+  font-family:'Cardo',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);
   color:#fff;text-align:center;letter-spacing:0.08em;
   text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);
   margin-bottom:22px;padding:0 20px;line-height:1.65;
@@ -85,16 +88,16 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
   box-shadow:0 4px 20px rgba(200,160,20,0.4);
   border:1px solid rgba(200,170,40,0.4);
 }
-.opt-love:hover{box-shadow:0 6px 28px rgba(245,200,66,0.6);border-color:rgba(245,200,66,0.7);}
+.opt-love:hover{box-shadow:0 6px 28px rgba(99,198,180,0.6);border-color:rgba(99,198,180,0.7);}
 .choice-inner{display:flex;align-items:center;gap:14px;padding:16px 20px;}
-.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.choice-label{flex-shrink:0;font-family:'Cardo',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
 .opt-anger .choice-label{color:#ff6050;text-shadow:0 0 12px rgba(220,60,40,0.8);}
-.opt-love .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(245,200,66,0.8);}
+.opt-love .choice-label{color:var(--gold);text-shadow:0 0 12px rgba(99,198,180,0.8);}
 .choice-text-wrap{flex:1;}
-.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.choice-main{font-family:'MaruBuri',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
 .opt-anger .choice-main{color:#ffb8a8;}
 .opt-love .choice-main{color:#fff8d0;}
-.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.choice-sub{font-size:0.67rem;font-family:'MaruBuri',serif;opacity:0.65;display:block;}
 .opt-anger .choice-sub{color:#ff9080;}
 .opt-love .choice-sub{color:var(--gold);}
 .choice-icon{font-size:1.8rem;flex-shrink:0;}
@@ -119,13 +122,13 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
   text-align:center;border:1px solid rgba(255,255,255,0.1);
 }
 .result-icon{font-size:3rem;margin-bottom:10px;display:block;}
-.result-title{font-family:'Cinzel',serif;font-size:1.15rem;margin-bottom:10px;}
-.result-text{font-family:'Noto Serif KR',serif;font-size:0.88rem;line-height:1.88;color:rgba(255,255,255,0.88);}
+.result-title{font-family:'Cardo',serif;font-size:1.15rem;margin-bottom:10px;}
+.result-text{font-family:'MaruBuri',serif;font-size:0.88rem;line-height:1.88;color:rgba(255,255,255,0.88);}
 .res-anger .result-title{color:#ff7060;}
 .res-love  .result-title{color:var(--gold);}
 .result-continue{
   display:inline-block;margin-top:16px;
-  font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;
+  font-family:'Cardo',serif;font-size:0.75rem;letter-spacing:0.12em;
   color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));
   border:none;padding:8px 22px;border-radius:3px;cursor:pointer;
 }
@@ -134,7 +137,7 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 @keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
 
 #progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
-#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#2C7A72,#63C6B4,#a8e6d8);width:0%;transition:width 0.8s ease;}
 
 #mute-btn{
   position:absolute;top:12px;right:14px;z-index:25;
@@ -146,32 +149,32 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
 
 /* ── DIALOG ── */
-#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#100800 0%,#1e1004 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#100800 0%,#1e1004 100%);border-top:2px solid rgba(99,198,180,0.45);flex-shrink:0;}
 #dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
 #portrait-wrap{
   width:100px;flex-shrink:0;display:flex;flex-direction:column;
   align-items:center;justify-content:center;padding:10px 6px;
-  border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;
+  border-right:1px solid rgba(99,198,180,0.2);gap:5px;position:relative;
 }
 .pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
 @keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
 #portrait-icon{font-size:2.8rem;filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
 @keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#portrait-name{font-family:'Cardo',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
 #dialog-text-wrap{flex:1;padding:14px 18px;display:flex;flex-direction:column;justify-content:space-between;}
-#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-text{font-family:'MaruBuri',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;text-shadow:0 1px 3px rgba(0,0,0,0.6);flex:1;display:flex;align-items:center;}
 #dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
 .dots{display:flex;gap:5px;}
-.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
-.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(99,198,180,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(99,198,180,0.6);}
 #next-btn{
-  font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;
+  font-family:'Cardo',serif;font-size:0.75rem;font-weight:700;
   letter-spacing:0.12em;color:#120a02;
   background:linear-gradient(135deg,var(--gold),var(--gold-dark));
   border:none;padding:7px 20px;border-radius:3px;cursor:pointer;
-  transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);
+  transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(99,198,180,0.35);
 }
-#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,198,180,0.6);}
 #next-btn:active{transform:translateY(0);}
 
 /* ── TITLE ── */
@@ -190,12 +193,12 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #title-screen>*{position:relative;z-index:1;}
 .title-emblem{font-size:3.5rem;animation:tFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,200,50,0.9));}
 @keyframes tFloat{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-12px) rotate(4deg);}}
-#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,200,50,0.9),0 0 70px rgba(255,200,50,0.4);}
-.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,200,80,0.6);font-size:0.72rem;letter-spacing:0.3em;}
-.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
-.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
-#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
-@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+#title-screen h1{font-family:'Cardo',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,200,50,0.9),0 0 70px rgba(255,200,50,0.4);}
+.title-ep{font-family:'MaruBuri',serif;color:rgba(255,200,80,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'MaruBuri',serif;color:rgba(200,240,230,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cardo',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(99,198,180,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(99,198,180,0.5);}50%{box-shadow:0 0 45px rgba(99,198,180,1);}}
 
 /* ── END ── */
 #end-screen{
@@ -208,10 +211,10 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 .end-overlay{position:absolute;inset:0;background:rgba(5,3,0,0.84);}
 #end-screen>*{position:relative;z-index:1;}
 #end-screen.show{opacity:1;pointer-events:all;}
-#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,200,50,0.5);}
-#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:0.88rem;text-align:center;max-width:370px;line-height:2.0;}
-.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
-#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(80,60,10,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#end-screen h2{font-family:'Cardo',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,200,50,0.5);}
+#end-screen p{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.9);font-size:0.88rem;text-align:center;max-width:370px;line-height:2.0;}
+.end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(20,50,46,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(120,90,15,0.6);}
 
 /* ── iOS Safe Area ── */
@@ -334,7 +337,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'👑', name:'JOSEPH',
     chapter:'창세기 45장 — 이집트의 총리 요셉', verse:'창 41:41',
-    text:'바로가 요셉에게 말하였다. "내가 너를 온 이집트 땅을 다스리는 총리로 세우노라." 요셉은 30세에 이집트 왕 바로 앞에 섰다. 구덩이에서 감옥으로, 감옥에서 왕궁으로. 하나님의 손이 그를 이끌었다.',
+    text:'바로가 요셉에게 말하였다. "너를 온 이집트를 다스리는 총리로 세우노라." 요셉은 30세에 바로 앞에 섰다. 구덩이에서 감옥으로, 감옥에서 왕궁으로. 하나님의 손이 이끌었다.',
     btn:'형들이 찾아오다 →',
     egypt:true, divine:false, rays:false, anger:false, warm:false, spark:false, flash:false,
   },
@@ -342,7 +345,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'😰', name:'BROTHERS',
     chapter:'형들이 이집트에 오다', verse:'창 42:6',
-    text:'기근이 온 땅을 덮었다. 야곱의 아들들이 식량을 구하러 이집트에 왔다. 그들은 요셉 앞에 얼굴을 땅에 대고 절하였다. 요셉은 형들을 알아보았다. 그러나 형들은 요셉을 알아보지 못했다.',
+    text:'기근이 온 땅을 덮었다. 야곱의 아들들이 식량을 구하러 이집트에 왔다. 요셉 앞에 얼굴을 땅에 대고 절하였다. 요셉은 형들을 알아보았지만, 형들은 알아보지 못했다.',
     btn:'요셉의 내적 갈등 →',
     egypt:true, divine:false, rays:false, anger:false, warm:false, spark:false, flash:false,
   },
@@ -350,7 +353,7 @@ const SCENES = [
     type:'choice', img:1,
     icon:'👑', name:'JOSEPH',
     chapter:'요셉의 내적 갈등', verse:'창 45:1',
-    text:'눈앞에 형들이 절하고 있다. 22년 전, 구덩이에 던져지던 날. 은 20개에 팔리던 그 순간이 눈에 선하다. 총리의 권력으로 얼마든지 복수할 수 있다. 그러나 요셉의 마음 깊은 곳에서 다른 목소리가 들린다…',
+    text:'눈앞에 형들이 절하고 있다. 22년 전, 구덩이에 던져지고 은 20개에 팔리던 그날이 눈에 선하다. 총리의 권력으로 복수할 수 있다. 그러나 마음 깊은 곳에서 다른 목소리가 들린다…',
     btn:'선택하기',
     egypt:false, divine:false, rays:false, anger:true, warm:false, spark:false, flash:false,
   },
@@ -358,7 +361,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'😭', name:'JOSEPH',
     chapter:'요셉이 눈물을 감추지 못하다', verse:'창 45:1-2',
-    text:'요셉이 곁에 있는 모든 사람을 물러가게 하고 형들에게 자기를 알리었다. 그가 소리 내어 우니 이집트 사람들도 듣고 바로의 궁중에도 들렸다. 22년 동안 참아온 눈물이었다.',
+    text:'요셉이 모두를 물러가게 하고 형들에게 자기를 알리었다. 소리 내어 우니 이집트 사람들도, 바로의 궁중에도 들렸다. 22년 동안 참아온 눈물이었다.',
     btn:'나는 요셉이다 →',
     egypt:false, divine:true, rays:false, anger:false, warm:true, spark:false, flash:false,
   },
@@ -366,7 +369,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'👑', name:'JOSEPH',
     chapter:'나는 요셉이다', verse:'창 45:3-5',
-    text:'"나는 요셉입니다! 아버지가 아직 살아 계십니까?" 형들이 너무 놀라 대답하지 못했다. 요셉이 말했다. "당신들이 나를 이곳에 팔았다고 근심하지 마소서. 하나님이 생명을 구원하시려고 나를 먼저 보내셨습니다!"',
+    text:'"나는 요셉입니다! 아버지가 살아 계십니까?" 형들이 놀라 대답하지 못했다. 요셉이 말했다. "나를 팔았다고 근심하지 마소서. 하나님이 생명을 구원하시려고 먼저 보내셨습니다!"',
     btn:'아버지를 모셔오라 →',
     egypt:false, divine:true, rays:true, anger:false, warm:true, spark:true, flash:true,
   },
@@ -374,7 +377,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'👴', name:'JACOB',
     chapter:'야곱이 이집트로 내려오다', verse:'창 46:29-30',
-    text:'요셉이 수레를 준비하여 아버지 야곱을 모시러 갔다. 야곱이 보이자 요셉이 달려가 아버지의 목을 안고 한동안 울었다. 야곱이 말하였다. "이제 네 얼굴을 보았으니 너 살아 있음을 확인하였다. 이제 내가 죽어도 여한이 없구나."',
+    text:'요셉이 수레를 보내 아버지 야곱을 모셔왔다. 야곱을 보자 달려가 목을 안고 한동안 울었다. 야곱이 말했다. "네 얼굴을 보았으니 살아 있음을 확인하였다. 이제 죽어도 여한이 없구나."',
     btn:'하나님의 섭리 →',
     egypt:false, divine:true, rays:true, anger:false, warm:true, spark:true, flash:false,
   },
@@ -382,7 +385,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'✨', name:'JOSEPH',
     chapter:'하나님의 섭리', verse:'창 50:20',
-    text:'"당신들은 나를 해하려 하였으나 하나님은 그것을 선으로 바꾸셨습니다. 오늘과 같이 많은 백성의 생명을 구원하게 하시려 하셨습니다." 고난은 끝이 아니었다. 하나님은 모든 것을 합력하여 선을 이루셨다.',
+    text:'"당신들은 나를 해하려 하였으나 하나님은 선으로 바꾸셨습니다. 오늘 많은 백성의 생명을 구원하게 하시려 하셨습니다." 고난은 끝이 아니었다. 하나님이 모든 것을 합력하여 선을 이루셨다.',
     btn:'✨ 마치다',
     egypt:false, divine:true, rays:true, anger:false, warm:true, spark:true, flash:false,
   },
@@ -409,7 +412,7 @@ function flashEffect(){
   setTimeout(()=>{el.style.transition='opacity 1.5s'; el.style.opacity='0';},80);
 }
 function spawnSparks(n=28){
-  const colors=['#F5C842','#ffe480','#ffcc60','#ffffff','#ffd080','#ffe0a0'];
+  const colors=['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff','#EFE1C2'];
   for(let i=0;i<n;i++) setTimeout(()=>{
     const sp=document.createElement('div'); sp.className='spark';
     const a=Math.random()*Math.PI*2, d=55+Math.random()*130;

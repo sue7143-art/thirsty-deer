@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>모세와 금송아지 — 출애굽기 32장</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2) format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2) format('woff2');font-weight:600;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2) format('woff2');font-weight:700;font-display:swap;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--gold:#F5C842;--gold-dark:#c89010;--red:#e04040;--blue:#4a90d9;}
-html{height:100%;background:#111;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#111;font-family:'Noto Serif KR',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
+:root{--gold:#63C6B4;--gold-dark:#2C7A72;--red:#e04040;--blue:#4a90d9;}
+html{height:100%;background:#0B1714;display:flex;align-items:center;justify-content:center;}body{height:100%;background:#0B1714;font-family:'MaruBuri',serif;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;}
 #game{width:min(100vw,600px);height:100vh;max-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.8);}
 
 /* ── SCENE ── */
@@ -32,15 +35,15 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #light-rays{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:500px;height:600px;opacity:0;z-index:7;pointer-events:none;transition:opacity 1.5s;background:conic-gradient(from -30deg at 50% 0%,transparent 0deg,rgba(255,200,80,0.22) 8deg,transparent 16deg,transparent 24deg,rgba(255,200,60,0.16) 32deg,transparent 40deg,transparent 48deg,rgba(255,220,80,0.24) 56deg,transparent 64deg);animation:rayRot 10s linear infinite;}
 @keyframes rayRot{from{transform:translateX(-50%) rotate(0deg);}to{transform:translateX(-50%) rotate(360deg);}}
 
-#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
+#chapter-title{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Cardo',serif;font-size:clamp(0.58rem,1.8vw,0.82rem);letter-spacing:0.22em;color:rgba(255,220,100,0.92);text-shadow:0 1px 6px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 0.8s;white-space:nowrap;text-transform:uppercase;}
 #chapter-title.show{opacity:1;}
-#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
+#verse-badge{position:absolute;top:40px;left:50%;transform:translateX(-50%);font-family:'MaruBuri',serif;font-size:0.68rem;color:rgba(255,240,180,0.75);text-shadow:0 1px 4px rgba(0,0,0,0.9);z-index:20;opacity:0;transition:opacity 1s;font-style:italic;white-space:nowrap;}
 #verse-badge.show{opacity:1;}
 
 /* ── CHOICE ── */
 #choice-overlay{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.7s;}
 #choice-overlay.show{opacity:1;pointer-events:all;}
-.choice-title{font-family:'Cinzel',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
+.choice-title{font-family:'Cardo',serif;font-size:clamp(0.88rem,2.4vw,1.2rem);color:#fff;text-align:center;letter-spacing:0.08em;text-shadow:0 0 24px rgba(0,0,0,1),0 2px 8px rgba(0,0,0,1);margin-bottom:22px;padding:0 20px;line-height:1.65;}
 .choice-title em{color:var(--gold);font-style:normal;}
 .choices{display:flex;flex-direction:column;gap:14px;width:min(490px,90vw);}
 .choice-btn{position:relative;overflow:hidden;border:none;cursor:pointer;padding:0;border-radius:8px;transition:transform 0.15s,box-shadow 0.15s;text-align:left;}
@@ -51,14 +54,14 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 .opt-mercy{background:linear-gradient(135deg,#00081a 0%,#00050f 100%);box-shadow:0 4px 20px rgba(60,120,220,0.4);border:1px solid rgba(80,140,220,0.35);}
 .opt-mercy:hover{box-shadow:0 6px 28px rgba(80,150,255,0.6);border-color:rgba(100,170,255,0.7);}
 .choice-inner{display:flex;align-items:center;gap:14px;padding:clamp(12px,2.5vw,16px) clamp(14px,3vw,20px);}
-.choice-label{flex-shrink:0;font-family:'Cinzel',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
+.choice-label{flex-shrink:0;font-family:'Cardo',serif;font-size:1.5rem;font-weight:900;width:36px;text-align:center;}
 .opt-anger .choice-label{color:#ff6640;text-shadow:0 0 12px rgba(255,80,40,0.9);}
 .opt-mercy .choice-label{color:#6ab0ff;text-shadow:0 0 12px rgba(100,170,255,0.9);}
 .choice-text-wrap{flex:1;}
-.choice-main{font-family:'Noto Serif KR',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
+.choice-main{font-family:'MaruBuri',serif;font-size:clamp(0.80rem,2.1vw,0.93rem);font-weight:700;line-height:1.5;display:block;margin-bottom:3px;}
 .opt-anger .choice-main{color:#ffe8e0;}
 .opt-mercy .choice-main{color:#d0e8ff;}
-.choice-sub{font-size:0.67rem;font-family:'Noto Serif KR',serif;opacity:0.65;display:block;}
+.choice-sub{font-size:0.67rem;font-family:'MaruBuri',serif;opacity:0.65;display:block;}
 .opt-anger .choice-sub{color:#ff8060;}
 .opt-mercy .choice-sub{color:#6ab0ff;}
 .choice-icon{font-size:1.8rem;flex-shrink:0;}
@@ -70,38 +73,38 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #choice-result.show{opacity:1;pointer-events:all;}
 .result-card{background:rgba(6,4,2,0.94);border-radius:12px;padding:clamp(20px,4vw,28px) clamp(20px,5vw,34px);max-width:min(430px,90vw);text-align:center;border:1px solid rgba(255,255,255,0.1);}
 .result-icon{font-size:clamp(2.2rem,5vw,3rem);margin-bottom:10px;display:block;}
-.result-title{font-family:'Cinzel',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
-.result-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
+.result-title{font-family:'Cardo',serif;font-size:clamp(0.95rem,2.2vw,1.15rem);margin-bottom:10px;}
+.result-text{font-family:'MaruBuri',serif;font-size:clamp(0.78rem,1.8vw,0.88rem);line-height:1.88;color:rgba(255,255,255,0.88);}
 .res-anger .result-title{color:#ff7050;}
 .res-mercy .result-title{color:#6ab0ff;}
-.result-continue{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
+.result-continue{display:inline-block;margin-top:16px;font-family:'Cardo',serif;font-size:0.75rem;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(7px,1.5vw,8px) clamp(16px,3.5vw,22px);border-radius:3px;cursor:pointer;}
 
 /* ── SPARKS ── */
 .spark{position:fixed;border-radius:50%;pointer-events:none;z-index:100;animation:sparkFly 1.4s ease-out forwards;}
 @keyframes sparkFly{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}}
 
 #progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,200,50,0.15);z-index:20;}
-#progress-fill{height:100%;background:linear-gradient(90deg,#c89010,#F5C842,#ffe480);width:0%;transition:width 0.8s ease;}
+#progress-fill{height:100%;background:linear-gradient(90deg,#2C7A72,#63C6B4,#a8e6d8);width:0%;transition:width 0.8s ease;}
 #mute-btn{position:absolute;top:12px;right:14px;z-index:25;background:rgba(0,0,0,0.45);border:1px solid rgba(255,200,66,0.3);color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.15s;backdrop-filter:blur(4px);}
 #mute-btn:hover{background:rgba(0,0,0,0.7);transform:scale(1.1);}
 
 /* ── DIALOG ── */
-#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#08050a 0%,#10080c 100%);border-top:2px solid rgba(245,200,66,0.45);flex-shrink:0;}
+#dialog{position:relative;z-index:50;background:linear-gradient(180deg,#08050a 0%,#10080c 100%);border-top:2px solid rgba(99,198,180,0.45);flex-shrink:0;}
 #dialog-inner{display:flex;align-items:stretch;min-height:clamp(140px,30vw,190px);max-height:clamp(160px,35vw,210px);}
-#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(245,200,66,0.2);gap:5px;position:relative;}
+#portrait-wrap{width:clamp(70px,18vw,100px);flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid rgba(99,198,180,0.2);gap:5px;position:relative;}
 .pglow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,200,60,0.08) 0%,transparent 70%);animation:pgAnim 3s ease-in-out infinite;}
 @keyframes pgAnim{0%,100%{opacity:0.5;}50%{opacity:1;}}
 #portrait-icon{font-size:clamp(1.8rem,5vw,2.8rem);filter:drop-shadow(0 0 8px rgba(255,200,80,0.6));animation:piFloat 3s ease-in-out infinite;}
 @keyframes piFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-#portrait-name{font-family:'Cinzel',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
+#portrait-name{font-family:'Cardo',serif;font-size:0.58rem;color:var(--gold);letter-spacing:0.1em;text-align:center;}
 #dialog-text-wrap{flex:1;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,14px);display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;}
-#dialog-text{font-family:'Noto Serif KR',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;flex:1;display:flex;align-items:center;}
+#dialog-text{font-family:'MaruBuri',serif;font-size:clamp(0.78rem,2.0vw,0.92rem);line-height:1.72;color:#faebd0;text-shadow:0 1px 3px rgba(0,0,0,0.6);flex:1;display:flex;align-items:center;}
 #dialog-actions{display:flex;align-items:center;justify-content:space-between;margin-top:4px;flex-shrink:0;}
 .dots{display:flex;gap:5px;}
-.dot{width:7px;height:7px;border-radius:50%;background:rgba(245,200,66,0.25);transition:background 0.3s;}
-.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(245,200,66,0.6);}
-#next-btn{font-family:'Cinzel',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(245,200,66,0.35);}
-#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(245,200,66,0.6);}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(99,198,180,0.25);transition:background 0.3s;}
+.dot.on{background:var(--gold);box-shadow:0 0 6px rgba(99,198,180,0.6);}
+#next-btn{font-family:'Cardo',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(99,198,180,0.35);}
+#next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,198,180,0.6);}
 #next-btn:active{transform:translateY(0);}
 
 /* ── TITLE ── */
@@ -111,12 +114,12 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 #title-screen>*{position:relative;z-index:1;}
 .title-emblem{font-size:3.5rem;animation:tFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,80,20,0.9));}
 @keyframes tFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
-#title-screen h1{font-family:'Cinzel',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,160,30,0.9),0 0 70px rgba(255,120,20,0.4);}
-.title-ep{font-family:'Noto Serif KR',serif;color:rgba(255,180,60,0.6);font-size:0.72rem;letter-spacing:0.3em;}
-.title-sub{font-family:'Noto Serif KR',serif;color:rgba(255,220,130,0.8);font-size:0.92rem;letter-spacing:0.18em;}
-.title-verse{font-family:'Noto Serif KR',serif;color:rgba(255,240,200,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
-#start-btn{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(245,200,66,0.6);animation:sPulse 2s ease-in-out infinite;}
-@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(245,200,66,0.5);}50%{box-shadow:0 0 45px rgba(245,200,66,1);}}
+#title-screen h1{font-family:'Cardo',serif;font-size:clamp(1.7rem,5vw,3.2rem);color:var(--gold);text-align:center;line-height:1.2;letter-spacing:0.06em;text-shadow:0 0 30px rgba(255,160,30,0.9),0 0 70px rgba(255,120,20,0.4);}
+.title-ep{font-family:'MaruBuri',serif;color:rgba(160,230,214,0.6);font-size:0.72rem;letter-spacing:0.3em;}
+.title-sub{font-family:'MaruBuri',serif;color:rgba(200,240,230,0.8);font-size:0.92rem;letter-spacing:0.18em;}
+.title-verse{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.62);font-size:0.77rem;font-style:italic;text-align:center;max-width:390px;line-height:1.88;}
+#start-btn{font-family:'Cardo',serif;font-size:1rem;font-weight:700;letter-spacing:0.18em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:13px 42px;border-radius:3px;cursor:pointer;margin-top:4px;box-shadow:0 0 30px rgba(99,198,180,0.6);animation:sPulse 2s ease-in-out infinite;}
+@keyframes sPulse{0%,100%{box-shadow:0 0 20px rgba(99,198,180,0.5);}50%{box-shadow:0 0 45px rgba(99,198,180,1);}}
 
 /* ── END ── */
 #end-screen{position:absolute;inset:0;z-index:200;background:radial-gradient(ellipse at center,#080010 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity 2s;overflow:hidden;}
@@ -124,10 +127,10 @@ html{height:100%;background:#111;display:flex;align-items:center;justify-content
 .end-overlay{position:absolute;inset:0;background:rgba(4,2,8,0.84);}
 #end-screen>*{position:relative;z-index:1;}
 #end-screen.show{opacity:1;pointer-events:all;}
-#end-screen h2{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,160,30,0.5);}
-#end-screen p{font-family:'Noto Serif KR',serif;color:rgba(255,240,190,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
-.end-verse{font-family:'Cinzel',serif;color:rgba(245,200,66,0.65);font-size:0.72rem;letter-spacing:0.14em;}
-#replay-btn{font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(60,40,10,0.5);border:1px solid rgba(245,200,66,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
+#end-screen h2{font-family:'Cardo',serif;font-size:clamp(1.3rem,3.8vw,2.3rem);color:var(--gold);text-align:center;text-shadow:0 0 20px rgba(255,160,30,0.5);}
+#end-screen p{font-family:'MaruBuri',serif;color:rgba(228,237,231,0.9);font-size:clamp(0.78rem,1.8vw,0.88rem);text-align:center;max-width:min(370px,92vw);line-height:2.0;}
+.end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
+#replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(60,40,10,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(100,70,15,0.6);}
 
 /* ── 미디어 쿼리 ── */
@@ -282,7 +285,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'✨', name:"GOD",
     chapter:'시내산 40일 — 하나님의 말씀', verse:'출 32:1',
-    text:'모세가 시내산에 올라간 지 사십 일이 지났다. 하나님은 손수 두 돌판에 십계명을 새겨 모세에게 주셨다. 그 사이, 산 아래 백성들은 기다림을 견디지 못하고 있었다.',
+    text:'모세가 시내산에 올라간 지 사십 일이 지났다. 하나님은 두 돌판에 손수 십계명을 새겨 주셨다. 그 사이, 산 아래 백성들은 기다림을 견디지 못하고 있었다.',
     btn:'산 아래에서 →',
     anger:false, divine:true, mercy:false, gold:false, rays:true, flash:false
   },
@@ -290,7 +293,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'😤', name:"PEOPLE",
     chapter:'참지 못한 백성들', verse:'출 32:2-4',
-    text:'"일어나라, 우리를 위해 우리 앞에서 인도할 신을 만들라. 이 모세는 어찌 됐는지 알 수 없도다." 아론이 금 귀고리를 모아 금송아지를 만들었다. 백성은 외쳤다. "이스라엘아, 이것이 너희를 이집트에서 데려낸 신이다!"',
+    text:'"우리를 인도할 신을 만들라. 이 모세는 어찌 됐는지 알 수 없도다." 아론이 금 귀고리를 모아 금송아지를 만들었다. 백성이 외쳤다. "이것이 너희를 이집트에서 데려낸 신이다!"',
     btn:'하나님의 진노 →',
     anger:false, divine:false, mercy:false, gold:true, rays:false, flash:false
   },
@@ -298,7 +301,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'✨', name:"GOD",
     chapter:'하나님의 진노', verse:'출 32:7-10',
-    text:'여호와께서 모세에게 말씀하셨다. "내려가라! 네가 이집트에서 인도해 낸 백성이 타락했다. 그들이 금송아지를 만들고 그 앞에 절하며 제사를 드렸다. 나의 진노가 그들을 불태울 것이다. 너는 비켜라!"',
+    text:'여호와께서 모세에게 말씀하셨다. "내려가라! 네가 인도해 낸 백성이 타락했다. 금송아지를 만들어 절하며 제사를 드렸다. 나의 진노가 그들을 불태울 것이다. 너는 비켜라!"',
     btn:'모세의 결단 →',
     anger:true, divine:false, mercy:false, gold:false, rays:false, flash:true
   },
@@ -306,7 +309,7 @@ const SCENES = [
     type:'choice', img:1,
     icon:'⚡', name:"MOSES",
     chapter:'모세의 결단', verse:'출 32:11-19',
-    text:'돌판을 두 손에 든 채 모세는 산을 내려왔다. 금송아지 앞에서 춤추며 노래하는 백성의 소리가 들려왔다. 모세의 심장이 타올랐다. 지금 이 순간, 어떻게 할 것인가?',
+    text:'돌판을 두 손에 든 채 모세는 산을 내려왔다. 금송아지 앞에서 춤추며 노래하는 백성의 소리가 들려왔다. 모세의 심장이 타올랐다. 지금, 어떻게 할 것인가?',
     btn:'선택하기',
     anger:true, divine:false, mercy:false, gold:true, rays:false, flash:false
   },
@@ -314,7 +317,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'🙏', name:"MOSES",
     chapter:'중보의 기도 — 백성을 위해 엎드리다', verse:'출 32:11-13',
-    text:'모세가 간구했다. "여호와여, 어찌하여 진노하시나이까. 이집트에서 큰 능력으로 인도하신 주의 백성에게 하나님은 아브라함과 이삭과 야곱에게 언약하신 것을 기억하소서. 주의 종들에게 하신 언약을 기억하소서."',
+    text:'모세가 간구했다. "여호와여, 어찌하여 진노하시나이까. 아브라함과 이삭과 야곱에게 하신 언약을 기억하소서. 주의 종들에게 하신 언약을 기억하소서."',
     btn:'하나님의 응답 →',
     anger:false, divine:true, mercy:true, gold:false, rays:true, flash:false
   },
@@ -322,7 +325,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'✨', name:"GOD",
     chapter:'하나님이 뜻을 돌이키시다', verse:'출 32:14',
-    text:'여호와께서 그 뜻을 돌이키사 말씀하신 재앙을 그 백성에게 내리지 아니하셨다. 한 사람의 중보 기도가 하나님의 마음을 움직였다. 모세는 분노보다 긍휼을 선택했고, 그 긍휼이 이스라엘 민족을 살렸다.',
+    text:'여호와께서 뜻을 돌이키사 말씀하신 재앙을 내리지 아니하셨다. 한 사람의 중보 기도가 하나님의 마음을 움직였다. 모세는 분노보다 긍휼을 선택했고, 그 긍휼이 백성을 살렸다.',
     btn:'돌판을 산산이 →',
     anger:false, divine:true, mercy:true, gold:false, rays:true, flash:false
   },
@@ -330,7 +333,7 @@ const SCENES = [
     type:'normal', img:1,
     icon:'⚡', name:"MOSES",
     chapter:'돌판을 깨뜨리다', verse:'출 32:19-20',
-    text:'진영에 가까이 와서 금송아지와 백성의 춤추는 것을 보고 모세가 크게 노하여 손에서 두 돌판을 산 아래로 던져 깨뜨렸다. 그리고 금송아지를 불살라 가루로 만들어 물에 뿌려 이스라엘 자손에게 마시게 했다.',
+    text:'금송아지와 춤추는 백성을 보고 모세가 크게 노하여 두 돌판을 산 아래로 던져 깨뜨렸다. 금송아지를 불살라 가루로 만들어 물에 뿌려 백성에게 마시게 했다.',
     btn:'다시 산으로 →',
     anger:true, divine:false, mercy:false, gold:false, rays:false, flash:true
   },
@@ -338,7 +341,7 @@ const SCENES = [
     type:'normal', img:2,
     icon:'✨', name:"GOD",
     chapter:'새 돌판 — 하나님의 회복', verse:'출 34:28',
-    text:'모세가 새 돌판 둘을 다듬어 새벽에 시내산에 올랐다. 사십 일 사십 야를 하나님과 함께하며, 깨뜨린 돌판 대신 새 십계명이 새겨졌다. 실패 뒤에도 하나님은 다시 말씀을 주셨다. "언약의 말씀 곧 십계명을 그 판들에 기록하셨더라."',
+    text:'모세가 새 돌판 둘을 다듬어 새벽에 시내산에 올랐다. 사십 일을 하나님과 함께하며, 깨뜨린 돌판 대신 새 십계명이 새겨졌다. 실패 뒤에도 하나님은 다시 말씀을 주셨다.',
     btn:'✨ 마치다',
     anger:false, divine:true, mercy:true, gold:false, rays:true, flash:false
   }
@@ -365,7 +368,7 @@ function flashEffect(){
   setTimeout(()=>{el.style.transition='opacity 1.4s'; el.style.opacity='0';},90);
 }
 function spawnSparks(n=28, colors){
-  const cols = colors || ['#F5C842','#ff8020','#ffe480','#ff6010','#ffffff'];
+  const cols = colors||['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff'];
   for(let i=0;i<n;i++) setTimeout(()=>{
     const sp=document.createElement('div'); sp.className='spark';
     const a=Math.random()*Math.PI*2, d=55+Math.random()*140;
@@ -425,14 +428,14 @@ function choose(isMercy){
     document.getElementById('result-title').textContent='긍휼이 분노를 이기다';
     document.getElementById('result-text').textContent='모세는 치솟는 분노를 꾹 눌렀다. "하나님이 아브라함에게, 이삭에게, 야곱에게 하신 언약이 있다. 이 백성은 나의 백성이 아니라 하나님의 백성이다." 모세는 무릎을 꿇었다. 손에 든 돌판보다 하나님의 마음이 먼저였다.';
     if(!muted) Music.play('mercy');
-    spawnSparks(20, ['#6ab0ff','#a0d0ff','#ffffff','#60c0ff']);
+    spawnSparks(20,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
   } else {
     card.className='result-card res-anger';
     document.getElementById('result-icon').textContent='💢';
     document.getElementById('result-title').textContent='분노가 폭발하다';
     document.getElementById('result-text').textContent='"어떻게 이럴 수가 있느냐!" 모세는 손에 쥔 돌판을 내동댕이쳤다. 돌판이 산산조각 났다. 하나님의 말씀이 새겨진 그 판이 먼지가 됐다. 분노는 정당했다. 그러나 그 순간, 모세도 하나님의 말씀을 깨뜨린 자가 됐다. 이후 모세는 다시 하나님 앞에 엎드렸다.';
     if(!muted) Music.play('anger');
-    spawnSparks(22, ['#ff6040','#ff8020','#ffcc00','#ff3030']);
+    spawnSparks(22,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
     setTimeout(flashEffect, 200);
   }
   const oldBtn=document.getElementById('result-continue-btn');
@@ -451,7 +454,7 @@ function applyScene(idx){
   setOverlays(s);
   setChapter(s.chapter, s.verse);
   if(s.flash) setTimeout(flashEffect,400);
-  if(s.anger && !s.divine) spawnSparks(12, ['#ff6040','#ff8020','#ffaa00']);
+  if(s.anger && !s.divine) spawnSparks(12,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
   document.getElementById('portrait-icon').textContent=s.icon;
   document.getElementById('portrait-name').textContent=s.name;
   document.getElementById('next-btn').textContent=s.btn;
@@ -469,8 +472,8 @@ function nextScene(){
 function showEnd(){
   document.getElementById('end-screen').classList.add('show');
   if(!muted) Music.play('holy');
-  spawnSparks(40, ['#6ab0ff','#a0d0ff','#F5C842','#ffffff']);
-  setTimeout(()=>spawnSparks(25,['#F5C842','#fff','#aaddff']),900);
+  spawnSparks(40,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
+  setTimeout(()=>spawnSparks(25,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']),900);
 }
 function replayGame(){
   document.getElementById('end-screen').classList.remove('show');
