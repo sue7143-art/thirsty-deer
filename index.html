@@ -12,21 +12,27 @@
 <meta property="og:image" content="https://thirsty-deer.pages.dev/images/gift_envelope_og.jpg">
 <meta property="og:url" content="https://thirsty-deer.pages.dev/">
 <meta name="twitter:card" content="summary_large_image">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;500;700&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Light.woff2) format('woff2');font-weight:300;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2) format('woff2');font-weight:400;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2) format('woff2');font-weight:600;font-display:swap;}
+@font-face{font-family:'MaruBuri';src:url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2) format('woff2');font-weight:700;font-display:swap;}
+</style>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --gold:#F5C842;
-  --gold-dark:#c89010;
-  --bg:#08060e;
-  --text:#faebd0;
-  --muted:rgba(250,235,208,0.65);
-  --card-bg:#0e0c1a;
+  --gold:#63C6B4;
+  --gold-dark:#2C7A72;
+  --bg:#0B1714;
+  --text:#E4EDE7;
+  --muted:rgba(228,237,231,0.62);
+  --card-bg:#122320;
 }
 html,body{
   background:var(--bg);
   color:var(--text);
-  font-family:'Noto Serif KR',serif;
+  font-family:'MaruBuri',serif;
   min-height:100vh;
   overflow-x:hidden;
 }
@@ -41,8 +47,8 @@ html{scroll-behavior:smooth;}
   text-align:center;padding:60px 24px 80px;
   overflow:hidden;
   background:
-    radial-gradient(ellipse at 25% 25%,rgba(80,40,180,0.20) 0%,transparent 50%),
-    radial-gradient(ellipse at 75% 75%,rgba(180,120,10,0.14) 0%,transparent 50%),
+    radial-gradient(ellipse at 25% 25%,rgba(44,122,114,0.24) 0%,transparent 50%),
+    radial-gradient(ellipse at 75% 75%,rgba(201,160,117,0.10) 0%,transparent 50%),
     var(--bg);
 }
 .stars{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
@@ -54,8 +60,8 @@ html{scroll-behavior:smooth;}
   position:absolute;
   inset:-16px;
   border-radius:50%;
-  border:2px solid rgba(245,200,66,0.55);
-  box-shadow:0 0 16px rgba(245,200,66,0.25);
+  border:2px solid rgba(99,198,180,0.55);
+  box-shadow:0 0 16px rgba(99,198,180,0.25);
   animation:ringPulse 3.5s ease-in-out infinite;
 }
 @keyframes ringPulse{0%,100%{transform:scale(1);opacity:0.85;}50%{transform:scale(1.10);opacity:0.35;}}
@@ -68,9 +74,9 @@ html{scroll-behavior:smooth;}
   background-position:38% 62%;
   position:relative;
   box-shadow:
-    0 0 0 1px rgba(245,200,66,0.30),
-    0 0 0 8px rgba(8,6,14,0.9),
-    0 0 40px rgba(245,200,66,0.25),
+    0 0 0 1px rgba(99,198,180,0.30),
+    0 0 0 8px rgba(11,23,20,0.9),
+    0 0 40px rgba(99,198,180,0.25),
     0 12px 36px rgba(0,0,0,0.55);
 }
 .hero-logo::after{
@@ -85,36 +91,36 @@ html{scroll-behavior:smooth;}
 #hero>*:not(.stars){position:relative;z-index:1;}
 
 .hero-label{
-  font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.4vw,0.72rem);
+  font-family:'Cardo',serif;font-size:clamp(0.58rem,1.4vw,0.72rem);
   letter-spacing:0.40em;color:var(--gold);opacity:0.75;
   text-transform:uppercase;margin-bottom:14px;
 }
 h1.hero-title{
-  font-family:'Gowun Batang','Noto Serif KR',serif;
+  font-family:'MaruBuri',serif;
   font-size:clamp(2.8rem,8vw,6rem);
   font-weight:700;letter-spacing:0.08em;line-height:1.1;
-  background:linear-gradient(140deg,#fffbe8 0%,var(--gold) 40%,#ffe090 70%,#fff8e0 100%);
+  background:linear-gradient(140deg,#f4fbf9 0%,var(--gold) 40%,#a8e6d8 70%,#eafaf6 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   text-shadow:none;
   margin-bottom:10px;
-  filter:drop-shadow(0 2px 20px rgba(245,200,66,0.35));
+  filter:drop-shadow(0 2px 20px rgba(99,198,180,0.35));
 }
 .hero-sub{
-  font-family:'Gowun Batang','Noto Serif KR',serif;font-size:clamp(0.80rem,1.8vw,1rem);
-  letter-spacing:0.28em;color:rgba(245,200,66,0.70);margin-bottom:28px;
+  font-family:'MaruBuri',serif;font-size:clamp(0.80rem,1.8vw,1rem);
+  letter-spacing:0.28em;color:rgba(99,198,180,0.70);margin-bottom:28px;
 }
 .hero-verse{
-  font-family:'Noto Serif KR',serif;font-family:'Gowun Batang','Noto Serif KR',serif;font-size:clamp(0.82rem,1.6vw,0.96rem);
+  font-family:'MaruBuri',serif;font-family:'MaruBuri',serif;font-size:clamp(0.82rem,1.6vw,0.96rem);
   color:rgba(250,235,208,0.82);font-style:italic;line-height:2.1;max-width:420px;
-  border-left:2px solid rgba(245,200,66,0.35);padding-left:18px;text-align:left;margin:0 auto;
+  border-left:2px solid rgba(99,198,180,0.35);padding-left:18px;text-align:left;margin:0 auto;
 }
 .hero-desc{
   margin-top:22px;font-size:clamp(0.80rem,1.6vw,0.92rem);
   color:var(--muted);line-height:1.95;max-width:400px;
 }
 .scroll-hint{
-  margin-top:48px;font-family:'Cinzel',serif;font-size:0.64rem;
-  letter-spacing:0.24em;color:rgba(245,200,66,0.40);
+  margin-top:48px;font-family:'Cardo',serif;font-size:0.64rem;
+  letter-spacing:0.24em;color:rgba(99,198,180,0.40);
   animation:scrollPulse 2.8s ease-in-out infinite;
 }
 @keyframes scrollPulse{0%,100%{opacity:0.35;transform:translateY(0);}50%{opacity:0.85;transform:translateY(7px);}}
@@ -124,14 +130,14 @@ h1.hero-title{
 .section-inner{max-width:1120px;margin:0 auto;}
 .section-header{text-align:center;margin-bottom:52px;}
 .eyebrow{
-  font-family:'Cinzel',serif;font-size:clamp(0.58rem,1.2vw,0.68rem);
+  font-family:'Cardo',serif;font-size:clamp(0.58rem,1.2vw,0.68rem);
   letter-spacing:0.38em;color:var(--gold);opacity:0.88;
   text-transform:uppercase;display:block;margin-bottom:12px;
 }
 .section-h2{
-  font-family:'Cinzel',serif;font-size:clamp(1.6rem,4vw,2.8rem);
+  font-family:'Cardo',serif;font-size:clamp(1.6rem,4vw,2.8rem);
   font-weight:700;color:#fff;letter-spacing:0.05em;
-  text-shadow:0 0 40px rgba(245,200,66,0.18);margin-bottom:14px;
+  text-shadow:0 0 40px rgba(99,198,180,0.18);margin-bottom:14px;
 }
 .divider{
   width:56px;height:2px;margin:0 auto 18px;
@@ -155,15 +161,15 @@ h1.hero-title{
   position:relative;
   display:flex;flex-direction:column;
   background:var(--card-bg);
-  border:1px solid rgba(245,200,66,0.12);
+  border:1px solid rgba(99,198,180,0.12);
   border-radius:12px;overflow:hidden;
   text-decoration:none;color:inherit;
   transition:transform 0.22s ease,box-shadow 0.22s ease,border-color 0.22s ease;
 }
 .card:not(.card-locked):hover{
   transform:translateY(-7px);
-  box-shadow:0 20px 50px rgba(0,0,0,0.65),0 0 0 1px rgba(245,200,66,0.32);
-  border-color:rgba(245,200,66,0.38);
+  box-shadow:0 20px 50px rgba(0,0,0,0.65),0 0 0 1px rgba(99,198,180,0.32);
+  border-color:rgba(99,198,180,0.38);
 }
 .card:not(.card-locked):active{
   transform:translateY(-3px);
@@ -180,20 +186,20 @@ h1.hero-title{
 .card:not(.card-locked):hover .card-thumb{transform:scale(1.05);}
 .card-thumb::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(to bottom,transparent 45%,rgba(8,6,14,0.90) 100%);
+  background:linear-gradient(to bottom,transparent 45%,rgba(11,23,20,0.90) 100%);
 }
 .card-thumb-locked{
   width:100%;aspect-ratio:16/9;
-  background:linear-gradient(135deg,#14121e 0%,#0a0816 100%);
+  background:linear-gradient(135deg,#16302c 0%,#0c1e1b 100%);
   display:flex;align-items:center;justify-content:center;
   position:relative;
 }
 .lock-emoji{font-size:2.4rem;opacity:0.22;}
 .lock-icon{
   position:absolute;bottom:10px;right:12px;
-  font-size:1.1rem;opacity:0.35;
+  font-size:1.1rem;opacity:0.55;
 }
-.card-locked{opacity:0.55;cursor:default;}
+.card-locked{opacity:0.62;cursor:default;}
 
 /* ── CARD BODY ── */
 .card-body{
@@ -201,57 +207,57 @@ h1.hero-title{
   flex:1;display:flex;flex-direction:column;gap:5px;
 }
 .ep-num{
-  font-family:'Cinzel',serif;font-size:0.60rem;
+  font-family:'Cardo',serif;font-size:0.60rem;
   letter-spacing:0.22em;color:var(--gold);opacity:0.80;
 }
-.ep-locked{color:rgba(255,255,255,0.28);}
+.ep-locked{color:rgba(255,255,255,0.50);}
 .card-title{
-  font-family:'Cinzel',serif;
+  font-family:'Cardo',serif;
   font-size:clamp(0.92rem,2vw,1.08rem);
   font-weight:700;color:#fff;letter-spacing:0.03em;line-height:1.3;
 }
-.card-title-locked{color:rgba(255,255,255,0.32);}
+.card-title-locked{color:rgba(255,255,255,0.58);}
 .card-verse{
-  font-family:'Cinzel',serif;font-size:0.62rem;
-  letter-spacing:0.10em;color:rgba(245,200,66,0.58);
+  font-family:'Cardo',serif;font-size:0.62rem;
+  letter-spacing:0.10em;color:rgba(99,198,180,0.58);
 }
-.card-verse-locked{color:rgba(245,200,66,0.20);}
+.card-verse-locked{color:rgba(99,198,180,0.38);}
 .card-desc{
   font-size:clamp(0.74rem,1.4vw,0.82rem);
   color:var(--muted);line-height:1.75;flex:1;margin-top:2px;
 }
-.card-desc-locked{color:rgba(255,255,255,0.20);}
+.card-desc-locked{color:rgba(255,255,255,0.46);}
 .play-btn{
   display:inline-block;margin-top:12px;
-  font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.14em;
+  font-family:'Cardo',serif;font-size:0.68rem;letter-spacing:0.14em;
   color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));
   padding:7px 16px;border-radius:3px;align-self:flex-start;
   transition:box-shadow 0.2s,transform 0.15s;
 }
 .card:not(.card-locked):hover .play-btn{
-  box-shadow:0 4px 16px rgba(245,200,66,0.5);transform:translateX(3px);
+  box-shadow:0 4px 16px rgba(99,198,180,0.5);transform:translateX(3px);
 }
 
 /* ── NT 섹션 ── */
 .section-nt{
-  background:linear-gradient(180deg,var(--bg) 0%,#0a051e 50%,var(--bg) 100%);
+  background:linear-gradient(180deg,var(--bg) 0%,#0a1a17 50%,var(--bg) 100%);
 }
 .nt-badge{
-  display:inline-block;font-family:'Cinzel',serif;
+  display:inline-block;font-family:'Cardo',serif;
   font-size:0.60rem;letter-spacing:0.24em;
-  color:rgba(245,200,66,0.55);
-  border:1px solid rgba(245,200,66,0.18);
+  color:rgba(99,198,180,0.55);
+  border:1px solid rgba(99,198,180,0.18);
   padding:5px 14px;border-radius:20px;margin-bottom:14px;
 }
 
 /* ── FOOTER ── */
 footer{
-  background:var(--bg);border-top:1px solid rgba(245,200,66,0.08);
+  background:var(--bg);border-top:1px solid rgba(99,198,180,0.08);
   text-align:center;padding:52px 24px;
 }
 .footer-verse{font-size:clamp(0.76rem,1.5vw,0.86rem);color:var(--muted);font-style:italic;line-height:2.1;}
 .footer-links{margin-top:20px;font-size:0.76rem;}
-.footer-links a{color:rgba(245,200,66,0.75);text-decoration:none;}
+.footer-links a{color:rgba(99,198,180,0.75);text-decoration:none;}
 .footer-links a:hover{text-decoration:underline;}
 .footer-links span{color:rgba(255,255,255,0.2);margin:0 8px;}
 .footer-biz{margin-top:14px;font-size:0.66rem;color:rgba(255,255,255,0.28);line-height:1.8;}
@@ -279,16 +285,16 @@ footer{
 
 .free-badge{
   position:absolute;top:10px;left:10px;z-index:3;
-  font-family:'Cinzel',serif;font-size:0.60rem;letter-spacing:0.06em;
+  font-family:'Cardo',serif;font-size:0.60rem;letter-spacing:0.06em;
   background:linear-gradient(135deg,var(--gold),var(--gold-dark));
   color:#120a02;font-weight:700;
   padding:4px 11px;border-radius:14px;
-  box-shadow:0 3px 10px rgba(245,200,66,0.4);
+  box-shadow:0 3px 10px rgba(99,198,180,0.4);
 }
 
 .water-guide{
   margin-top:10px;
-  font-family:'Gowun Batang',serif;
+  font-family:'MaruBuri',serif;
   font-size:0.76rem;
   color:rgba(160,220,240,0.75);
   text-align:center;
@@ -343,7 +349,7 @@ footer{
 }
 #water-modal.show{display:flex;}
 .water-modal-card{
-  background:linear-gradient(160deg,#12101e 0%,#0a0816 100%);
+  background:linear-gradient(160deg,#16302c 0%,#0c1e1b 100%);
   border:1px solid rgba(160,220,240,0.25);
   border-radius:16px;
   padding:32px 28px;
@@ -357,16 +363,16 @@ footer{
   filter:drop-shadow(0 4px 12px rgba(120,200,240,0.4));
 }
 .water-modal-title{
-  font-family:'Cinzel',serif;font-size:1.1rem;
+  font-family:'Cardo',serif;font-size:1.1rem;
   color:#fff;letter-spacing:0.04em;margin-bottom:14px;
 }
 .water-modal-desc{
-  font-family:'Noto Serif KR',serif;font-size:0.85rem;
+  font-family:'MaruBuri',serif;font-size:0.85rem;
   color:rgba(250,235,208,0.80);line-height:1.9;margin-bottom:20px;
 }
 .water-modal-desc b{color:rgba(160,220,240,0.95);font-weight:600;}
 .water-modal-close{
-  font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.12em;
+  font-family:'Cardo',serif;font-size:0.75rem;letter-spacing:0.12em;
   color:#052028;background:linear-gradient(135deg,#9fe0ee,#5cb0cc);
   border:none;padding:9px 26px;border-radius:4px;cursor:pointer;
 }
@@ -382,7 +388,7 @@ footer{
 }
 #purchase-modal.show{display:flex;}
 .purchase-modal-card{
-  background:linear-gradient(160deg,#12101e 0%,#0a0816 100%);
+  background:linear-gradient(160deg,#16302c 0%,#0c1e1b 100%);
   border:1px solid rgba(160,220,240,0.25);
   border-radius:16px;
   padding:30px 26px;
@@ -391,25 +397,26 @@ footer{
   box-shadow:0 20px 60px rgba(0,0,0,0.6);
 }
 .purchase-modal-title{
-  font-family:'Cinzel',serif;font-size:1.0rem;
+  font-family:'Cardo',serif;font-size:1.0rem;
   color:#fff;letter-spacing:0.03em;margin-bottom:6px;
 }
 .purchase-modal-name{
-  font-family:'Noto Serif KR',serif;font-size:0.85rem;
+  font-family:'MaruBuri',serif;font-size:0.85rem;
   color:rgba(250,235,208,0.85);margin-bottom:4px;
 }
 .purchase-modal-price{
-  font-family:'Cinzel',serif;font-size:0.8rem;
+  font-family:'Cardo',serif;font-size:0.8rem;
   color:rgba(160,220,240,0.9);margin-bottom:22px;
 }
 .pay-btn{
-  display:flex;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:center;gap:8px;
   width:100%;padding:12px 0;margin-bottom:10px;
   border:none;border-radius:8px;cursor:pointer;
-  font-family:'Noto Serif KR',serif;font-size:0.88rem;font-weight:600;
+  font-family:'MaruBuri',serif;font-size:0.88rem;font-weight:600;
 }
 .pay-btn-kakao{background:#FEE500;color:#191919;}
 .pay-btn-naver{background:#03C75A;color:#fff;}
+.kakaopay-logo{height:16px;width:auto;display:block;}
 .purchase-modal-cancel{
   margin-top:6px;background:none;border:none;
   color:rgba(255,255,255,0.45);font-size:0.78rem;cursor:pointer;
@@ -427,7 +434,7 @@ footer{
   display:flex;align-items:center;justify-content:center;
   width:100%;padding:12px 0;margin-bottom:10px;
   border:none;border-radius:8px;cursor:pointer;
-  font-family:'Noto Serif KR',serif;font-size:0.88rem;font-weight:600;
+  font-family:'MaruBuri',serif;font-size:0.88rem;font-weight:600;
   background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;
 }
 
@@ -438,7 +445,7 @@ footer{
   border:1px solid rgba(160,220,240,0.3);
   color:rgba(250,235,208,0.95);
   padding:11px 18px;border-radius:10px;
-  font-family:'Noto Serif KR',serif;font-size:0.78rem;
+  font-family:'MaruBuri',serif;font-size:0.78rem;
   max-width:240px;line-height:1.4;
   opacity:0;transform:translateY(-8px);
   transition:opacity 0.35s ease, transform 0.35s ease;
@@ -459,8 +466,8 @@ footer{
 }
 #gift-letter-modal.show{display:flex;}
 .letter-card{
-  background:linear-gradient(160deg,#1a1530 0%,#0a0816 100%);
-  border:1px solid rgba(245,200,66,0.3);
+  background:linear-gradient(160deg,#1a3330 0%,#0c1e1b 100%);
+  border:1px solid rgba(99,198,180,0.3);
   border-radius:16px;padding:36px 26px;
   max-width:360px;width:100%;text-align:center;
   box-shadow:0 25px 70px rgba(0,0,0,0.7);
@@ -474,15 +481,15 @@ footer{
   opacity:0;transform:scale(0.9) translateY(-6px);
 }
 .letter-sealed-text{
-  font-family:'Cinzel',serif;font-size:1.0rem;color:#fff;
+  font-family:'Cardo',serif;font-size:1.0rem;color:#fff;
   margin-bottom:22px;line-height:1.5;
 }
 .letter-from{
-  font-family:'Cinzel',serif;font-size:0.86rem;
-  color:rgba(245,200,66,0.9);margin-bottom:14px;
+  font-family:'Cardo',serif;font-size:0.86rem;
+  color:rgba(99,198,180,0.9);margin-bottom:14px;
 }
 .letter-message{
-  font-family:'Noto Serif KR',serif;font-size:0.88rem;font-style:italic;
+  font-family:'MaruBuri',serif;font-size:0.88rem;font-style:italic;
   color:rgba(250,235,208,0.9);line-height:1.7;
   padding:16px;margin-bottom:22px;
   border-top:1px solid rgba(255,255,255,0.12);
@@ -496,31 +503,31 @@ footer{
 }
 #gift-modal.show, #gift-share-modal.show, #gift-swap-modal.show{display:flex;}
 .gift-modal-card{
-  background:linear-gradient(160deg,#12101e 0%,#0a0816 100%);
+  background:linear-gradient(160deg,#16302c 0%,#0c1e1b 100%);
   border:1px solid rgba(160,220,240,0.25);
   border-radius:16px;padding:28px 24px;
   max-width:360px;width:100%;text-align:center;
   box-shadow:0 20px 60px rgba(0,0,0,0.6);
 }
 .gift-modal-title{
-  font-family:'Cinzel',serif;font-size:1.0rem;color:#fff;margin-bottom:6px;
+  font-family:'Cardo',serif;font-size:1.0rem;color:#fff;margin-bottom:6px;
 }
 .gift-modal-desc{
-  font-family:'Noto Serif KR',serif;font-size:0.8rem;
+  font-family:'MaruBuri',serif;font-size:0.8rem;
   color:rgba(250,235,208,0.75);margin-bottom:16px;
 }
 .gift-episode-select{
   width:100%;padding:10px;margin-bottom:10px;
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
   border-radius:8px;color:#fff;
-  font-family:'Noto Serif KR',serif;font-size:0.82rem;
+  font-family:'MaruBuri',serif;font-size:0.82rem;
 }
 .gift-episode-select option{color:#191919;}
 .gift-message-input{
   width:100%;min-height:64px;resize:vertical;
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
   border-radius:8px;padding:10px;color:#fff;
-  font-family:'Noto Serif KR',serif;font-size:0.82rem;
+  font-family:'MaruBuri',serif;font-size:0.82rem;
   margin-bottom:10px;
 }
 .gift-suggestions{
@@ -531,11 +538,12 @@ footer{
   background:rgba(160,220,240,0.1);border:1px solid rgba(160,220,240,0.3);
   color:rgba(160,220,240,0.9);border-radius:16px;
   padding:5px 10px;font-size:0.68rem;cursor:pointer;
-  font-family:'Noto Serif KR',serif;
+  font-family:'MaruBuri',serif;
 }
 .gift-pay-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
   width:100%;padding:12px 0;margin-bottom:8px;border:none;border-radius:8px;
-  cursor:pointer;font-family:'Noto Serif KR',serif;font-size:0.88rem;font-weight:600;
+  cursor:pointer;font-family:'MaruBuri',serif;font-size:0.88rem;font-weight:600;
   background:#FEE500;color:#191919;
 }
 .gift-link-box{
@@ -545,7 +553,7 @@ footer{
 }
 .gift-share-btn{
   width:100%;padding:12px 0;margin-bottom:8px;border:none;border-radius:8px;
-  cursor:pointer;font-family:'Noto Serif KR',serif;font-size:0.88rem;font-weight:600;
+  cursor:pointer;font-family:'MaruBuri',serif;font-size:0.88rem;font-weight:600;
   background:linear-gradient(135deg,#9fe0ee,#5cb0cc);color:#052028;
 }
 
@@ -554,9 +562,9 @@ footer{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:flex-end;
   padding:14px 20px;
-  background:rgba(8,6,14,0.55);
+  background:rgba(11,23,20,0.55);
   backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(245,200,66,0.10);
+  border-bottom:1px solid rgba(99,198,180,0.10);
 }
 .auth-area{display:flex;align-items:center;gap:10px;}
 .kakao-login-btn{
@@ -564,7 +572,7 @@ footer{
   background:#FEE500;color:#191919;
   border:none;border-radius:8px;
   padding:8px 16px;
-  font-family:'Noto Serif KR',sans-serif;
+  font-family:'Noto Sans KR',sans-serif;
   font-size:0.78rem;font-weight:700;
   cursor:pointer;
   box-shadow:0 2px 10px rgba(0,0,0,0.25);
@@ -577,7 +585,7 @@ footer{
 .kakao-icon{width:16px;height:16px;flex-shrink:0;}
 .user-info{
   display:none;align-items:center;gap:10px;
-  font-family:'Noto Serif KR',serif;font-size:0.78rem;
+  font-family:'MaruBuri',serif;font-size:0.78rem;
   color:rgba(250,235,208,0.85);
 }
 .user-info.show{display:flex;}
@@ -589,7 +597,7 @@ footer{
   border-radius:20px;padding:2px 9px;
 }
 .gift-btn{
-  font-family:'Noto Serif KR',serif;font-size:0.72rem;
+  font-family:'MaruBuri',serif;font-size:0.72rem;
   color:#052028;background:linear-gradient(135deg,#9fe0ee,#5cb0cc);
   border:none;border-radius:20px;padding:5px 12px;cursor:pointer;
 }
@@ -598,13 +606,13 @@ footer{
 }
 .user-avatar{
   width:28px;height:28px;border-radius:50%;
-  background:rgba(245,200,66,0.15);
+  background:rgba(99,198,180,0.15);
   display:flex;align-items:center;justify-content:center;
   font-size:0.85rem;
-  border:1px solid rgba(245,200,66,0.25);
+  border:1px solid rgba(99,198,180,0.25);
 }
 .logout-btn{
-  font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.08em;
+  font-family:'Cardo',serif;font-size:0.62rem;letter-spacing:0.08em;
   color:rgba(250,235,208,0.55);
   background:none;border:1px solid rgba(250,235,208,0.20);
   padding:5px 11px;border-radius:14px;cursor:pointer;
@@ -967,7 +975,7 @@ footer{
     <div class="purchase-modal-title">💧 샘물 충전할까요?</div>
     <div class="purchase-modal-name">에피소드 2개를 열 수 있습니다</div>
     <div class="purchase-modal-price">샘물 하나 · 990원</div>
-    <button class="pay-btn pay-btn-kakao" onclick="payWith()">카카오페이로 결제</button>
+    <button class="pay-btn pay-btn-kakao" onclick="payWith()"><img src="images/kakaopay_logo.png" alt="" class="kakaopay-logo">카카오페이로 결제</button>
     <button class="purchase-modal-cancel" onclick="hidePurchaseModal()">닫기</button>
   </div>
 </div>
@@ -1001,7 +1009,7 @@ footer{
     </select>
     <textarea id="gift-message-input" class="gift-message-input" maxlength="80" placeholder="함께 보낼 메시지 (선택)"></textarea>
     <div class="gift-suggestions" id="gift-suggestions"></div>
-    <button class="gift-pay-btn" onclick="payWithGift()">카카오페이로 선물하기 · 990원</button>
+    <button class="gift-pay-btn" onclick="payWithGift()"><img src="images/kakaopay_logo.png" alt="" class="kakaopay-logo">카카오페이로 선물하기 · 990원</button>
     <button class="purchase-modal-cancel" onclick="hideGiftModal()">닫기</button>
   </div>
 </div>
