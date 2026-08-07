@@ -217,6 +217,15 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
 .end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
 #replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(20,50,46,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(120,90,15,0.6);}
+#more-btn{
+  font-family:'Cardo',serif;font-size:0.78rem;letter-spacing:0.08em;
+  margin-top:14px;padding:10px 22px;border-radius:3px;cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.15s;
+  color:#120a02;border:none;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  box-shadow:0 3px 14px rgba(99,198,180,0.4);
+}
+#more-btn:hover{transform:translateY(-1px);box-shadow:0 5px 20px rgba(99,198,180,0.6);}
 
 /* ── iOS Safe Area ── */
 #game{
@@ -328,6 +337,7 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
     <h2>하나님의 섭리</h2>
     <p>요셉의 눈물은 복수가 아닌 용서였습니다.<br>고난은 하나님의 계획이었고,<br>형들의 악은 선으로 바뀌었습니다.<br><br>"당신들이 나를 판 것은 당신들이 아니라<br>하나님이 나를 보내신 것입니다."</p>
     <div class="end-verse">창세기 45:8</div>
+    <button id="more-btn" onclick="goToMoreStories()">더 많은 말씀 보러 가기</button>
     <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
   </div>
 </div>
@@ -519,6 +529,13 @@ function showEnd(){
   if(!muted) Music.play('holy');
   spawnSparks(40); setTimeout(()=>spawnSparks(28),900);
 }
+
+
+// 더 많은 말씀 보러 가기 → 메인 페이지(전체 에피소드 목록)로 이동
+function goToMoreStories(){
+  window.location.href = '../index.html';
+}
+
 function replayGame(){
   document.getElementById('end-screen').classList.remove('show');
   document.getElementById('choice-overlay').classList.remove('show');

@@ -226,6 +226,15 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
 .end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
 #replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(20,50,46,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(120,90,15,0.6);}
+#more-btn{
+  font-family:'Cardo',serif;font-size:0.78rem;letter-spacing:0.08em;
+  margin-top:14px;padding:10px 22px;border-radius:3px;cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.15s;
+  color:#120a02;border:none;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  box-shadow:0 3px 14px rgba(99,198,180,0.4);
+}
+#more-btn:hover{transform:translateY(-1px);box-shadow:0 5px 20px rgba(99,198,180,0.6);}
 
 /* ── 소형 모바일 (≤480px) ── */
 @media (max-width:480px){
@@ -372,6 +381,7 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
     <h2>여호와의 칼!</h2>
     <p>300명의 나팔 소리와 횃불 하나가<br>미디안의 대군을 무너뜨렸습니다.<br>전쟁은 사람의 수가 아니라<br>하나님의 능력으로 이기는 것입니다.<br><br>"이는 힘으로 되지 아니하며 능으로 되지 아니하고<br>오직 나의 영으로 되느니라."</p>
     <div class="end-verse">사사기 7:22 / 스가랴 4:6</div>
+    <button id="more-btn" onclick="goToMoreStories()">더 많은 말씀 보러 가기</button>
     <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
   </div>
 </div>
@@ -564,6 +574,13 @@ function showEnd(){
   if(!muted) Music.play('holy');
   spawnSparks(45); setTimeout(()=>spawnSparks(30),900);
 }
+
+
+// 더 많은 말씀 보러 가기 → 메인 페이지(전체 에피소드 목록)로 이동
+function goToMoreStories(){
+  window.location.href = '../index.html';
+}
+
 function replayGame(){
   document.getElementById('end-screen').classList.remove('show');
   document.getElementById('choice-overlay').classList.remove('show');

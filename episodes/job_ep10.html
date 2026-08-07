@@ -131,6 +131,15 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
 .end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
 #replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(55,40,8,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(90,65,12,0.6);}
+#more-btn{
+  font-family:'Cardo',serif;font-size:0.78rem;letter-spacing:0.08em;
+  margin-top:14px;padding:10px 22px;border-radius:3px;cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.15s;
+  color:#120a02;border:none;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  box-shadow:0 3px 14px rgba(99,198,180,0.4);
+}
+#more-btn:hover{transform:translateY(-1px);box-shadow:0 5px 20px rgba(99,198,180,0.6);}
 
 @media (max-width:480px){
   #portrait-name{font-size:0.48rem;letter-spacing:0.06em;}
@@ -270,6 +279,7 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
     <h2>정직한 대면</h2>
     <p>하나님은 "불평하지 말라"고 하지 않으셨습니다.<br>오히려 정직하게 부르짖은 욥이 옳았다 하시고,<br>신학적인 말로 욥을 정죄한 친구들을 책망하셨습니다.<br><br>하나님이 원하시는 것은 침묵이 아니라<br>진실한 마음으로 그분 앞에 서는 것입니다.<br><br>"너희가 나를 가리켜 욥처럼<br>옳게 말하지 못하였도다."</p>
     <div class="end-verse">욥기 42:7-8</div>
+    <button id="more-btn" onclick="goToMoreStories()">더 많은 말씀 보러 가기</button>
     <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
   </div>
 </div>
@@ -478,6 +488,13 @@ function showEnd(){
   spawnSparks(40,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']);
   setTimeout(()=>spawnSparks(24,['#63C6B4','#2C7A72','#C9A075','#a8e6d8','#ffffff']),900);
 }
+
+
+// 더 많은 말씀 보러 가기 → 메인 페이지(전체 에피소드 목록)로 이동
+function goToMoreStories(){
+  window.location.href = '../index.html';
+}
+
 function replayGame(){
   document.getElementById('end-screen').classList.remove('show');
   document.getElementById('choice-overlay').classList.remove('show');
