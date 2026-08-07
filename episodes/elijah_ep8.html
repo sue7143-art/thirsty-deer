@@ -104,7 +104,7 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
 .dots{display:flex;gap:5px;}
 .dot{width:7px;height:7px;border-radius:50%;background:rgba(99,198,180,0.25);transition:background 0.3s;}
 .dot.on{background:var(--gold);box-shadow:0 0 6px rgba(99,198,180,0.6);}
-#next-btn{font-family:'Cardo',serif;font-size:clamp(0.65rem,1.8vw,0.75rem);font-weight:700;letter-spacing:0.10em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:clamp(4px,1vw,6px) clamp(10px,2.5vw,16px);border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(99,198,180,0.35);}
+#next-btn{font-family:'Cardo',serif;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;color:#120a02;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;padding:7px 20px;border-radius:3px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 10px rgba(99,198,180,0.35);}
 #next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,198,180,0.6);}
 #next-btn:active{transform:translateY(0);}
 
@@ -133,15 +133,6 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
 .end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
 #replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(55,40,8,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(90,65,12,0.6);}
-#more-btn{
-  font-family:'Cardo',serif;font-size:0.78rem;letter-spacing:0.08em;
-  margin-top:14px;padding:10px 22px;border-radius:3px;cursor:pointer;
-  transition:transform 0.15s,box-shadow 0.15s;
-  color:#120a02;border:none;
-  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-  box-shadow:0 3px 14px rgba(99,198,180,0.4);
-}
-#more-btn:hover{transform:translateY(-1px);box-shadow:0 5px 20px rgba(99,198,180,0.6);}
 
 /* ── 미디어 쿼리 ── */
 @media (max-width:480px){
@@ -285,7 +276,6 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
     <h2>일어나 먹으라</h2>
     <p>지쳐 쓰러진 그 자리에서<br>하나님은 책망하지 않으셨습니다.<br>천사를 보내 먹이시고 재우시고<br>다시 일으켜 세우셨습니다.<br><br>"일어나 먹으라,<br>네가 갈 길이 멀도다."</p>
     <div class="end-verse">열왕기상 19:7</div>
-    <button id="more-btn" onclick="goToMoreStories()">더 많은 말씀 보러 가기</button>
     <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
   </div>
 </div>
@@ -470,10 +460,6 @@ function showEnd(){
 }
 
 
-// 더 많은 말씀 보러 가기 → 메인 페이지(전체 에피소드 목록)로 이동
-function goToMoreStories(){
-  window.location.href = '../index.html';
-}
 
 function replayGame(){
   document.getElementById('end-screen').classList.remove('show');

@@ -226,15 +226,6 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
 .end-verse{font-family:'Cardo',serif;color:rgba(99,198,180,0.65);font-size:0.72rem;letter-spacing:0.14em;}
 #replay-btn{font-family:'Cardo',serif;font-size:0.85rem;letter-spacing:0.1em;color:#fff;background:rgba(20,50,46,0.5);border:1px solid rgba(99,198,180,0.3);padding:9px 26px;border-radius:3px;cursor:pointer;margin-top:6px;transition:background 0.2s;}
 #replay-btn:hover{background:rgba(120,90,15,0.6);}
-#more-btn{
-  font-family:'Cardo',serif;font-size:0.78rem;letter-spacing:0.08em;
-  margin-top:14px;padding:10px 22px;border-radius:3px;cursor:pointer;
-  transition:transform 0.15s,box-shadow 0.15s;
-  color:#120a02;border:none;
-  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-  box-shadow:0 3px 14px rgba(99,198,180,0.4);
-}
-#more-btn:hover{transform:translateY(-1px);box-shadow:0 5px 20px rgba(99,198,180,0.6);}
 
 /* ── iOS Safe Area ── */
 #game{
@@ -347,7 +338,6 @@ html{height:100%;background:#0B1714;display:flex;align-items:center;justify-cont
     <h2>화해와 새 이름</h2>
     <p>두려움을 이긴 야곱은 이스라엘이 되었고,<br>20년의 원한은 형제의 포옹으로 녹아내렸습니다.<br><br>"내가 형의 얼굴을 보니<br>하나님의 얼굴을 보는 것 같습니다."</p>
     <div class="end-verse">창세기 33:10</div>
-    <button id="more-btn" onclick="goToMoreStories()">더 많은 말씀 보러 가기</button>
     <button id="replay-btn" onclick="replayGame()">↺ &nbsp;다시 보기</button>
   </div>
 </div>
@@ -542,10 +532,6 @@ function showEnd() {
 }
 
 
-// 더 많은 말씀 보러 가기 → 메인 페이지(전체 에피소드 목록)로 이동
-function goToMoreStories(){
-  window.location.href = '../index.html';
-}
 
 function replayGame() {
   document.getElementById('end-screen').classList.remove('show');
